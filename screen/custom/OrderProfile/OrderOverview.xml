@@ -405,11 +405,11 @@
                                 <entity-find-one entity-name="moqui.basic.Enumeration" value-field="decisionEnum">
                                     <field-map field-name="enumId" from="decisionReason?.decisionReasonEnumId" />
                                 </entity-find-one>
-                                <set field="decisionReasonsNum" from="decisionReason?.sequenceNum"/>
+                                <set field="decisionReasonNum" from="decisionReason?.sequenceNum"/>
                             </actions>
                             <widgets>
                                 <field name="decisionReasons">
-                                    <label text="Reason ${decisionReasonsNum}:" style="text-light-grey"/>
+                                    <label text="Reason ${decisionReasonNum}:" style="text-light-grey"/>
                                     <label text="${decisionEnum?.description} &#13;&#10;"/>
                                 </field>
                             </widgets>
