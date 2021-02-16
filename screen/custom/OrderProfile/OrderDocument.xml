@@ -6,6 +6,7 @@
 
     <parameter name="orderId" required="true"/>
 
+    <transition-include name="viewAgreement" location="component://mk-dashboard/screen/custom/OrderProfile/OrderAgreement.xml"/>
     <transition name="downloadPartyContent" read-only="true">
         <parameter name="contentId"/>
         <actions>
@@ -23,6 +24,13 @@
                 <field-map field-name="orderContentId" from="contentId"/>
             </entity-find-one>
             <script>ec.web.sendResourceResponse(orderContent?.contentLocation)</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
+    <transition name="downloadPdfAgreement" read-only="true">
+        <parameter name="agreementContentLocation"/>
+        <actions>
+            <script>ec.web.sendResourceResponse(agreementContentLocation)</script>
         </actions>
         <default-response type="none"/>
     </transition>
@@ -206,19 +214,26 @@
                             <field-map field-name="partyId" from="agreementParty?.partyId"/>
                         </service-call>
                     </if>
+                    <service-call name="mkdecision.dashboard.PartyServices.get#PartyName" out-map="orgParty">
+                        <field-map field-name="partyId" from="agreement?.organizationPartyId"/>
+                    </service-call>
 
                     <entity-find-one entity-name="mantle.party.agreement.AgreementContent" value-field="agreementContent">
                         <field-map field-name="agreementId" from="agreement.agreementId"/>
                     </entity-find-one>
+                    <set field="contentLocation" from="agreementContent?.contentLocation"/>
 
-                    <set field="resourceRef" from="ec.resource.getLocationReference(agreementContent?.contentLocation)?.getFileName()"/>
+                    <if condition="ec.resource.getContentType(contentLocation) == 'application/pdf'">
+                        <set field="isPdf" value="true" type="Boolean"/>
+                        <set field="resourceRef" from="ec.resource.getLocationReference(contentLocation)?.getFileName()"/>
 
-                    <if condition="resourceRef == null">
-                        <service-call name="mkdecision.dashboard.PartyServices.get#PartyName" out-map="orgParty">
-                            <field-map field-name="partyId" from="agreement?.organizationPartyId"/>
-                        </service-call>
-                        <set field="resourceRef" from="orgParty?.partyName"/>
+                        <!--If an Agreement is a HTML type the Content Location for it would be null-->
+                        <else-if condition="contentLocation == null">
+                            <set field="resourceRef" from="orgParty?.partyName"/>
+                            <set field="isPdf" value="false" type="Boolean"/>
+                        </else-if>
                     </if>
+
                     <set field="contentDate" from="agreement?.agreementDate"/>
                 </row-actions>
                 <field name="description">
@@ -232,8 +247,11 @@
                     </default-field>
                 </field>
                 <field name="source">
-                    <default-field>
-                        <display text="${resourceRef ?: '-'}"/>
+                    <conditional-field condition="isPdf">
+                        <link url="downloadPdfAgreement" text="${resourceRef}" parameter-map="[agreementContentLocation: contentLocation]" link-type="anchor"/>
+                    </conditional-field>
+                    <default-field container-style="">
+                        <link url="viewAgreement" target-window="_blank" text="${resourceRef}" parameter-map="[agreementId: agreement.agreementId]" link-type="anchor" />
                     </default-field>
                 </field>
                 <!--TODO Need to discuss should we put the same name as party field here or the primaryApplicant if he signed only-->
@@ -260,7 +278,7 @@
                     </column>
                 </columns>
             </form-list>
-            <section name="EmptyContentList" condition="contentList == null || agreementsList.isEmpty()">
+            <section name="EmptyContentList" condition="contentList == null &amp;&amp; agreementsList.isEmpty()">
                 <widgets>
                     <container style="padding-all-05 text-center">
                         <label text="No agreements have been added yet" style="text-grey"/>
