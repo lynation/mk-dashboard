@@ -7,13 +7,11 @@
     <transition name="viewAgreement" read-only="true">
         <parameter name="agreementId" required="true"/>
         <actions>
-            <actions>
                 <entity-find-one entity-name="mantle.party.agreement.Agreement" value-field="agreement">
                     <field-map field-name="agreementId"/>
                 </entity-find-one>
                 <script>ec.web.response.setContentType('text/html;charset=utf-8')</script>
                 <script>ec.web.sendTextResponse(agreement.textData, 'text/html', null)</script>
-            </actions>
         </actions>
         <default-response type="none"/>
     </transition>
