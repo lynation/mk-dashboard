@@ -49,7 +49,29 @@
             <if condition="incomeCount == 0">
                 <return message="${ec.l10n.localize('DASHBOARD_INVALID_INCOME_SOURCE_COUNT')}" error="true"/>
             </if>
+
+            <entity-find entity-name="mantle.party.PartyToAndRelationship" list="currentEmploymentRelationList">
+                <econdition field-name="relationshipTypeEnumId" value="PrtEmployee"/>
+                <econdition field-name="fromPartyId" from="partyId"/>
+                <econdition field-name="fromRoleTypeId" value="Employee"/>
+                <order-by field-name="fromDate"/>
+            </entity-find>
+            <set field="employmentDuration" from="currentEmploymentRelationList.getFirst()?.fromDate"/>
+            <if condition="employmentDuration != null">
+                <set field="millis" from="Math.abs(employmentDuration.getTime() - ec.user.nowTimestamp.getTime())"/>
+                <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+                <set field="employmentYear" from="Math.floor(days / 365)" type="Integer"/>
+            </if>
         </actions>
+   
+        <conditional-response url="../../OrderProfile">
+            <condition>
+                <expression>employmentYear >= 2</expression>
+            </condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
+
         <default-response url="../PartyEmploymentPrevious">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
@@ -72,6 +94,18 @@
             <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
             <econdition field-name="partyRelationshipId" operator="is-null" value=""/>
         </entity-find>
+        <entity-find entity-name="mantle.party.PartyToAndRelationship" list="currentEmploymentRelationList">
+            <econdition field-name="relationshipTypeEnumId" value="PrtEmployee"/>
+            <econdition field-name="fromPartyId" from="partyId"/>
+            <econdition field-name="fromRoleTypeId" value="Employee"/>
+            <order-by field-name="fromDate"/>
+        </entity-find>
+        <set field="employmentDuration" from="currentEmploymentRelationList.getFirst()?.fromDate"/>
+        <if condition="employmentDuration != null">
+            <set field="millis" from="Math.abs(employmentDuration.getTime() - ec.user.nowTimestamp.getTime())"/>
+            <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+            <set field="employmentYear" from="Math.floor(days / 365)" type="Integer"/>
+        </if>
     </actions>
 
     <widgets>
@@ -115,7 +149,8 @@
                         <link url="partyIdentity" text="Back" style="text-black"/>
                     </row-col>
                     <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0 text-right">
-                        <link url="checkEmployment" text="Continue" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId]"/>
+                        <link url="checkEmployment" text="Finish" style="text-primary" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId]" condition="employmentYear &gt;= 2"/>
+                        <link url="checkEmployment" text="Continue" style="text-primary" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId]" condition="employmentYear &lt; 2"/>
                     </row-col>
                 </container-row>
             </row-col>
