@@ -55,9 +55,12 @@
                 <econdition field-name="agreementTypeEnumId" value="MkAgrCertificateOfCompletion"/>
                 <econdition field-name="orderStatusId" from="orderHeader.statusId"/>
             </entity-find-count>
+            <!--Find the COC agreementId that is active -->
             <entity-find entity-name="mantle.order.OrderAgreementDetail" list="cocAgreementList">
                 <econdition field-name="orderId" from="orderHeader.orderId"/>
                 <econdition field-name="agreementTypeEnumId" value="MkAgrCertificateOfCompletion"/>
+                <econdition field-name="statusId" operator="in" value="MkAgreeDraft,MkAgreeExecuted"/>
+                <econdition field-name="thruDate" operator="is-null"/>
             </entity-find>
             <set field="cocAgreementIdSet" from="new HashSet(cocAgreementList*.agreementId)"/>
             <entity-find-count entity-name="mantle.party.agreement.AgreementSignature" count-field="cocAgreementSignatureCount">
