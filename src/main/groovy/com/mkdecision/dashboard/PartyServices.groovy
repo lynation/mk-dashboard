@@ -725,7 +725,7 @@ class PartyServices {
                 mf.addError(lf.localize("DASHBOARD_INVALID_JOB_TITLE"))
                 return
             }
-        } else if (StringUtils.equals(employmentStatusEnumId, "EmpsContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
+        } else if (StringUtils.equals(employmentStatusEnumId, "EmpsIndependentContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
             if (StringUtils.isBlank(employerClassificationId)) {
                 mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYER_CLASS"))
                 return
@@ -816,7 +816,7 @@ class PartyServices {
         String employerPartyId = (String) employerResp.get("partyId")
 
         // create employer classification
-        if (StringUtils.equals(employmentStatusEnumId, "EmpsContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
+        if (StringUtils.equals(employmentStatusEnumId, "EmpsIndependentContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
             sf.sync().name("create#mantle.party.PartyClassificationAppl")
                     .parameter("partyId", employerPartyId)
                     .parameter("partyClassificationId", employerClassificationId)
@@ -946,7 +946,7 @@ class PartyServices {
                 .call()
 
         // update employer classification
-        if (StringUtils.equals(employmentStatusEnumId, "EmpsContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
+        if (StringUtils.equals(employmentStatusEnumId, "EmpsIndependentContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
             EntityList partyClasses = ef.find("mantle.party.PartyClassificationAppl")
                     .condition("partyId", employerPartyId)
                     .conditionDate("fromDate", "thruDate", uf.getNowTimestamp())

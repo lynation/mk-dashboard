@@ -1322,7 +1322,7 @@
                                     <entity-options text="${description}" key="${enumId}">
                                         <entity-find entity-name="moqui.basic.Enumeration">
                                             <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                            <econdition field-name="enumId" value="EmpsContractor"/>
+                                            <econdition field-name="enumId" value="EmpsIndependentContractor"/>
                                             <order-by field-name="description"/>
                                         </entity-find>
                                     </entity-options>
@@ -1442,7 +1442,7 @@
 
         <section name="EditCurrentContractorEmployment">
             <widgets>
-                <container-dialog id="EditCurrentContractorEmploymentDialog" button-text="Edit" width="960" condition="orderEditable &amp;&amp; (employmentStatusEnumId == 'EmpsContractor')">
+                <container-dialog id="EditCurrentContractorEmploymentDialog" button-text="Edit" width="960" condition="orderEditable &amp;&amp; (employmentStatusEnumId == 'EmpsIndependentContractor')">
                     <form-single name="EditCurrentContractorEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
@@ -1473,7 +1473,7 @@
                                     <entity-options text="${description}" key="${enumId}">
                                         <entity-find entity-name="moqui.basic.Enumeration">
                                             <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                            <econdition field-name="enumId" value="EmpsContractor"/>
+                                            <econdition field-name="enumId" value="EmpsIndependentContractor"/>
                                             <order-by field-name="description"/>
                                         </entity-find>
                                     </entity-options>
@@ -2221,7 +2221,7 @@
                                     <entity-options text="${description}" key="${enumId}">
                                         <entity-find entity-name="moqui.basic.Enumeration">
                                             <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                            <econdition field-name="enumId" value="EmpsContractor"/>
+                                            <econdition field-name="enumId" value="EmpsIndependentContractor"/>
                                             <order-by field-name="description"/>
                                         </entity-find>
                                     </entity-options>
@@ -2341,7 +2341,7 @@
 
         <section name="EditPreviousContractorEmployment">
             <widgets>
-                <container-dialog id="EditPreviousContractorEmploymentDialog" button-text="Edit" width="960" condition="orderEditable &amp;&amp; (employmentStatusEnumId == 'EmpsContractor')">
+                <container-dialog id="EditPreviousContractorEmploymentDialog" button-text="Edit" width="960" condition="orderEditable &amp;&amp; (employmentStatusEnumId == 'EmpsIndependentContractor')">
                     <form-single name="EditPreviousContractorEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
@@ -2372,7 +2372,7 @@
                                     <entity-options text="${description}" key="${enumId}">
                                         <entity-find entity-name="moqui.basic.Enumeration">
                                             <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                            <econdition field-name="enumId" value="EmpsContractor"/>
+                                            <econdition field-name="enumId" value="EmpsIndependentContractor"/>
                                             <order-by field-name="description"/>
                                         </entity-find>
                                     </entity-options>
