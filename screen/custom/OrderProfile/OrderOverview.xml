@@ -107,6 +107,8 @@
             <econditions combine="or">
                 <econdition field-name="roleTypeId" value="PrimaryApplicant"/>
                 <econdition field-name="roleTypeId" value="CoApplicant"/>
+                <econdition field-name="roleTypeId" value="CcSpouseSeparate"/>
+                <econdition field-name="roleTypeId" value="NonBorrowerOwner"/>
             </econditions>
         </entity-find>
         <entity-find entity-name="mantle.request.requirement.RequirementOrderItem" list="requirementsList">
@@ -120,6 +122,8 @@
             <econditions combine="and">
                 <econdition field-name="roleTypeId" operator="not-equals" value="PrimaryApplicant"/>
                 <econdition field-name="roleTypeId" operator="not-equals" value="CoApplicant"/>
+                <econdition field-name="roleTypeId" operator="not-equals" value="CcSpouseSeparate"/>
+                <econdition field-name="roleTypeId" operator="not-equals" value="NonBorrowerOwner"/>
             </econditions>
         </entity-find>
 
@@ -142,14 +146,6 @@
                 </entity-find>
             </else>
         </if>
-
-        <entity-find-count entity-name="moqui.basic.StatusFlowItem" count-field="editableOrderStatusCount">
-            <econditions>
-                <econdition field-name="statusFlowId" value="MkDashboardEditableOrderStatuses"/>
-                <econdition field-name="statusId" from="orderHeader.statusId"/>
-            </econditions>
-        </entity-find-count>
-        <set field="orderEditable" from="editableOrderStatusCount > 0 &amp;&amp; (orderHeader.lockUserId == null || orderHeader.lockUserId == ec.user.userId)"/>
     </actions>
 
     <widgets>
@@ -383,17 +379,11 @@
             <form-list name="DecisionList" list="decisionList" list-entry="decision">
                 <row-actions>
                     <entity-find-one entity-name="moqui.basic.StatusItem" value-field="decisionStatus">
-                        <field-map field-name="statusId" from="decision.statusId"/>
+                        <field-map field-name="statusId" from="decision?.statusId"/>
                     </entity-find-one>
                     <entity-find-one entity-name="mantle.party.PartyDetail" value-field="decisionBy">
-                        <field-map field-name="partyId" from="decision.decisionByPartyId"/>
+                        <field-map field-name="partyId" from="decision?.decisionByPartyId"/>
                     </entity-find-one>
-
-                    <entity-find entity-name="mantle.order.OrderDecisionReason" list="orderDecisionReasons">
-                        <econdition field-name="orderId" from="decision?.orderId" />
-                        <econdition field-name="decisionDate" from="decision?.decisionDate" />
-                        <order-by field-name="sequenceNum" />
-                    </entity-find>
                 </row-actions>
                 <field name="description">
                     <default-field>

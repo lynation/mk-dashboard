@@ -69,6 +69,8 @@
             <econditions combine="or">
                 <econdition field-name="roleTypeId" value="PrimaryApplicant"/>
                 <econdition field-name="roleTypeId" value="CoApplicant"/>
+                <econdition field-name="roleTypeId" value="CcSpouseSeparate"/>
+                <econdition field-name="roleTypeId" value="NonBorrowerOwner"/>
             </econditions>
         </entity-find>
         <entity-find entity-name="mantle.product.asset.Asset" list="assetList">
@@ -86,14 +88,6 @@
             </service-call>
             <set field="responseMap" from="formResponse?.responseMap"/>
         </if>
-
-        <entity-find-count entity-name="moqui.basic.StatusFlowItem" count-field="editableOrderStatusCount">
-            <econditions>
-                <econdition field-name="statusFlowId" value="MkDashboardEditableOrderStatuses"/>
-                <econdition field-name="statusId" from="orderStatus.statusId"/>
-            </econditions>
-        </entity-find-count>
-        <set field="orderEditable" from="editableOrderStatusCount > 0 &amp;&amp; (orderHeader.lockUserId == null || orderHeader.lockUserId == ec.user.userId)"/>
     </actions>
 
     <widgets>
@@ -143,9 +137,9 @@
                     <set field="classEnumId" from="asset.classEnumId"/>
                     <set field="salvageValue" from="asset.salvageValue"/>
                     <set field="acquireCost" from="asset.acquireCost"/>
-                    <set field="hoaFeeMonthly" from="hoaMonthlyFeeFinFlowList?.getFirst().amount ?: 0"/>
-                    <set field="propertyTaxesMonthly" from="monthlyPropertyTaxFinFlowList?.getFirst().amount ?: 0"/>
-                    <set field="propertyInsuranceCostsMonthly" from="monthlyInsuranceCostFinFlowList?.getFirst().amount ?: 0"/>
+                    <set field="hoaFeeMonthly" from="hoaMonthlyFeeFinFlowList?.getFirst()?.amount ?: 0"/>
+                    <set field="propertyTaxesMonthly" from="monthlyPropertyTaxFinFlowList?.getFirst()?.amount ?: 0"/>
+                    <set field="propertyInsuranceCostsMonthly" from="monthlyInsuranceCostFinFlowList?.getFirst()?.amount ?: 0"/>
                 </actions>
                 <widgets>
                     <container style="col-lg-6 col-md-12 col-sm-12 col-xs-12">
@@ -199,7 +193,7 @@
                         <econdition field-name="relationshipTypeEnumId" value="PrtEmployee"/>
                         <econdition field-name="fromPartyId" from="party.partyId"/>
                         <econdition field-name="fromRoleTypeId" value="Employee"/>
-                        <order-by field-name="fromDate"/>
+                        <order-by field-name="partyRelationshipId"/>
                     </entity-find>
                     <entity-find entity-name="mk.close.FinancialFlow" list="incomeFinFlowList">
                         <econdition field-name="partyId" from="partyId"/>
@@ -210,7 +204,7 @@
                         <econdition field-name="relationshipTypeEnumId" value="PrtPreviousEmployee"/>
                         <econdition field-name="fromPartyId" from="party.partyId"/>
                         <econdition field-name="fromRoleTypeId" value="Employee"/>
-                        <order-by field-name="fromDate"/>
+                        <order-by field-name="partyRelationshipId"/>
                     </entity-find>
 
                     <set field="firstName" from="partyDetail?.firstName ?: null"/>

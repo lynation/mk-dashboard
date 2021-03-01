@@ -38,8 +38,6 @@
                                 <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
                                 <set field="years" from="Math.floor(days / 365)" type="Integer"/>
                                 <set field="months" from="Math.floor(days / 30.4) - (years * 12)" type="Integer"/>
-                                <log level="warn" message=">> ${years}"/>
-                                <log level="warn" message=">> ${months}"/>
                                 <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                                 <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
                                 <set field="employerUnitNumber" from="postalAddressResp.postalAddress?.unitNumber"/>
@@ -57,6 +55,7 @@
                                     <row-col xs="6" sm="6" md="6" lg="6" style="text-right">
                                         <section-include name="EditCurrentRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <section-include name="EditCurrentSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                        <section-include name="EditCurrentContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <link text="Remove" btn-type="danger" url="deleteEmployment" parameter-map="[orderId: orderId, partyId: partyId, partyRelationshipId: employmentRelation.partyRelationshipId]"/>
                                     </row-col>
                                 </container-row>
@@ -71,6 +70,9 @@
                 </container>
                 <container style="block margin-tb-1">
                     <section-include name="AddCurrentSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                </container>
+                <container style="block margin-tb-1">
+                    <section-include name="AddCurrentContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                 </container>
             </widgets>
         </section>
@@ -136,6 +138,9 @@
                 </container>
                 <container style="block margin-tb-1">
                     <section-include name="AddPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                </container>
+                <container style="block margin-tb-1">
+                    <section-include name="AddPreviousContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                 </container>
             </widgets>
         </section>
@@ -313,11 +318,11 @@
                         </container-row>
                         <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Date of Birth" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${birthDate}"/></row-col>
+                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${birthDate ?: '-'}"/></row-col>
                         </container-row>
                         <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Marital Status" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${maritalStatus.description ?: '-'}"/></row-col>
+                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${maritalStatus?.description ?: '-'}"/></row-col>
                         </container-row>
                         <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employment Status" style="text-light-grey"/></row-col>
@@ -650,7 +655,7 @@
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(hoaFeeMonthly ?: 0, orderHeader.currencyUomId)}"/></row-col>
                         </container-row>
                         <container-row>
-                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Property Tax Monthly" style="text-light-grey"/></row-col>
+                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Property Taxes Monthly" style="text-light-grey"/></row-col>
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(propertyTaxesMonthly ?: 0, orderHeader.currencyUomId)}"/></row-col>
                         </container-row>
                         <container-row>
