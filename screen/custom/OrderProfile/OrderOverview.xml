@@ -384,6 +384,11 @@
                     <entity-find-one entity-name="mantle.party.PartyDetail" value-field="decisionBy">
                         <field-map field-name="partyId" from="decision?.decisionByPartyId"/>
                     </entity-find-one>
+                    <entity-find entity-name="mantle.order.OrderDecisionReason" list="orderDecisionReasons">
+                        <econdition field-name="orderId" from="decision?.orderId" />
+                        <econdition field-name="decisionDate" from="decision?.decisionDate" />
+                        <order-by field-name="sequenceNum" />
+                    </entity-find>
                 </row-actions>
                 <field name="description">
                     <default-field>
