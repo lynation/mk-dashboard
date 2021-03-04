@@ -244,8 +244,11 @@
                     <set field="contentDate" from="agreement?.agreementDate"/>
                 </row-actions>
                 <field name="description">
-                    <default-field>
-                        <display text="${contentType?.description ?: '-'}"/>
+                    <conditional-field condition="isPdf">
+                        <link url="downloadPdfAgreement" text="${contentType?.description}" parameter-map="[agreementContentLocation: contentLocation]" link-type="anchor"/>
+                    </conditional-field>
+                    <default-field container-style="">
+                        <link url="viewAgreement" target-window="_blank" text="${contentType?.description}" parameter-map="[agreementId: agreement.agreementId]" link-type="anchor" />
                     </default-field>
                 </field>
                 <field name="party">
@@ -254,11 +257,8 @@
                     </default-field>
                 </field>
                 <field name="source">
-                    <conditional-field condition="isPdf">
-                        <link url="downloadPdfAgreement" text="${resourceRef}" parameter-map="[agreementContentLocation: contentLocation]" link-type="anchor"/>
-                    </conditional-field>
-                    <default-field container-style="">
-                        <link url="viewAgreement" target-window="_blank" text="${resourceRef}" parameter-map="[agreementId: agreement.agreementId]" link-type="anchor" />
+                    <default-field>
+                        <display text="${resourceRef ?: '-'}"/>
                     </default-field>
                 </field>
                 <!--TODO Need to discuss should we put the same name as party field here or the primaryApplicant if he signed only-->
@@ -302,8 +302,11 @@
             </container>
             <form-list name="FileList" list="fileList" list-entry="content">
                 <field name="contentType">
-                    <default-field title="Type">
-                        <display/>
+                    <conditional-field condition="contentOrigin == 'Order'">
+                        <link url="downloadOrderContent" text="${contentType}" parameter-map="[contentId: contentId]" link-type="anchor"/>
+                    </conditional-field>
+                    <default-field>
+                        <link url="downloadPartyContent" text="${contentType}" parameter-map="[contentId: contentId]" link-type="anchor"/>
                     </default-field>
                 </field>
                 <field name="partyName">
@@ -312,11 +315,8 @@
                     </default-field>
                 </field>
                 <field name="source">
-                    <conditional-field condition="contentOrigin == 'Order'">
-                        <link url="downloadOrderContent" text="${source}" parameter-map="[contentId: contentId]" link-type="anchor"/>
-                    </conditional-field>
                     <default-field>
-                        <link url="downloadPartyContent" text="${source}" parameter-map="[contentId: contentId]" link-type="anchor"/>
+                        <display text="${source}" />
                     </default-field>
                 </field>
                 <field name="performedBy">
