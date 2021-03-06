@@ -384,13 +384,31 @@
                     <entity-find-one entity-name="mantle.party.PartyDetail" value-field="decisionBy">
                         <field-map field-name="partyId" from="decision?.decisionByPartyId"/>
                     </entity-find-one>
+                    <entity-find entity-name="mantle.order.OrderDecisionReason" list="orderDecisionReasons">
+                        <econdition field-name="orderId" from="decision?.orderId" />
+                        <econdition field-name="decisionDate" from="decision?.decisionDate" />
+                        <order-by field-name="sequenceNum" />
+                    </entity-find>
                 </row-actions>
                 <field name="description">
                     <default-field>
-                        <dynamic-dialog id="DecisionReasonsDialog" button-text="${decisionStatus?.description}" transition="../DecisionReasons" condition="decision">
-                            <parameter name="orderId" from="decision.orderId"/>
-                            <parameter name="decisionDate" from="decision.decisionDate"/>
-                        </dynamic-dialog>
+                        <container>
+                            <label text="${decisionStatus.description}" style="text-bold"/>
+                        </container>
+                        <section-iterate name="DecisionReasonsForm" list="orderDecisionReasons" entry="decisionReason">
+                            <actions>
+                                <entity-find-one entity-name="moqui.basic.Enumeration" value-field="decisionEnum">
+                                    <field-map field-name="enumId" from="decisionReason?.decisionReasonEnumId" />
+                                </entity-find-one>
+                                <set field="decisionReasonNum" from="decisionReason?.sequenceNum"/>
+                            </actions>
+                            <widgets>
+                                <field name="decisionReasons">
+                                    <label text="Reason ${decisionReasonNum}:" style="text-light-grey"/>
+                                    <label text="${decisionEnum?.description} &#13;&#10;"/>
+                                </field>
+                            </widgets>
+                        </section-iterate>
                     </default-field>
                 </field>
                 <field name="decisionBy">
