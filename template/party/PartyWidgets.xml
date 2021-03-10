@@ -428,7 +428,7 @@
                             <field-map field-name="partySettingTypeId" value="EmploymentStatus"/>
                         </entity-find-one>
                         <entity-find-one entity-name="moqui.basic.Enumeration" value-field="employmentStatus">
-                            <field-map field-name="enumId" from="employmentStatusSetting.settingValue"/>
+                            <field-map field-name="enumId" from="employmentStatusSetting?.settingValue"/>
                         </entity-find-one>
                         <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                             <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
@@ -470,7 +470,7 @@
                             <container style="q-pt-sm">
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employment Status" style="text-light-grey"/></row-col>
-                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employmentStatus}"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employmentStatus ?: '-'}"/></row-col>
                                 </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employer Name" style="text-light-grey"/></row-col>
