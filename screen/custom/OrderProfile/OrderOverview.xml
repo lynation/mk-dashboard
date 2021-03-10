@@ -693,13 +693,14 @@
             <section-iterate name="NoteIterator" list="noteList" entry="note">
                 <actions>
                     <entity-find-related-one value-field="note" relationship-name="moqui.security.UserAccount" to-value-field="userAccount"/>
+                    <set field="userFullName" from="userAccount.userId == '_NA_' ? 'System' : userAccount.userFullName"/>
                 </actions>
                 <widgets>
                     <container-box>
                         <box-header>
                             <label text="&amp;nbsp;" style="fa fa-lock" encode="false" condition="note.internalNote == 'Y'"/>
                             <label text="&amp;nbsp;" style="fa fa-unlock" encode="false" condition="note.internalNote != 'Y'"/>
-                            <label text="${ec.l10n.format(note.noteDate, 'MM/dd/yyyy h:mm:ss a')} - ${userAccount.userFullName}" style="text-bold"/>
+                            <label text="${ec.l10n.format(note.noteDate, 'MM/dd/yyyy h:mm:ss a')} - ${userFullName}" style="text-bold"/>
                         </box-header>
                         <box-body><label text="${note.noteText}"/></box-body>
                     </container-box>
