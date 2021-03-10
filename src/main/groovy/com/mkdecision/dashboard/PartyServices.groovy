@@ -244,7 +244,6 @@ class PartyServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
 
         // validate first name
         if (StringUtils.isBlank(firstName)) {
@@ -280,10 +279,6 @@ class PartyServices {
             return
         }
 
-        // validate employment status
-        if (StringUtils.isBlank(employmentStatusEnumId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_STATUS"))
-        }
     }
 
     static Map<String, Object> updatePerson(ExecutionContext ec) {
@@ -305,7 +300,6 @@ class PartyServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
 
         // validate fields
         sf.sync().name("mkdecision.dashboard.PartyServices.validate#PersonFields")
@@ -325,7 +319,6 @@ class PartyServices {
                 .parameter("nickname", nickname)
                 .parameter("birthDate", birthDate)
                 .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                .parameter("employmentStatusEnumId", employmentStatusEnumId)
                 .call()
 
         // create social security number

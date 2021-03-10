@@ -60,18 +60,6 @@
                                 </drop-down>
                             </default-field>
                         </field>
-                        <field name="employmentStatusEnumId">
-                            <default-field title="Employment Status" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
-                                <drop-down required-manual-select="true">
-                                    <entity-options text="${description}" key="${enumId}">
-                                        <entity-find entity-name="moqui.basic.Enumeration">
-                                            <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                            <order-by field-name="sequenceNum,description"/>
-                                        </entity-find>
-                                    </entity-options>
-                                </drop-down>
-                            </default-field>
-                        </field>
 
                         <field name="submit">
                             <default-field>
@@ -97,9 +85,6 @@
                             </field-col-row>
                             <field-col-row>
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="maritalStatusEnumId"/></field-col>
-                            </field-col-row>
-                            <field-col-row>
-                                <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="employmentStatusEnumId"/></field-col>
                             </field-col-row>
                             <field-col-row>
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="submit"/></field-col>

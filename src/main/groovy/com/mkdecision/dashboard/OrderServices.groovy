@@ -596,7 +596,6 @@ class OrderServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
         String contactNumber = (String) cs.getOrDefault("contactNumber", null)
         String contactMechPurposeId = (String) cs.getOrDefault("contactMechPurposeId", null)
         String email = (String) cs.getOrDefault("email", null)
@@ -666,12 +665,6 @@ class OrderServices {
             return
         }
 
-        // validate employment status
-        if (StringUtils.isBlank(employmentStatusEnumId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_STATUS"))
-            return
-        }
-
         // validate contact number
         if (StringUtils.isBlank(contactNumber)) {
             mf.addError(lf.localize("DASHBOARD_INVALID_PHONE_NUMBER"))
@@ -721,7 +714,6 @@ class OrderServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
         String contactNumber = (String) cs.getOrDefault("contactNumber", null)
         String contactMechPurposeId = (String) cs.getOrDefault("contactMechPurposeId", null)
         String email = (String) cs.getOrDefault("email", null)
@@ -753,7 +745,6 @@ class OrderServices {
                     .parameter("nickname", nickname)
                     .parameter("birthDate", birthDate)
                     .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                    .parameter("employmentStatusEnumId", employmentStatusEnumId)
                     .call()
 
             // update party role
@@ -844,7 +835,6 @@ class OrderServices {
                     .parameter("nickname", nickname)
                     .parameter("birthDate", birthDate)
                     .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                    .parameter("employmentStatusEnumId", employmentStatusEnumId)
                     .parameter("roleTypeId", roleTypeId)
                     .call()
             partyId = (String) personResp.get("partyId")
