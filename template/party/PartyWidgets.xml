@@ -325,10 +325,6 @@
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${maritalStatus?.description ?: '-'}"/></row-col>
                         </container-row>
                         <container-row>
-                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employment Status" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employmentStatus.description ?: '-'}"/></row-col>
-                        </container-row>
-                        <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Occupation" style="text-light-grey"/></row-col>
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${currentEmploymentRelationList.getFirst()?.relationshipName ?: '-'}"/></row-col>
                         </container-row>
@@ -431,6 +427,9 @@
                             <field-map field-name="partyRelationshipId" from="employmentRelation.partyRelationshipId"/>
                             <field-map field-name="partySettingTypeId" value="EmploymentStatus"/>
                         </entity-find-one>
+                        <entity-find-one entity-name="moqui.basic.Enumeration" value-field="employmentStatus">
+                            <field-map field-name="enumId" from="employmentStatusSetting.settingValue"/>
+                        </entity-find-one>
                         <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                             <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
                             <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
@@ -443,7 +442,7 @@
                         <set field="employerClassificationId" from="partyClassList?.getFirst()?.partyClassificationId ?: null"/>
                         <set field="employerName" from="employmentRelation.organizationName"/>
                         <set field="jobTitle" from="employmentRelation.relationshipName"/>
-                        <set field="employmentStatusEnumId" from="employmentStatusSetting?.settingValue"/>
+                        <set field="employmentStatus" from="employmentStatus?.description"/>
                         <set field="monthlyIncome" from="monthlyIncomeFinFlowList?.getFirst()?.amount ?: null"/>
                         <set field="millis" from="Math.abs(employmentRelation.fromDate.getTime() - ec.user.nowTimestamp.getTime())"/>
                         <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
@@ -469,6 +468,10 @@
                                 </row-col>
                             </container-row>
                             <container style="q-pt-sm">
+                                <container-row>
+                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employment Status" style="text-light-grey"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employmentStatus}"/></row-col>
+                                </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employer Name" style="text-light-grey"/></row-col>
                                     <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employerName}"/></row-col>

@@ -38,7 +38,6 @@
             <parameter name="socialSecurityNumber"/>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy"/>
             <parameter name="maritalStatusEnumId"/>
-            <parameter name="employmentStatusEnumId"/>
         </in-parameters>
     </service>
     <service verb="update" noun="Person" type="java" location="com.mkdecision.dashboard.PartyServices" method="updatePerson">
@@ -60,7 +59,6 @@
             </parameter>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy" required="true"/>
             <parameter name="maritalStatusEnumId" required="true"/>
-            <parameter name="employmentStatusEnumId" required="true"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>

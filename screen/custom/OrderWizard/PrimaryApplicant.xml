@@ -69,7 +69,6 @@
             <set field="nickname" from="party?.nickname ?: ''"/>
             <set field="birthDate" from="ec.l10n.format(party?.birthDate, 'MM-dd-yyyy') ?: ''"/>
             <set field="maritalStatusEnumId" from="party?.maritalStatusEnumId ?: ''"/>
-            <set field="employmentStatusEnumId" from="party?.employmentStatusEnumId ?: ''"/>
 
             <service-call name="mkdecision.dashboard.PartyServices.get#SocialSecurityNumber" out-map="context">
                 <field-map field-name="partyId" from="partyId"/>
@@ -275,18 +274,6 @@
                         </drop-down>
                     </default-field>
                 </field>
-                <field name="employmentStatusEnumId">
-                    <default-field title="Employment Status" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
-                        <drop-down required-manual-select="true">
-                            <entity-options text="${description}" key="${enumId}">
-                                <entity-find entity-name="moqui.basic.Enumeration">
-                                    <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                    <order-by field-name="sequenceNum,description"/>
-                                </entity-find>
-                            </entity-options>
-                        </drop-down>
-                    </default-field>
-                </field>
 
                 <field name="addressHeader">
                     <default-field>
@@ -425,11 +412,6 @@
                     <field-col-row>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
                         <field-col xs="12" sm="10" md="6" lg="6"><field-ref name="maritalStatusEnumId"/></field-col>
-                        <field-col xs="0" sm="1" md="3" lg="3"/>
-                    </field-col-row>
-                    <field-col-row>
-                        <field-col xs="0" sm="1" md="3" lg="3"/>
-                        <field-col xs="12" sm="10" md="6" lg="6"><field-ref name="employmentStatusEnumId"/></field-col>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
                     </field-col-row>
 
