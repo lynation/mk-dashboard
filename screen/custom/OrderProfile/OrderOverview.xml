@@ -623,7 +623,7 @@
                         <container>
                             <label text="${ec.l10n.format(requirementId.requirementStartDate, 'MM/dd/yyyy h:mm:ss a')} - ${partyName?: '-'}" style="text-bold"/>
                         </container>
-                        <label text="${enumId?.description}"/>
+                        <label text="${requirementId?.description ?: enumId?.description}"/>
                     </default-field>
                 </field>
                 <field name="status">
