@@ -107,6 +107,16 @@
         
     <actions>
         <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
+
+        <entity-find-one entity-name="mantle.order.OrderItem" value-field="orderItem">
+            <field-map field-name="orderId" from="orderId"/>
+            <field-map field-name="orderItemSeqId" value="01"/>
+        </entity-find-one>
+        <entity-find-one entity-name="mantle.product.Product" value-field="product">
+            <field-map field-name="productId" from="orderItem.productId"/>
+        </entity-find-one>
+        <set field="productClassEnumId" from="product.productClassEnumId"/>
+
         <entity-find-related-one value-field="orderHeader" relationship-name="status" to-value-field="orderStatus"/>
         <entity-find-count entity-name="mantle.product.store.ProductStoreParty" count-field="financeManagerCount">
             <econdition field-name="productStoreId" from="orderHeader.productStoreId"/>
@@ -120,11 +130,25 @@
                 <set field="statusFlowId" value="MkDashboardIndirectSalesRepresentative"/>
             </else>
         </if>
-        <entity-find entity-name="moqui.basic.StatusFlowTransition" list="transitionList">
-            <econdition field-name="statusFlowId" from="statusFlowId"/>
-            <econdition field-name="statusId" from="orderHeader.statusId"/>
-            <order-by field-name="transitionSequence"/>
-        </entity-find>
+
+        <if condition="productClassEnumId == 'IndirectSecuredLoan'">
+            <then>
+                <entity-find entity-name="moqui.basic.StatusFlowTransition" list="transitionList">
+                    <econdition field-name="statusFlowId" from="statusFlowId"/>
+                    <econdition field-name="statusId" from="orderHeader.statusId"/>
+                    <order-by field-name="transitionSequence"/>
+                </entity-find>
+                <set field="transitionList" from="transitionList.findAll { it.toStatusId != 'OrderConditionalApproved' }"/>
+            </then>
+            <else>
+                <entity-find entity-name="moqui.basic.StatusFlowTransition" list="transitionList">
+                    <econdition field-name="statusFlowId" from="statusFlowId"/>
+                    <econdition field-name="statusId" from="orderHeader.statusId"/>
+                    <order-by field-name="transitionSequence"/>
+                </entity-find>
+                <set field="transitionList" from="transitionList.findAll { it.toStatusId != 'OrderCustomerProcessing' }"/>
+            </else>
+        </if>
 
         <entity-find entity-name="mantle.product.store.ProductStoreSetting" list="storeSettings">
             <date-filter/>
