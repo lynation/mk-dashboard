@@ -138,7 +138,7 @@
                     <econdition field-name="statusId" from="orderHeader.statusId"/>
                     <order-by field-name="transitionSequence"/>
                 </entity-find>
-                <set field="transitionList" from="transitionList.findAll { it.toStatusId != 'OrderConditionalApproved' }"/>
+                <set field="transitionList" from="transitionList.findAll { it.toStatusId != 'OrderCustomerProcessing' }"/>
             </then>
             <else>
                 <entity-find entity-name="moqui.basic.StatusFlowTransition" list="transitionList">
@@ -146,7 +146,7 @@
                     <econdition field-name="statusId" from="orderHeader.statusId"/>
                     <order-by field-name="transitionSequence"/>
                 </entity-find>
-                <set field="transitionList" from="transitionList.findAll { it.toStatusId != 'OrderCustomerProcessing' }"/>
+                <set field="transitionList" from="transitionList.findAll { it.toStatusId != 'OrderConditionalApproved' }"/>
             </else>
         </if>
 
