@@ -10,7 +10,21 @@
     <parameter name="partyId"/>
 
     <transition name="storeApplicant">
-        <service-call name="mkdecision.dashboard.OrderServices.store#Applicant" in-map="context"/>
+        <actions>
+            <if condition="backButtons != null">
+                <then>
+                    <service-call name="mkdecision.dashboard.OrderServices.archive#OrderParty" in-map="context"/>
+                </then>
+                <else>
+                    <service-call name="mkdecision.dashboard.OrderServices.store#Applicant" in-map="context"/>
+                </else>
+            </if>
+        </actions>
+        <conditional-response url="../../OrderProfile/OrderOverview">
+            <condition>
+                <expression>backButtons != null</expression>
+            </condition>
+        </conditional-response>
         <default-response url="../PartyIdentity">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
@@ -271,9 +285,15 @@
                         <submit text="Continue"/>
                     </default-field>
                 </field>
-                <field name="backButton">
+                <field name="backButton" hide="partyId != null">
                     <default-field container-style="dark-link">
                         <link url="orderOverview" text="Back" btn-type="default"/>
+                    </default-field>
+                </field>
+                <field name="backButtons" hide="partyId == null">
+                    <default-field container-style="dark-link">
+                        <link url="orderOverview" text="Back" btn-type="default"/>
+                        <submit text="Delete" confirmation="Are you sure you want to delete this party?"/>
                     </default-field>
                 </field>
 
@@ -387,7 +407,10 @@
 
                     <field-col-row>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
-                        <field-col xs="6" sm="5" md="3" lg="3"><field-ref name="backButton"/></field-col>
+                        <field-col xs="6" sm="5" md="3" lg="3">
+                            <field-ref name="backButton"/>
+                            <field-ref name="backButtons"/>
+                        </field-col>
                         <field-col xs="6" sm="5" md="3" lg="3" style="text-right"><field-ref name="continueButton"/></field-col>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
                     </field-col-row>
