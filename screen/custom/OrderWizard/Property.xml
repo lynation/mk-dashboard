@@ -143,17 +143,17 @@
                 </field>
                 <field name="propertyTaxesMonthly">
                     <default-field title="Property Taxes Monthly">
-                        <text-line input-type="number" format="#.##" prefix="$"/>
+                        <text-line format="#.##" prefix="$"/>
                     </default-field>
                 </field>
                 <field name="propertyInsuranceCostsMonthly">
                     <default-field title="Property Insurance Costs Monthly">
-                        <text-line input-type="number" format="#.##" prefix="$"/>
+                        <text-line format="#.##" prefix="$"/>
                     </default-field>
                 </field>
                 <field name="hoaFeeMonthly">
                     <default-field title="HOA Fee Monthly">
-                        <text-line input-type="number" format="#.##" prefix="$"/>
+                        <text-line format="#.##" prefix="$"/>
                     </default-field>
                 </field>
 
