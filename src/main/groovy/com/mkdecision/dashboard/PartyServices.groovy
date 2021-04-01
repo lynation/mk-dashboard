@@ -142,10 +142,12 @@ class PartyServices {
         ArrayList<String> addressParts = new ArrayList<>()
         if (postalAddress != null) {
             String address1 = postalAddress.getString("address1")
+            String unitNumber = postalAddress.getString("unitNumber")
             String city = postalAddress.getString("city")
             String stateGeoCodeAlpha2 = postalAddress.getString("stateGeoCodeAlpha2")
             String postalCode = postalAddress.getString("postalCode")
             if (StringUtils.isNotBlank(address1)) addressParts.add(address1)
+            if (StringUtils.isNotBlank(unitNumber)) addressParts.add("Unit #" + unitNumber)
             if (StringUtils.isNotBlank(city)) addressParts.add(city)
             if (StringUtils.isNotBlank(stateGeoCodeAlpha2) && StringUtils.isNotBlank(postalCode)) addressParts.add(String.format("%s %s", stateGeoCodeAlpha2, postalCode))
         }
