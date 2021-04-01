@@ -147,7 +147,7 @@ class PartyServices {
             String stateGeoCodeAlpha2 = postalAddress.getString("stateGeoCodeAlpha2")
             String postalCode = postalAddress.getString("postalCode")
             if (StringUtils.isNotBlank(address1)) addressParts.add(address1)
-            if (StringUtils.isNotBlank(unitNumber)) addressParts.add("Unit #" + unitNumber)
+            if (StringUtils.isNotBlank(unitNumber)) addressParts.add(unitNumber)
             if (StringUtils.isNotBlank(city)) addressParts.add(city)
             if (StringUtils.isNotBlank(stateGeoCodeAlpha2) && StringUtils.isNotBlank(postalCode)) addressParts.add(String.format("%s %s", stateGeoCodeAlpha2, postalCode))
         }
