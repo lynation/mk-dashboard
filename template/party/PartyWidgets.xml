@@ -40,7 +40,7 @@
                                 <set field="months" from="Math.floor(days / 30.4) - (years * 12)" type="Integer"/>
                                 <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                                 <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                                <set field="employeraddress2" from="postalAddressResp.postalAddress?.address2"/>
+                                <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                                 <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                                 <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                                 <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -109,7 +109,7 @@
                                 <set field="toDate" from="ec.l10n.format(employmentRelation.thruDate, 'MM-dd-yyyy') ?: null"/>
                                 <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                                 <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                                <set field="employeraddress2" from="postalAddressResp.postalAddress?.address2"/>
+                                <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                                 <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                                 <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                                 <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -452,7 +452,7 @@
                         <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                         <set field="employerPostalAddress" from="postalAddressResp.postalAddressString"/>
                         <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                        <set field="employeraddress2" from="postalAddressResp.postalAddress?.address2"/>
+                        <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                         <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                         <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                         <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -570,7 +570,7 @@
                         <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                         <set field="employerPostalAddress" from="postalAddressResp.postalAddressString"/>
                         <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                        <set field="employeraddress2" from="postalAddressResp.postalAddress?.address2"/>
+                        <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                         <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                         <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                         <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>

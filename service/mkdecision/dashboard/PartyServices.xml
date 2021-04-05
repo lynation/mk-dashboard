@@ -222,7 +222,7 @@
             <parameter name="toDate" type="Date" format="MM-dd-yyyy"/>
             <parameter name="monthlyIncome" type="BigDecimal"/>
             <parameter name="employerAddress1"/>
-            <parameter name="employeraddress2"/>
+            <parameter name="employerAddress2"/>
             <parameter name="employerPostalCode"/>
             <parameter name="employerCity"/>
             <parameter name="employerStateProvinceGeoId"/>
@@ -253,7 +253,7 @@
             <parameter name="employerAddress1">
                 <matches regexp="^[- #a-zA-Z0-9.',\/]+$" message="Please enter a valid street address using only letters, numbers, spaces, periods, commas, and -, /, ', or #."/>
             </parameter>
-            <parameter name="employeraddress2"/>
+            <parameter name="employerAddress2"/>
             <parameter name="employerPostalCode">
                 <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
             </parameter>
@@ -295,7 +295,7 @@
             <parameter name="employerAddress1">
                 <matches regexp="^[- #a-zA-Z0-9.',\/]+$" message="Please enter a valid street address using only letters, numbers, spaces, periods, commas, and -, /, ', or #."/>
             </parameter>
-            <parameter name="employeraddress2"/>
+            <parameter name="employerAddress2"/>
             <parameter name="employerPostalCode">
                 <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
             </parameter>
