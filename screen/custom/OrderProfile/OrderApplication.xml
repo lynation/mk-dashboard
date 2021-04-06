@@ -217,7 +217,7 @@
                     <set field="maritalStatusEnumId" from="partyDetail?.maritalStatusEnumId ?: null"/>
                     <set field="employmentStatusEnumId" from="partyDetail?.employmentStatusEnumId ?: null"/>
                     <set field="address1" from="postalAddress?.address1 ?: null"/>
-                    <set field="unitNumber" from="postalAddress?.unitNumber ?: null"/>
+                    <set field="address2" from="postalAddress?.address2 ?: null"/>
                     <set field="postalCode" from="postalAddress?.postalCode ?: null"/>
                     <set field="city" from="postalAddress?.city ?: null"/>
                     <set field="stateProvinceGeoId" from="postalAddress?.stateProvinceGeoId ?: null"/>

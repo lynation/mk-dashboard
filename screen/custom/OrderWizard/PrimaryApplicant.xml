@@ -84,7 +84,7 @@
             </service-call>
 
             <set field="address1" from="postalAddress?.address1 ?: ''"/>
-            <set field="unitNumber" from="postalAddress?.unitNumber ?: ''"/>
+            <set field="address2" from="postalAddress?.address2 ?: ''"/>
             <set field="postalCode" from="postalAddress?.postalCode ?: ''"/>
             <set field="city" from="postalAddress?.city ?: ''"/>
             <set field="stateProvinceGeoId" from="postalAddress?.stateProvinceGeoId ?: ''"/>
@@ -286,7 +286,7 @@
                         <text-line/>
                     </default-field>
                 </field>
-                <field name="unitNumber">
+                <field name="address2">
                     <default-field title="Apt / Unit # (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                         <text-line/>
                     </default-field>
@@ -425,7 +425,7 @@
                     </field-col-row>
                     <field-col-row>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
-                        <field-col xs="12" sm="5" md="3" lg="3"><field-ref name="unitNumber"/></field-col>
+                        <field-col xs="12" sm="5" md="3" lg="3"><field-ref name="address2"/></field-col>
                         <field-col xs="12" sm="5" md="3" lg="3"><field-ref name="postalCode"/></field-col>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
                     </field-col-row>
