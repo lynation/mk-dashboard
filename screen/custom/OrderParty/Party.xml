@@ -16,7 +16,7 @@
                     <service-call name="mkdecision.dashboard.OrderServices.archive#OrderParty" in-map="context"/>
                 </then>
                 <else>
-                    <service-call name="mkdecision.dashboard.OrderServices.store#Applicant" in-map="context"/>
+                    <service-call name="mkdecision.dashboard.OrderServices.store#Applicant" in-map="context" out-map="context"/>
                 </else>
             </if>
         </actions>

@@ -109,6 +109,7 @@
                 <econdition field-name="roleTypeId" value="CoApplicant"/>
                 <econdition field-name="roleTypeId" value="CcSpouseSeparate"/>
                 <econdition field-name="roleTypeId" value="NonBorrowerOwner"/>
+                <econdition field-name="roleTypeId" value="Archived"/>
             </econditions>
         </entity-find>
         <entity-find entity-name="mantle.request.requirement.RequirementOrderItem" list="requirementsList">
@@ -124,6 +125,7 @@
                 <econdition field-name="roleTypeId" operator="not-equals" value="CoApplicant"/>
                 <econdition field-name="roleTypeId" operator="not-equals" value="CcSpouseSeparate"/>
                 <econdition field-name="roleTypeId" operator="not-equals" value="NonBorrowerOwner"/>
+                <econdition field-name="roleTypeId" operator="not-equals" value="Archived"/>
             </econditions>
         </entity-find>
 
