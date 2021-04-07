@@ -157,32 +157,32 @@
                     <label text="${orderHeader.orderId} - ${orderStatus.description}" type="h4"/>
                 </row-col>
             </container-row>
-            <container-row>
-                <row-col lg="6" md="6" sm="6" xs="12">
+            <container id="OrderHeader" style="row q-px-xs">
+                <container style="col">
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Agent" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${productStore.storeName}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Agent" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${productStore.storeName}"/></row-col>
                     </container-row>
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Method" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${salesChannel?.description ?: '-'}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Method" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${salesChannel?.description ?: '-'}"/></row-col>
                     </container-row>
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Entered by" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${enteredBy.partyName ?: '-'}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Entered by" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${enteredBy.partyName ?: '-'}"/></row-col>
                     </container-row>
-                </row-col>
-                <row-col lg="6" md="6" sm="6" xs="12">
+                </container>
+                <container style="col">
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Entered on" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.entryDate, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Entered on" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.entryDate, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
                     </container-row>
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Last updated" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.lastUpdatedStamp, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Last updated" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.lastUpdatedStamp, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
                     </container-row>
-                </row-col>
-            </container-row>
+                </container>
+            </container>
         </container>
 
         <container style="h-separator q-my-md"/>
