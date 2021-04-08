@@ -2657,19 +2657,25 @@
                                 <text-line input-type="number" format="#.##" prefix="$"/>
                             </default-field>
                         </field>
-                        <field name="hoaFeeMonthly">
-                            <default-field title="HOA Fee Monthly">
-                                <text-line input-type="number" format="#.##" prefix="$"/>
+                        <field name="propertyHelperText">
+                            <default-field>
+                                <label text="Please enter monthly property expenses, input \$0.00 if not applicable." type="p"/>
+                                <label text="If paid annually, divide the amount by 12 and round to 2 decimal places." style="margin-b-1"/>
                             </default-field>
                         </field>
                         <field name="propertyTaxesMonthly">
                             <default-field title="Property Taxes Monthly">
-                                <text-line input-type="number" format="#.##" prefix="$"/>
+                                <text-line  format="#.##" prefix="$"/>
                             </default-field>
                         </field>
                         <field name="propertyInsuranceCostsMonthly">
                             <default-field title="Property Insurance Costs Monthly">
-                                <text-line input-type="number" format="#.##" prefix="$"/>
+                                <text-line format="#.##" prefix="$"/>
+                            </default-field>
+                        </field>
+                        <field name="hoaFeeMonthly">
+                            <default-field title="HOA Fee Monthly">
+                                <text-line format="#.##" prefix="$"/>
                             </default-field>
                         </field>
 
