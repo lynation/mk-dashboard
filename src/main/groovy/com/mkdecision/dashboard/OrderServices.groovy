@@ -835,6 +835,7 @@ class OrderServices {
                     .parameter("nickname", nickname)
                     .parameter("birthDate", birthDate)
                     .parameter("maritalStatusEnumId", maritalStatusEnumId)
+                    .parameter("residenceStatusEnumId", "RessOwn")
                     .parameter("roleTypeId", roleTypeId)
                     .call()
             partyId = (String) personResp.get("partyId")

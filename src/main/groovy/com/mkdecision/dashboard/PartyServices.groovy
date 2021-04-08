@@ -321,6 +321,7 @@ class PartyServices {
                 .parameter("nickname", nickname)
                 .parameter("birthDate", birthDate)
                 .parameter("maritalStatusEnumId", maritalStatusEnumId)
+                .parameter("residenceStatusEnumId", maritalStatusEnumId)
                 .call()
 
         // create social security number
@@ -1464,6 +1465,12 @@ class PartyServices {
                 .parameter("amount", mortgagePaymentMonthly)
                 .call()
 
+        // update person to show residence has mortgage
+        sf.sync().name("update#mantle.party.Person")
+            .parameter("partyId", partyId)
+            .parameter("residenceStatusEnumId", "RessMortgage")
+            .call()
+
 
         // return the output parameters
         Map<String, Object> outParams = new HashMap<>()
@@ -1573,6 +1580,21 @@ class PartyServices {
         sf.sync().name("delete#mantle.party.PartyRelationship")
                 .parameter("partyRelationshipId", partyRelationshipId)
                 .call()
+
+        // check if party has any mortgages
+        EntityList mortgageFinancialFlowList = ef.find("mk.close.FinancialFlow")
+            .condition("partyId", partyId)
+            .condition("entryTypeEnumId", "MkEntryExpense")
+            .condition("financialFlowTypeEnumId", "MkFinFlowMortgage")
+            .list()
+
+        // update person to show they own residence if they have no mortgages
+        if(mortgageFinancialFlowList.size() == 0) {
+            sf.sync().name("update#mantle.party.Person")
+                .parameter("partyId", partyId)
+                .parameter("residenceStatusEnumId", "RessOwn")
+                .call()
+        }
 
         // return the output parameters
         return new HashMap<>()
