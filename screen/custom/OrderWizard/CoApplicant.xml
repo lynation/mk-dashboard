@@ -295,7 +295,6 @@
                 </field>
                 <field name="backButtons" hide="partyId == null">
                     <default-field container-style="dark-link">
-                        <link url="coApplicantOption" text="Back" btn-type="default"/>
                         <submit text="Delete" confirmation="Are you sure you want to delete this party?"/>
                     </default-field>
                 </field>
