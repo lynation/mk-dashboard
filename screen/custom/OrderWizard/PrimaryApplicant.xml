@@ -69,7 +69,6 @@
             <set field="nickname" from="party?.nickname ?: ''"/>
             <set field="birthDate" from="ec.l10n.format(party?.birthDate, 'MM-dd-yyyy') ?: ''"/>
             <set field="maritalStatusEnumId" from="party?.maritalStatusEnumId ?: ''"/>
-            <set field="employmentStatusEnumId" from="party?.employmentStatusEnumId ?: ''"/>
 
             <service-call name="mkdecision.dashboard.PartyServices.get#SocialSecurityNumber" out-map="context">
                 <field-map field-name="partyId" from="partyId"/>
@@ -85,7 +84,7 @@
             </service-call>
 
             <set field="address1" from="postalAddress?.address1 ?: ''"/>
-            <set field="unitNumber" from="postalAddress?.unitNumber ?: ''"/>
+            <set field="address2" from="postalAddress?.address2 ?: ''"/>
             <set field="postalCode" from="postalAddress?.postalCode ?: ''"/>
             <set field="city" from="postalAddress?.city ?: ''"/>
             <set field="stateProvinceGeoId" from="postalAddress?.stateProvinceGeoId ?: ''"/>
@@ -99,6 +98,79 @@
 
             <set field="email" from="emailAddress"/>
             <set field="emailVerify" from="emailAddress"/>
+        </if>
+
+        <if condition="orderId != null &amp;&amp; orderPartSeqId != null">
+            <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
+            <entity-find-one entity-name="mantle.order.OrderPart" value-field="orderPart"/>
+            <set field="salesChannelEnumId" from="orderHeader?.salesChannelEnumId ?: ''"/>
+            <set field="productStoreId" from="orderHeader?.productStoreId ?: ''"/>
+
+            <entity-find entity-name="mantle.order.OrderPartParty" list="salesRepresentativeList">
+                <econdition field-name="orderId" from="orderId"/>
+                <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
+                <econdition field-name="roleTypeId" value="SalesRepresentative"/>
+                <order-by field-name="-lastUpdatedStamp"/>
+            </entity-find>
+            <set field="salesRepresentativeId" from="salesRepresentativeList?.getFirst()?.partyId ?: ''"/>
+
+            <entity-find entity-name="mantle.order.OrderItem" list="orderItemList">
+                <econdition field-name="orderId" from="orderId"/>
+                <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
+                <order-by field-name="-lastUpdatedStamp"/>
+            </entity-find>
+            <set field="orderItemSeqId" from="orderItemList?.getFirst()?.orderItemSeqId ?: ''"/>
+            <set field="productParameterSetId" from="orderItemList?.getFirst()?.productParameterSetId ?: ''"/>
+            <set field="productId" from="orderItemList?.getFirst()?.productId ?: ''"/>
+            <set field="netPurchaseAmount" from="orderItemList?.getFirst()?.unitAmount ?: ''"/>
+
+            <entity-find entity-name="mantle.product.ProductParameterValue" list="productCategoryParamList">
+                <econdition field-name="productParameterId" value="ProductCategory"/>
+                <econdition field-name="productParameterSetId" from="productParameterSetId"/>
+            </entity-find>
+            <set field="productCategoryId" from="productCategoryParamList?.getFirst()?.parameterValue ?: ''"/>
+
+            <entity-find entity-name="mantle.product.ProductParameterValue" list="totalPurchaseAmountParamList">
+                <econdition field-name="productParameterId" value="TotalPurchaseAmount"/>
+                <econdition field-name="productParameterSetId" from="productParameterSetId"/>
+            </entity-find>
+            <set field="totalPurchaseAmount" from="totalPurchaseAmountParamList?.getFirst()?.parameterValue ?: ''"/>
+
+            <entity-find entity-name="mantle.product.ProductParameterValue" list="downPaymentParamList">
+                <econdition field-name="productParameterId" value="DownPayment"/>
+                <econdition field-name="productParameterSetId" from="productParameterSetId"/>
+            </entity-find>
+            <set field="downPayment" from="downPaymentParamList?.getFirst()?.parameterValue ?: ''"/>
+
+            <entity-find entity-name="mantle.product.ProductParameterValue" list="loanFeeParamList">
+                <econdition field-name="productParameterId" value="LoanFee"/>
+                <econdition field-name="productParameterSetId" from="productParameterSetId"/>
+            </entity-find>
+            <set field="loanFee" from="loanFeeParamList?.getFirst()?.parameterValue ?: ''"/>
+
+            <entity-find entity-name="mantle.product.ProductParameterValue" list="financedAmountParamList">
+                <econdition field-name="productParameterId" value="FinancedAmount"/>
+                <econdition field-name="productParameterSetId" from="productParameterSetId"/>
+            </entity-find>
+            <set field="financedAmount" from="financedAmountParamList?.getFirst()?.parameterValue ?: ''"/>
+
+            <entity-find entity-name="mantle.product.ProductParameterValue" list="estimatedPaymentParamList">
+                <econdition field-name="productParameterId" value="EstimatedPayment"/>
+                <econdition field-name="productParameterSetId" from="productParameterSetId"/>
+            </entity-find>
+            <set field="estimatedPayment" from="estimatedPaymentParamList?.getFirst()?.parameterValue ?: ''"/>
+            <entity-find entity-name="mantle.order.OrderItemFormResponse" list="responseList">
+                <econdition field-name="orderId" from="orderId"/>
+                <econdition field-name="orderItemSeqId" from="orderItemSeqId"/>
+            </entity-find>
+            <set field="formResponseId" from="responseList?.getFirst()?.formResponseId ?: null"/>
+
+            <if condition="formResponseId != null">
+                <service-call name="org.moqui.impl.ScreenServices.get#FormResponse" out-map="formResponse">
+                    <field-map field-name="formResponseId" from="formResponseId"/>
+                </service-call>
+                <set field="responseMap" from="formResponse?.responseMap"/>
+            </if>
         </if>
     </actions>
 
@@ -202,18 +274,6 @@
                         </drop-down>
                     </default-field>
                 </field>
-                <field name="employmentStatusEnumId">
-                    <default-field title="Employment Status" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
-                        <drop-down required-manual-select="true">
-                            <entity-options text="${description}" key="${enumId}">
-                                <entity-find entity-name="moqui.basic.Enumeration">
-                                    <econdition field-name="enumTypeId" value="EmploymentStatus"/>
-                                    <order-by field-name="sequenceNum,description"/>
-                                </entity-find>
-                            </entity-options>
-                        </drop-down>
-                    </default-field>
-                </field>
 
                 <field name="addressHeader">
                     <default-field>
@@ -226,7 +286,7 @@
                         <text-line/>
                     </default-field>
                 </field>
-                <field name="unitNumber">
+                <field name="address2">
                     <default-field title="Apt / Unit # (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                         <text-line/>
                     </default-field>
@@ -296,12 +356,12 @@
                     </default-field>
                 </field>
                 <field name="email">
-                    <default-field title="Email Address" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
+                    <default-field title="Email Address (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                         <text-line input-type="email"/>
                     </default-field>
                 </field>
                 <field name="emailVerify">
-                    <default-field title="Verify Email Address" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
+                    <default-field title="Verify Email Address (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                         <text-line input-type="email"/>
                     </default-field>
                 </field>
@@ -354,11 +414,6 @@
                         <field-col xs="12" sm="10" md="6" lg="6"><field-ref name="maritalStatusEnumId"/></field-col>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
                     </field-col-row>
-                    <field-col-row>
-                        <field-col xs="0" sm="1" md="3" lg="3"/>
-                        <field-col xs="12" sm="10" md="6" lg="6"><field-ref name="employmentStatusEnumId"/></field-col>
-                        <field-col xs="0" sm="1" md="3" lg="3"/>
-                    </field-col-row>
 
                     <field-col-row>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
@@ -370,7 +425,7 @@
                     </field-col-row>
                     <field-col-row>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
-                        <field-col xs="12" sm="5" md="3" lg="3"><field-ref name="unitNumber"/></field-col>
+                        <field-col xs="12" sm="5" md="3" lg="3"><field-ref name="address2"/></field-col>
                         <field-col xs="12" sm="5" md="3" lg="3"><field-ref name="postalCode"/></field-col>
                         <field-col xs="0" sm="1" md="3" lg="3"/>
                     </field-col-row>

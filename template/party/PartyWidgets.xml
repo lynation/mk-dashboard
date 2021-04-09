@@ -38,11 +38,9 @@
                                 <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
                                 <set field="years" from="Math.floor(days / 365)" type="Integer"/>
                                 <set field="months" from="Math.floor(days / 30.4) - (years * 12)" type="Integer"/>
-                                <log level="warn" message=">> ${years}"/>
-                                <log level="warn" message=">> ${months}"/>
                                 <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                                 <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                                <set field="employerUnitNumber" from="postalAddressResp.postalAddress?.unitNumber"/>
+                                <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                                 <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                                 <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                                 <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -57,6 +55,7 @@
                                     <row-col xs="6" sm="6" md="6" lg="6" style="text-right">
                                         <section-include name="EditCurrentRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <section-include name="EditCurrentSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                        <section-include name="EditCurrentContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <link text="Remove" btn-type="danger" url="deleteEmployment" parameter-map="[orderId: orderId, partyId: partyId, partyRelationshipId: employmentRelation.partyRelationshipId]"/>
                                     </row-col>
                                 </container-row>
@@ -71,6 +70,9 @@
                 </container>
                 <container style="block margin-tb-1">
                     <section-include name="AddCurrentSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                </container>
+                <container style="block margin-tb-1">
+                    <section-include name="AddCurrentContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                 </container>
             </widgets>
         </section>
@@ -107,7 +109,7 @@
                                 <set field="toDate" from="ec.l10n.format(employmentRelation.thruDate, 'MM-dd-yyyy') ?: null"/>
                                 <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                                 <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                                <set field="employerUnitNumber" from="postalAddressResp.postalAddress?.unitNumber"/>
+                                <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                                 <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                                 <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                                 <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -136,6 +138,9 @@
                 </container>
                 <container style="block margin-tb-1">
                     <section-include name="AddPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                </container>
+                <container style="block margin-tb-1">
+                    <section-include name="AddPreviousContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                 </container>
             </widgets>
         </section>
@@ -320,10 +325,6 @@
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${maritalStatus?.description ?: '-'}"/></row-col>
                         </container-row>
                         <container-row>
-                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employment Status" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employmentStatus.description ?: '-'}"/></row-col>
-                        </container-row>
-                        <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Occupation" style="text-light-grey"/></row-col>
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${currentEmploymentRelationList.getFirst()?.relationshipName ?: '-'}"/></row-col>
                         </container-row>
@@ -426,6 +427,9 @@
                             <field-map field-name="partyRelationshipId" from="employmentRelation.partyRelationshipId"/>
                             <field-map field-name="partySettingTypeId" value="EmploymentStatus"/>
                         </entity-find-one>
+                        <entity-find-one entity-name="moqui.basic.Enumeration" value-field="employmentStatus">
+                            <field-map field-name="enumId" from="employmentStatusSetting?.settingValue"/>
+                        </entity-find-one>
                         <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                             <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
                             <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
@@ -438,7 +442,7 @@
                         <set field="employerClassificationId" from="partyClassList?.getFirst()?.partyClassificationId ?: null"/>
                         <set field="employerName" from="employmentRelation.organizationName"/>
                         <set field="jobTitle" from="employmentRelation.relationshipName"/>
-                        <set field="employmentStatusEnumId" from="employmentStatusSetting?.settingValue"/>
+                        <set field="employmentStatus" from="employmentStatus?.description"/>
                         <set field="monthlyIncome" from="monthlyIncomeFinFlowList?.getFirst()?.amount ?: null"/>
                         <set field="millis" from="Math.abs(employmentRelation.fromDate.getTime() - ec.user.nowTimestamp.getTime())"/>
                         <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
@@ -447,7 +451,7 @@
                         <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                         <set field="employerPostalAddress" from="postalAddressResp.postalAddressString"/>
                         <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                        <set field="employerUnitNumber" from="postalAddressResp.postalAddress?.unitNumber"/>
+                        <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                         <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                         <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                         <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -464,6 +468,10 @@
                                 </row-col>
                             </container-row>
                             <container style="q-pt-sm">
+                                <container-row>
+                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employment Status" style="text-light-grey"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employmentStatus ?: '-'}"/></row-col>
+                                </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Employer Name" style="text-light-grey"/></row-col>
                                     <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${employerName}"/></row-col>
@@ -561,7 +569,7 @@
                         <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                         <set field="employerPostalAddress" from="postalAddressResp.postalAddressString"/>
                         <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
-                        <set field="employerUnitNumber" from="postalAddressResp.postalAddress?.unitNumber"/>
+                        <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
                         <set field="employerPostalCode" from="postalAddressResp.postalAddress?.postalCode"/>
                         <set field="employerCity" from="postalAddressResp.postalAddress?.city"/>
                         <set field="employerStateProvinceGeoId" from="postalAddressResp.postalAddress?.stateProvinceGeoId"/>
@@ -646,16 +654,16 @@
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(acquireCost ?: 0, orderHeader.currencyUomId)}"/></row-col>
                         </container-row>
                         <container-row>
-                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="HOA Fee Monthly" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(hoaFeeMonthly ?: 0, orderHeader.currencyUomId)}"/></row-col>
-                        </container-row>
-                        <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Property Taxes Monthly" style="text-light-grey"/></row-col>
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(propertyTaxesMonthly ?: 0, orderHeader.currencyUomId)}"/></row-col>
                         </container-row>
                         <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Property Insurance Costs Monthly" style="text-light-grey"/></row-col>
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(propertyInsuranceCostsMonthly ?: 0, orderHeader.currencyUomId)}"/></row-col>
+                        </container-row>
+                        <container-row>
+                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="HOA Fee Monthly" style="text-light-grey"/></row-col>
+                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(hoaFeeMonthly ?: 0, orderHeader.currencyUomId)}"/></row-col>
                         </container-row>
                     </container>
                 </container>

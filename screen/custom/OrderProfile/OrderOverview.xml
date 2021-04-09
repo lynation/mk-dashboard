@@ -109,6 +109,7 @@
                 <econdition field-name="roleTypeId" value="CoApplicant"/>
                 <econdition field-name="roleTypeId" value="CcSpouseSeparate"/>
                 <econdition field-name="roleTypeId" value="NonBorrowerOwner"/>
+                <econdition field-name="roleTypeId" value="Archived"/>
             </econditions>
         </entity-find>
         <entity-find entity-name="mantle.request.requirement.RequirementOrderItem" list="requirementsList">
@@ -124,6 +125,7 @@
                 <econdition field-name="roleTypeId" operator="not-equals" value="CoApplicant"/>
                 <econdition field-name="roleTypeId" operator="not-equals" value="CcSpouseSeparate"/>
                 <econdition field-name="roleTypeId" operator="not-equals" value="NonBorrowerOwner"/>
+                <econdition field-name="roleTypeId" operator="not-equals" value="Archived"/>
             </econditions>
         </entity-find>
 
@@ -146,14 +148,6 @@
                 </entity-find>
             </else>
         </if>
-
-        <entity-find-count entity-name="moqui.basic.StatusFlowItem" count-field="editableOrderStatusCount">
-            <econditions>
-                <econdition field-name="statusFlowId" value="MkDashboardEditableOrderStatuses"/>
-                <econdition field-name="statusId" from="orderHeader.statusId"/>
-            </econditions>
-        </entity-find-count>
-        <set field="orderEditable" from="editableOrderStatusCount > 0 &amp;&amp; (orderHeader.lockUserId == null || orderHeader.lockUserId == ec.user.userId)"/>
     </actions>
 
     <widgets>
@@ -163,32 +157,32 @@
                     <label text="${orderHeader.orderId} - ${orderStatus.description}" type="h4"/>
                 </row-col>
             </container-row>
-            <container-row>
-                <row-col lg="6" md="6" sm="6" xs="12">
+            <container id="OrderHeader" style="row q-px-xs">
+                <container style="col">
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Agent" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${productStore.storeName}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Agent" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${productStore.storeName}"/></row-col>
                     </container-row>
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Method" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${salesChannel?.description ?: '-'}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Method" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${salesChannel?.description ?: '-'}"/></row-col>
                     </container-row>
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Entered by" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${enteredBy.partyName ?: '-'}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Entered by" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${enteredBy.partyName ?: '-'}"/></row-col>
                     </container-row>
-                </row-col>
-                <row-col lg="6" md="6" sm="6" xs="12">
+                </container>
+                <container style="col">
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Entered on" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.entryDate, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Entered on" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.entryDate, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
                     </container-row>
                     <container-row>
-                        <row-col lg="3" md="3" sm="4" xs="12"><label text="Last updated" style="text-light-grey"/></row-col>
-                        <row-col lg="9" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.lastUpdatedStamp, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
+                        <row-col lg="2" md="3" sm="4" xs="12"><label text="Last updated" style="text-light-grey"/></row-col>
+                        <row-col lg="10" md="9" sm="8" xs="12"><label text="${ec.l10n.format(orderHeader.lastUpdatedStamp, 'MM/dd/yyyy h:mm:ss a')}"/></row-col>
                     </container-row>
-                </row-col>
-            </container-row>
+                </container>
+            </container>
         </container>
 
         <container style="h-separator q-my-md"/>
@@ -387,12 +381,11 @@
             <form-list name="DecisionList" list="decisionList" list-entry="decision">
                 <row-actions>
                     <entity-find-one entity-name="moqui.basic.StatusItem" value-field="decisionStatus">
-                        <field-map field-name="statusId" from="decision.statusId"/>
+                        <field-map field-name="statusId" from="decision?.statusId"/>
                     </entity-find-one>
                     <entity-find-one entity-name="mantle.party.PartyDetail" value-field="decisionBy">
-                        <field-map field-name="partyId" from="decision.decisionByPartyId"/>
+                        <field-map field-name="partyId" from="decision?.decisionByPartyId"/>
                     </entity-find-one>
-
                     <entity-find entity-name="mantle.order.OrderDecisionReason" list="orderDecisionReasons">
                         <econdition field-name="orderId" from="decision?.orderId" />
                         <econdition field-name="decisionDate" from="decision?.decisionDate" />
@@ -401,20 +394,23 @@
                 </row-actions>
                 <field name="description">
                     <default-field>
-                        <container-dialog id="DecisionReasonsDialog" button-text="${decisionStatus.description}">
-                            <form-list name="DecisionReasonsForm" list="orderDecisionReasons" list-entry="decisionReason">
-                                <row-actions>
-                                    <entity-find-one entity-name="moqui.basic.Enumeration" value-field="decisionEnum">
-                                        <field-map field-name="enumId" from="decisionReason.decisionReasonEnumId" />
-                                    </entity-find-one>
-                                </row-actions>
+                        <container>
+                            <label text="${decisionStatus.description}" style="text-bold"/>
+                        </container>
+                        <section-iterate name="DecisionReasonsForm" list="orderDecisionReasons" entry="decisionReason">
+                            <actions>
+                                <entity-find-one entity-name="moqui.basic.Enumeration" value-field="decisionEnum">
+                                    <field-map field-name="enumId" from="decisionReason?.decisionReasonEnumId" />
+                                </entity-find-one>
+                                <set field="decisionReasonNum" from="decisionReason?.sequenceNum"/>
+                            </actions>
+                            <widgets>
                                 <field name="decisionReasons">
-                                    <default-field>
-                                        <display text="${decisionEnum?.description}" />
-                                    </default-field>
+                                    <label text="Reason ${decisionReasonNum}:" style="text-light-grey"/>
+                                    <label text="${decisionEnum?.description} &#13;&#10;"/>
                                 </field>
-                            </form-list>
-                        </container-dialog>
+                            </widgets>
+                        </section-iterate>
                     </default-field>
                 </field>
                 <field name="decisionBy">
@@ -629,7 +625,7 @@
                         <container>
                             <label text="${ec.l10n.format(requirementId.requirementStartDate, 'MM/dd/yyyy h:mm:ss a')} - ${partyName?: '-'}" style="text-bold"/>
                         </container>
-                        <label text="${enumId?.description}"/>
+                        <label text="${requirementId?.description ?: enumId?.description}"/>
                     </default-field>
                 </field>
                 <field name="status">
@@ -699,13 +695,14 @@
             <section-iterate name="NoteIterator" list="noteList" entry="note">
                 <actions>
                     <entity-find-related-one value-field="note" relationship-name="moqui.security.UserAccount" to-value-field="userAccount"/>
+                    <set field="userFullName" from="userAccount.userId == '_NA_' ? 'System' : userAccount.userFullName"/>
                 </actions>
                 <widgets>
                     <container-box>
                         <box-header>
                             <label text="&amp;nbsp;" style="fa fa-lock" encode="false" condition="note.internalNote == 'Y'"/>
                             <label text="&amp;nbsp;" style="fa fa-unlock" encode="false" condition="note.internalNote != 'Y'"/>
-                            <label text="${ec.l10n.format(note.noteDate, 'MM/dd/yyyy h:mm:ss a')} - ${userAccount.userFullName}" style="text-bold"/>
+                            <label text="${ec.l10n.format(note.noteDate, 'MM/dd/yyyy h:mm:ss a')} - ${userFullName}" style="text-bold"/>
                         </box-header>
                         <box-body><label text="${note.noteText}"/></box-body>
                     </container-box>

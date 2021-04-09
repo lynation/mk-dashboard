@@ -6,6 +6,7 @@
 
     <parameter name="orderId" required="true"/>
 
+    <transition-include name="viewAgreement" location="component://mk-dashboard/screen/custom/OrderProfile/OrderAgreement.xml"/>
     <transition name="downloadPartyContent" read-only="true">
         <parameter name="contentId"/>
         <actions>
@@ -26,6 +27,13 @@
         </actions>
         <default-response type="none"/>
     </transition>
+    <transition name="downloadPdfAgreement" read-only="true">
+        <parameter name="agreementContentLocation"/>
+        <actions>
+            <script>ec.web.sendResourceResponse(agreementContentLocation)</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
 
     <actions>
         <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
@@ -42,7 +50,7 @@
         <entity-find entity-name="mantle.party.agreement.Agreement" list="partyAgreementList">
             <econdition field-name="otherPartyId" operator="in" from="partyIdList"/>
         </entity-find>
-        <set field="agreementsList" from="(partyAgreementList + agreementList)"/>
+        <set field="agreementsList" from="(partyAgreementList + agreementList).orderByFields(['-agreementDate'])"/>
 
         <entity-find-count entity-name="mantle.product.store.ProductStoreParty" count-field="financeManagerCount">
             <econdition field-name="productStoreId" from="orderHeader.productStoreId"/>
@@ -213,24 +221,34 @@
                             <field-map field-name="partyId" from="agreementParty?.partyId"/>
                         </service-call>
                     </if>
+                    <service-call name="mkdecision.dashboard.PartyServices.get#PartyName" out-map="orgParty">
+                        <field-map field-name="partyId" from="agreement?.organizationPartyId"/>
+                    </service-call>
 
                     <entity-find-one entity-name="mantle.party.agreement.AgreementContent" value-field="agreementContent">
                         <field-map field-name="agreementId" from="agreement.agreementId"/>
                     </entity-find-one>
+                    <set field="contentLocation" from="agreementContent?.contentLocation"/>
 
-                    <set field="resourceRef" from="ec.resource.getLocationReference(agreementContent?.contentLocation)?.getFileName()"/>
+                    <if condition="ec.resource.getContentType(contentLocation) == 'application/pdf'">
+                        <set field="isPdf" value="true" type="Boolean"/>
+                        <set field="resourceRef" from="ec.resource.getLocationReference(contentLocation)?.getFileName()"/>
 
-                    <if condition="resourceRef == null">
-                        <service-call name="mkdecision.dashboard.PartyServices.get#PartyName" out-map="orgParty">
-                            <field-map field-name="partyId" from="agreement?.organizationPartyId"/>
-                        </service-call>
-                        <set field="resourceRef" from="orgParty?.partyName"/>
+                        <!--If an Agreement is a HTML type the Content Location for it would be null-->
+                        <else-if condition="contentLocation == null">
+                            <set field="resourceRef" from="orgParty?.partyName"/>
+                            <set field="isPdf" value="false" type="Boolean"/>
+                        </else-if>
                     </if>
+
                     <set field="contentDate" from="agreement?.agreementDate"/>
                 </row-actions>
                 <field name="description">
-                    <default-field>
-                        <display text="${contentType?.description ?: '-'}"/>
+                    <conditional-field condition="isPdf">
+                        <link url="downloadPdfAgreement" text="${contentType?.description}" parameter-map="[agreementContentLocation: contentLocation]" link-type="anchor"/>
+                    </conditional-field>
+                    <default-field container-style="">
+                        <link url="viewAgreement" target-window="_blank" text="${contentType?.description}" parameter-map="[agreementId: agreement.agreementId]" link-type="anchor" />
                     </default-field>
                 </field>
                 <field name="party">
@@ -267,7 +285,7 @@
                     </column>
                 </columns>
             </form-list>
-            <section name="EmptyContentList" condition="contentList == null || agreementsList.isEmpty()">
+            <section name="EmptyContentList" condition="contentList == null &amp;&amp; agreementsList.isEmpty()">
                 <widgets>
                     <container style="padding-all-05 text-center">
                         <label text="No agreements have been added yet" style="text-grey"/>
@@ -284,8 +302,11 @@
             </container>
             <form-list name="FileList" list="fileList" list-entry="content">
                 <field name="contentType">
-                    <default-field title="Type">
-                        <display/>
+                    <conditional-field condition="contentOrigin == 'Order'">
+                        <link url="downloadOrderContent" text="${contentType}" parameter-map="[contentId: contentId]" link-type="anchor"/>
+                    </conditional-field>
+                    <default-field>
+                        <link url="downloadPartyContent" text="${contentType}" parameter-map="[contentId: contentId]" link-type="anchor"/>
                     </default-field>
                 </field>
                 <field name="partyName">
@@ -294,11 +315,8 @@
                     </default-field>
                 </field>
                 <field name="source">
-                    <conditional-field condition="contentOrigin == 'Order'">
-                        <link url="downloadOrderContent" text="${source}" parameter-map="[contentId: contentId]" link-type="anchor"/>
-                    </conditional-field>
                     <default-field>
-                        <link url="downloadPartyContent" text="${source}" parameter-map="[contentId: contentId]" link-type="anchor"/>
+                        <display text="${source}" />
                     </default-field>
                 </field>
                 <field name="performedBy">

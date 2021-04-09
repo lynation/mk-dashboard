@@ -45,6 +45,33 @@
         padding: 8px 16px !important;
     }
 }
+@media screen and (min-width: 600px) {
+    #OrderHeader .col { width: 45%; flex: none; }
+    #OrderHeader .col:last-child { width: auto; flex: auto; }
+    #ItemList_table .th { width: 22.5%;; }
+    #ItemList_table .th:last-child { width: auto; }
+    #DecisionList_table .th { width: 22.5%; }
+    #DecisionList_table .th:last-child { width: auto; }
+    #InternalList_table .th { width: 22.5%; }
+    #InternalList_table .th:last-child { width: auto; }
+    #PartyList_table .th { width: 22.5%; }
+    #PartyList_table .th:last-child { width: auto; }
+    #RequirementList_table .th { width: 67.5%; }
+    #RequirementList_table .th:last-child { width: auto; }
+}
+
+@media screen and (max-width: 599px) {
+    #ItemList_table .th { width: 45%; }
+    #ItemList_table .th:last-child { width: auto; }
+    #DecisionList_table .th { width: 45%; }
+    #DecisionList_table .th:last-child { width: auto; }
+    #InternalList_table .th { width: 45%; }
+    #InternalList_table .th:last-child { width: auto; }
+    #PartyList_table .th { width: 45%; }
+    #PartyList_table .th:last-child { width: auto; }
+    #RequirementList_table .th { width: 45%; }
+    #RequirementList_table .th:last-child { width: auto; }
+}
 
 /* Quasar hacks */
 .nested-form-field .q-ma-sm { margin: 8px 0px !important; }

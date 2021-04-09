@@ -587,7 +587,7 @@ class OrderServices {
         String suffix = (String) cs.getOrDefault("suffix", null)
         String nickname = (String) cs.getOrDefault("nickname", null)
         String address1 = (String) cs.getOrDefault("address1", null)
-        String unitNumber = (String) cs.getOrDefault("unitNumber", null)
+        String address2 = (String) cs.getOrDefault("address2", null)
         String postalCode = (String) cs.getOrDefault("postalCode", null)
         String city = (String) cs.getOrDefault("city", null)
         String stateProvinceGeoId = (String) cs.getOrDefault("stateProvinceGeoId", null)
@@ -596,7 +596,6 @@ class OrderServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
         String contactNumber = (String) cs.getOrDefault("contactNumber", null)
         String contactMechPurposeId = (String) cs.getOrDefault("contactMechPurposeId", null)
         String email = (String) cs.getOrDefault("email", null)
@@ -666,12 +665,6 @@ class OrderServices {
             return
         }
 
-        // validate employment status
-        if (StringUtils.isBlank(employmentStatusEnumId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_STATUS"))
-            return
-        }
-
         // validate contact number
         if (StringUtils.isBlank(contactNumber)) {
             mf.addError(lf.localize("DASHBOARD_INVALID_PHONE_NUMBER"))
@@ -685,10 +678,10 @@ class OrderServices {
         }
 
         // validate email address
-        if (StringUtils.isBlank(email)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMAIL"))
-        } else if (!StringUtils.equals(email, emailVerify)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMAIL_VERIFY"))
+        if (StringUtils.isNotBlank(email) || StringUtils.isNotBlank(emailVerify)) {
+            if (!StringUtils.equals(email, emailVerify)) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_EMAIL_VERIFY"))
+            }
         }
     }
 
@@ -712,7 +705,7 @@ class OrderServices {
         String suffix = (String) cs.getOrDefault("suffix", null)
         String nickname = (String) cs.getOrDefault("nickname", null)
         String address1 = (String) cs.getOrDefault("address1", null)
-        String unitNumber = (String) cs.getOrDefault("unitNumber", null)
+        String address2 = (String) cs.getOrDefault("address2", null)
         String postalCode = (String) cs.getOrDefault("postalCode", null)
         String city = (String) cs.getOrDefault("city", null)
         String stateProvinceGeoId = (String) cs.getOrDefault("stateProvinceGeoId", null)
@@ -721,7 +714,6 @@ class OrderServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
         String contactNumber = (String) cs.getOrDefault("contactNumber", null)
         String contactMechPurposeId = (String) cs.getOrDefault("contactMechPurposeId", null)
         String email = (String) cs.getOrDefault("email", null)
@@ -753,7 +745,6 @@ class OrderServices {
                     .parameter("nickname", nickname)
                     .parameter("birthDate", birthDate)
                     .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                    .parameter("employmentStatusEnumId", employmentStatusEnumId)
                     .call()
 
             // update party role
@@ -775,7 +766,7 @@ class OrderServices {
             sf.sync().name("update#mantle.party.contact.PostalAddress")
                     .parameter("contactMechId", postalAddress.getString("contactMechId"))
                     .parameter("address1", address1)
-                    .parameter("unitNumber", unitNumber)
+                    .parameter("address2", address2)
                     .parameter("city", city)
                     .parameter("postalCode", postalCode)
                     .parameter("stateProvinceGeoId", stateProvinceGeoId)
@@ -820,10 +811,18 @@ class OrderServices {
                     .conditionDate("fromDate", "thruDate", uf.getNowTimestamp())
                     .list()
                     .getFirst()
-            sf.sync().name("update#mantle.party.contact.ContactMech")
-                    .parameter("contactMechId", info.getString("contactMechId"))
-                    .parameter("infoString", email)
-                    .call()
+            if (info == null) {
+                sf.sync().name("mantle.party.ContactServices.create#EmailAddress")
+                        .parameter("partyId", partyId)
+                        .parameter("emailAddress", email)
+                        .parameter("contactMechPurposeId", "EmailPrimary")
+                        .call()
+            } else {
+                sf.sync().name("update#mantle.party.contact.ContactMech")
+                        .parameter("contactMechId", info.getString("contactMechId"))
+                        .parameter("infoString", email)
+                        .call()
+            }
         } else {
 
             // create person
@@ -836,7 +835,6 @@ class OrderServices {
                     .parameter("nickname", nickname)
                     .parameter("birthDate", birthDate)
                     .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                    .parameter("employmentStatusEnumId", employmentStatusEnumId)
                     .parameter("roleTypeId", roleTypeId)
                     .call()
             partyId = (String) personResp.get("partyId")
@@ -862,7 +860,7 @@ class OrderServices {
             sf.sync().name("mantle.party.ContactServices.create#PostalAddress")
                     .parameter("partyId", partyId)
                     .parameter("address1", address1)
-                    .parameter("unitNumber", unitNumber)
+                    .parameter("address2", address2)
                     .parameter("city", city)
                     .parameter("postalCode", postalCode)
                     .parameter("stateProvinceGeoId", stateProvinceGeoId)
@@ -878,11 +876,13 @@ class OrderServices {
                     .call()
 
             // create email address
-            sf.sync().name("mantle.party.ContactServices.create#EmailAddress")
-                    .parameter("partyId", partyId)
-                    .parameter("emailAddress", email)
-                    .parameter("contactMechPurposeId", "EmailPrimary")
-                    .call()
+            if (StringUtils.isNotBlank(email)) {
+                sf.sync().name("mantle.party.ContactServices.create#EmailAddress")
+                        .parameter("partyId", partyId)
+                        .parameter("emailAddress", email)
+                        .parameter("contactMechPurposeId", "EmailPrimary")
+                        .call()
+            }
         }
 
         // create social security number

@@ -142,10 +142,12 @@ class PartyServices {
         ArrayList<String> addressParts = new ArrayList<>()
         if (postalAddress != null) {
             String address1 = postalAddress.getString("address1")
+            String address2 = postalAddress.getString("address2")
             String city = postalAddress.getString("city")
             String stateGeoCodeAlpha2 = postalAddress.getString("stateGeoCodeAlpha2")
             String postalCode = postalAddress.getString("postalCode")
             if (StringUtils.isNotBlank(address1)) addressParts.add(address1)
+            if (StringUtils.isNotBlank(address2)) addressParts.add(address2)
             if (StringUtils.isNotBlank(city)) addressParts.add(city)
             if (StringUtils.isNotBlank(stateGeoCodeAlpha2) && StringUtils.isNotBlank(postalCode)) addressParts.add(String.format("%s %s", stateGeoCodeAlpha2, postalCode))
         }
@@ -244,7 +246,6 @@ class PartyServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
 
         // validate first name
         if (StringUtils.isBlank(firstName)) {
@@ -280,10 +281,6 @@ class PartyServices {
             return
         }
 
-        // validate employment status
-        if (StringUtils.isBlank(employmentStatusEnumId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_STATUS"))
-        }
     }
 
     static Map<String, Object> updatePerson(ExecutionContext ec) {
@@ -305,7 +302,6 @@ class PartyServices {
         String socialSecurityNumber = (String) cs.getOrDefault("socialSecurityNumber", null)
         Date birthDate = (Date) cs.getOrDefault("birthDate", null)
         String maritalStatusEnumId = (String) cs.getOrDefault("maritalStatusEnumId", null)
-        String employmentStatusEnumId = (String) cs.getOrDefault("employmentStatusEnumId", null)
 
         // validate fields
         sf.sync().name("mkdecision.dashboard.PartyServices.validate#PersonFields")
@@ -325,7 +321,6 @@ class PartyServices {
                 .parameter("nickname", nickname)
                 .parameter("birthDate", birthDate)
                 .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                .parameter("employmentStatusEnumId", employmentStatusEnumId)
                 .call()
 
         // create social security number
@@ -355,7 +350,7 @@ class PartyServices {
         // get the parameters
         String partyId = (String) cs.getOrDefault("partyId", null)
         String address1 = (String) cs.getOrDefault("address1", null)
-        String unitNumber = (String) cs.getOrDefault("unitNumber", null)
+        String address2 = (String) cs.getOrDefault("address2", null)
         String postalCode = (String) cs.getOrDefault("postalCode", null)
         String city = (String) cs.getOrDefault("city", null)
         String stateProvinceGeoId = (String) cs.getOrDefault("stateProvinceGeoId", null)
@@ -409,10 +404,10 @@ class PartyServices {
         }
 
         // validate email address
-        if (StringUtils.isBlank(email)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMAIL"))
-        } else if (!StringUtils.equals(email, emailVerify)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMAIL_VERIFY"))
+        if (StringUtils.isNotBlank(email) || StringUtils.isNotBlank(emailVerify)) {
+            if (!StringUtils.equals(email, emailVerify)) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_EMAIL_VERIFY"))
+            }
         }
     }
 
@@ -428,7 +423,7 @@ class PartyServices {
         // get the parameters
         String partyId = (String) cs.getOrDefault("partyId", null)
         String address1 = (String) cs.getOrDefault("address1", null)
-        String unitNumber = (String) cs.getOrDefault("unitNumber", null)
+        String address2 = (String) cs.getOrDefault("address2", null)
         String postalCode = (String) cs.getOrDefault("postalCode", null)
         String city = (String) cs.getOrDefault("city", null)
         String stateProvinceGeoId = (String) cs.getOrDefault("stateProvinceGeoId", null)
@@ -461,7 +456,7 @@ class PartyServices {
         sf.sync().name("update#mantle.party.contact.PostalAddress")
                 .parameter("contactMechId", postalAddress.getString("contactMechId"))
                 .parameter("address1", address1)
-                .parameter("unitNumber", unitNumber)
+                .parameter("address2", address2)
                 .parameter("city", city)
                 .parameter("postalCode", postalCode)
                 .parameter("stateProvinceGeoId", stateProvinceGeoId)
@@ -506,10 +501,19 @@ class PartyServices {
                 .conditionDate("fromDate", "thruDate", uf.getNowTimestamp())
                 .list()
                 .getFirst()
-        sf.sync().name("update#mantle.party.contact.ContactMech")
-                .parameter("contactMechId", info.getString("contactMechId"))
-                .parameter("infoString", email)
-                .call()
+        if (info == null) {
+            sf.sync().name("mantle.party.ContactServices.create#EmailAddress")
+                    .parameter("partyId", partyId)
+                    .parameter("emailAddress", email)
+                    .parameter("contactMechPurposeId", "EmailPrimary")
+                    .call()
+        } else {
+            sf.sync().name("update#mantle.party.contact.ContactMech")
+                    .parameter("contactMechId", info.getString("contactMechId"))
+                    .parameter("infoString", email)
+                    .call()
+        }
+
 
         // return the output parameters
         Map<String, Object> outParams = new HashMap<>()
@@ -698,7 +702,7 @@ class PartyServices {
         Date toDate = (Date) cs.getOrDefault("toDate", null)
         BigDecimal monthlyIncome = (BigDecimal) cs.getOrDefault("monthlyIncome", null)
         String employerAddress1 = (String) cs.getOrDefault("employerAddress1", null)
-        String employerUnitNumber = (String) cs.getOrDefault("employerUnitNumber", null)
+        String employerAddress2 = (String) cs.getOrDefault("employerAddress2", null)
         String employerPostalCode = (String) cs.getOrDefault("employerPostalCode", null)
         String employerCity = (String) cs.getOrDefault("employerCity", null)
         String employerStateProvinceGeoId = (String) cs.getOrDefault("employerStateProvinceGeoId", null)
@@ -716,7 +720,7 @@ class PartyServices {
                 mf.addError(lf.localize("DASHBOARD_INVALID_JOB_TITLE"))
                 return
             }
-        } else if (StringUtils.equals(employmentStatusEnumId, "EmpsContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
+        } else if (StringUtils.equals(employmentStatusEnumId, "EmpsIndependentContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
             if (StringUtils.isBlank(employerClassificationId)) {
                 mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYER_CLASS"))
                 return
@@ -777,7 +781,7 @@ class PartyServices {
         Date toDate = (Date) cs.getOrDefault("toDate", null)
         BigDecimal monthlyIncome = (BigDecimal) cs.getOrDefault("monthlyIncome", null)
         String employerAddress1 = (String) cs.getOrDefault("employerAddress1", null)
-        String employerUnitNumber = (String) cs.getOrDefault("employerUnitNumber", null)
+        String employerAddress2 = (String) cs.getOrDefault("employerAddress2", null)
         String employerPostalCode = (String) cs.getOrDefault("employerPostalCode", null)
         String employerCity = (String) cs.getOrDefault("employerCity", null)
         String employerStateProvinceGeoId = (String) cs.getOrDefault("employerStateProvinceGeoId", null)
@@ -807,11 +811,11 @@ class PartyServices {
         String employerPartyId = (String) employerResp.get("partyId")
 
         // create employer classification
-        if (StringUtils.equals(employmentStatusEnumId, "EmpsContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
+        if (StringUtils.equals(employmentStatusEnumId, "EmpsIndependentContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
             sf.sync().name("create#mantle.party.PartyClassificationAppl")
                     .parameter("partyId", employerPartyId)
                     .parameter("partyClassificationId", employerClassificationId)
-                    .parameter("fromDate", fromDate.getTime())
+                    .parameter("fromDate", fromDate)
                     .call()
         }
 
@@ -829,7 +833,7 @@ class PartyServices {
             sf.sync().name("mantle.party.ContactServices.create#PostalAddress")
                     .parameter("partyId", employerPartyId)
                     .parameter("address1", employerAddress1)
-                    .parameter("unitNumber", employerUnitNumber)
+                    .parameter("address2", employerAddress2)
                     .parameter("city", employerCity)
                     .parameter("postalCode", employerPostalCode)
                     .parameter("stateProvinceGeoId", employerStateProvinceGeoId)
@@ -900,7 +904,7 @@ class PartyServices {
         Date toDate = (Date) cs.getOrDefault("toDate", null)
         BigDecimal monthlyIncome = (BigDecimal) cs.getOrDefault("monthlyIncome", null)
         String employerAddress1 = (String) cs.getOrDefault("employerAddress1", null)
-        String employerUnitNumber = (String) cs.getOrDefault("employerUnitNumber", null)
+        String employerAddress2 = (String) cs.getOrDefault("employerAddress2", null)
         String employerPostalCode = (String) cs.getOrDefault("employerPostalCode", null)
         String employerCity = (String) cs.getOrDefault("employerCity", null)
         String employerStateProvinceGeoId = (String) cs.getOrDefault("employerStateProvinceGeoId", null)
@@ -938,7 +942,7 @@ class PartyServices {
                 .call()
 
         // update employer classification
-        if (StringUtils.equals(employmentStatusEnumId, "EmpsContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
+        if (StringUtils.equals(employmentStatusEnumId, "EmpsIndependentContractor") || StringUtils.equals(employmentStatusEnumId, "EmpsSelf")) {
             EntityList partyClasses = ef.find("mantle.party.PartyClassificationAppl")
                     .condition("partyId", employerPartyId)
                     .conditionDate("fromDate", "thruDate", uf.getNowTimestamp())
@@ -952,7 +956,7 @@ class PartyServices {
             sf.sync().name("create#mantle.party.PartyClassificationAppl")
                     .parameter("partyId", employerPartyId)
                     .parameter("partyClassificationId", employerClassificationId)
-                    .parameter("fromDate", fromDate.getTime())
+                    .parameter("fromDate", fromDate)
                     .call()
         }
 
@@ -992,7 +996,7 @@ class PartyServices {
             sf.sync().name("mantle.party.ContactServices.create#PostalAddress")
                     .parameter("partyId", employerPartyId)
                     .parameter("address1", employerAddress1)
-                    .parameter("unitNumber", employerUnitNumber)
+                    .parameter("address2", employerAddress2)
                     .parameter("city", employerCity)
                     .parameter("postalCode", employerPostalCode)
                     .parameter("stateProvinceGeoId", employerStateProvinceGeoId)
@@ -1157,7 +1161,7 @@ class PartyServices {
                 .parameter("financialFlowTypeEnumId", financialFlowTypeEnumId)
                 .parameter("partyId", partyId)
                 .parameter("amount", amount)
-                .parameter("fromDate", incomeStartDate.getTime())
+                .parameter("fromDate", incomeStartDate)
                 .call()
         String financialFlowId = (String) finFlowResp.get("financialFlowId")
 
@@ -1211,7 +1215,7 @@ class PartyServices {
                 .parameter("financialFlowId", financialFlowId)
                 .parameter("financialFlowTypeEnumId", financialFlowTypeEnumId)
                 .parameter("amount", amount)
-                .parameter("fromDate", incomeStartDate.getTime())
+                .parameter("fromDate", incomeStartDate)
                 .call()
 
         // return the output parameters

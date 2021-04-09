@@ -38,7 +38,6 @@
             <parameter name="socialSecurityNumber"/>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy"/>
             <parameter name="maritalStatusEnumId"/>
-            <parameter name="employmentStatusEnumId"/>
         </in-parameters>
     </service>
     <service verb="update" noun="Person" type="java" location="com.mkdecision.dashboard.PartyServices" method="updatePerson">
@@ -60,7 +59,6 @@
             </parameter>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy" required="true"/>
             <parameter name="maritalStatusEnumId" required="true"/>
-            <parameter name="employmentStatusEnumId" required="true"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
@@ -72,7 +70,7 @@
         <in-parameters>
             <parameter name="partyId"/>
             <parameter name="address1"/>
-            <parameter name="unitNumber"/>
+            <parameter name="address2"/>
             <parameter name="postalCode"/>
             <parameter name="city"/>
             <parameter name="stateProvinceGeoId"/>
@@ -90,7 +88,7 @@
             <parameter name="address1" required="true">
                 <matches regexp="^[- #a-zA-Z0-9.',\/]+$" message="Please enter a valid street address using only letters, numbers, spaces, periods, commas, and -, /, ', or #."/>
             </parameter>
-            <parameter name="unitNumber"/>
+            <parameter name="address2"/>
             <parameter name="postalCode" required="true">
                 <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
             </parameter>
@@ -108,10 +106,10 @@
                 <number-range min="0" max="11" max-include-equals="true" message="Please enter a number between 0 and 11."/>
             </parameter>
             <parameter name="contactMechPurposeId"/>
-            <parameter name="email" required="true">
+            <parameter name="email">
                 <text-email/>
             </parameter>
-            <parameter name="emailVerify" required="true">
+            <parameter name="emailVerify">
                 <text-email/>
             </parameter>
         </in-parameters>
@@ -224,7 +222,7 @@
             <parameter name="toDate" type="Date" format="MM-dd-yyyy"/>
             <parameter name="monthlyIncome" type="BigDecimal"/>
             <parameter name="employerAddress1"/>
-            <parameter name="employerUnitNumber"/>
+            <parameter name="employerAddress2"/>
             <parameter name="employerPostalCode"/>
             <parameter name="employerCity"/>
             <parameter name="employerStateProvinceGeoId"/>
@@ -255,7 +253,7 @@
             <parameter name="employerAddress1">
                 <matches regexp="^[- #a-zA-Z0-9.',\/]+$" message="Please enter a valid street address using only letters, numbers, spaces, periods, commas, and -, /, ', or #."/>
             </parameter>
-            <parameter name="employerUnitNumber"/>
+            <parameter name="employerAddress2"/>
             <parameter name="employerPostalCode">
                 <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
             </parameter>
@@ -297,7 +295,7 @@
             <parameter name="employerAddress1">
                 <matches regexp="^[- #a-zA-Z0-9.',\/]+$" message="Please enter a valid street address using only letters, numbers, spaces, periods, commas, and -, /, ', or #."/>
             </parameter>
-            <parameter name="employerUnitNumber"/>
+            <parameter name="employerAddress2"/>
             <parameter name="employerPostalCode">
                 <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
             </parameter>

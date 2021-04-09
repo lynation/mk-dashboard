@@ -30,7 +30,29 @@
             <if condition="incomeCount == 0">
                 <return message="${ec.l10n.localize('DASHBOARD_INVALID_INCOME_SOURCE_COUNT')}" error="true"/>
             </if>
+
+            <entity-find entity-name="mantle.party.PartyToAndRelationship" list="currentEmploymentRelationList">
+                <econdition field-name="relationshipTypeEnumId" value="PrtEmployee"/>
+                <econdition field-name="fromPartyId" from="partyId"/>
+                <econdition field-name="fromRoleTypeId" value="Employee"/>
+                <order-by field-name="fromDate"/>
+            </entity-find>
+            <set field="employmentDuration" from="currentEmploymentRelationList.getFirst()?.fromDate"/>
+            <if condition="employmentDuration != null">
+                <set field="millis" from="Math.abs(employmentDuration.getTime() - ec.user.nowTimestamp.getTime())"/>
+                <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+                <set field="employmentYear" from="Math.floor(days / 365)" type="Integer"/>
+            </if>
         </actions>
+
+        <conditional-response url="../Property">
+            <condition>
+                <expression>employmentYear >= 2</expression>
+            </condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
+
         <default-response url="../CoApplicantEmploymentPrevious">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
@@ -40,14 +62,6 @@
     <actions>
         <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
         <entity-find-one entity-name="mantle.order.OrderPart" value-field="orderPart"/>
-
-        <entity-find-count entity-name="moqui.basic.StatusFlowItem" count-field="editableOrderStatusCount">
-            <econditions>
-                <econdition field-name="statusFlowId" value="MkDashboardEditableOrderStatuses"/>
-                <econdition field-name="statusId" from="orderHeader.statusId"/>
-            </econditions>
-        </entity-find-count>
-        <set field="orderEditable" from="editableOrderStatusCount > 0 &amp;&amp; (orderHeader.lockUserId == null || orderHeader.lockUserId == ec.user.userId)"/>
 
         <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
             <econdition field-name="orderId" from="orderId"/>
@@ -119,7 +133,7 @@
                         <link url="coApplicantIdentity" text="Back" style="text-black"/>
                     </row-col>
                     <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0 text-right">
-                        <link url="checkEmployment" text="Continue" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId]"/>
+                        <link url="checkEmployment" text="Continue" style="text-primary" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId]"/>
                     </row-col>
                 </container-row>
             </row-col>

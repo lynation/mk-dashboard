@@ -141,7 +141,7 @@
             <parameter name="suffix"/>
             <parameter name="nickname"/>
             <parameter name="address1"/>
-            <parameter name="unitNumber"/>
+            <parameter name="address2"/>
             <parameter name="postalCode"/>
             <parameter name="city"/>
             <parameter name="stateProvinceGeoId"/>
@@ -150,7 +150,6 @@
             <parameter name="socialSecurityNumber"/>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy"/>
             <parameter name="maritalStatusEnumId"/>
-            <parameter name="employmentStatusEnumId"/>
             <parameter name="contactNumber"/>
             <parameter name="contactMechPurposeId"/>
             <parameter name="email"/>
@@ -176,9 +175,9 @@
             <parameter name="suffix"/>
             <parameter name="nickname"/>
             <parameter name="address1" required="true">
-                <matches regexp="^[- #a-zA-Z0-9.',\/]+$" message="Please enter a valid street address using only letters, numbers, spaces, periods, commas, and -, /, ', or #."/>
+                <matches regexp="^(?=[- #a-zA-Z0-9.',\/]+$)(?!.*(?:(.*([p|P][\s?.?]*[o|O][\s?.?]*[b|B][\s]|\b[p|P][\s?.?]*[o|O][\s?.?]*[b|B][\s]*[o|O][\s]*[x|X][\s]*[a-zA-Z0-9]*|\b[P|p]+(OST|ost|o|O)?\s*[O|o|0]+(ffice|FFICE)?\s*[B|b][O|o|0]?[X|x]+\.?\s+[#]?(\d+)*(\D+)*)))).*$" message="Please enter a valid street address using only letters, numbers, spaces and special characters (periods, commas, -, /, ', or #). Do not include P.O. Box numbers."/>
             </parameter>
-            <parameter name="unitNumber"/>
+            <parameter name="address2"/>
             <parameter name="postalCode" required="true">
                 <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
             </parameter>
@@ -197,15 +196,14 @@
             </parameter>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy" required="true"/>
             <parameter name="maritalStatusEnumId" required="true"/>
-            <parameter name="employmentStatusEnumId" required="true"/>
             <parameter name="contactNumber" required="true">
                 <matches regexp="^[0,2-9]{1}\d{2}([-])\d{3}([-])\d{4}" message="Please enter a valid phone number"/>
             </parameter>
             <parameter name="contactMechPurposeId"/>
-            <parameter name="email" required="true">
+            <parameter name="email">
                 <text-email/>
             </parameter>
-            <parameter name="emailVerify" required="true">
+            <parameter name="emailVerify">
                 <text-email/>
             </parameter>
         </in-parameters>
