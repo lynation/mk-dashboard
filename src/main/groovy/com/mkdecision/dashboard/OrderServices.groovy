@@ -835,7 +835,7 @@ class OrderServices {
                     .parameter("nickname", nickname)
                     .parameter("birthDate", birthDate)
                     .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                    .parameter("residenceStatusEnumId", StringUtils.equals(roleTypeId, "PrimaryApplicant") ? "RessOwn" : StringUtils.equals(roleTypeId, "CoApplicant") ? "RessWithOthers" : "")
+                    .parameter("residenceStatusEnumId", StringUtils.equals(roleTypeId, "PrimaryApplicant") ? "RessOwn" : "")
                     .parameter("roleTypeId", roleTypeId)
                     .call()
             partyId = (String) personResp.get("partyId")

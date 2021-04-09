@@ -321,7 +321,6 @@ class PartyServices {
                 .parameter("nickname", nickname)
                 .parameter("birthDate", birthDate)
                 .parameter("maritalStatusEnumId", maritalStatusEnumId)
-                .parameter("residenceStatusEnumId", maritalStatusEnumId)
                 .call()
 
         // create social security number
@@ -1582,14 +1581,14 @@ class PartyServices {
                 .call()
 
         // check if party has any mortgages
-        EntityList mortgageFinancialFlowList = ef.find("mk.close.FinancialFlow")
+        long mortgageFinancialFlowCount = ef.find("mk.close.FinancialFlow")
             .condition("partyId", partyId)
             .condition("entryTypeEnumId", "MkEntryExpense")
             .condition("financialFlowTypeEnumId", "MkFinFlowMortgage")
-            .list()
+            .count()
 
         // update person to show they own residence if they have no mortgages
-        if(mortgageFinancialFlowList.size() == 0) {
+        if(mortgageFinancialFlowCount == 0) {
             sf.sync().name("update#mantle.party.Person")
                 .parameter("partyId", partyId)
                 .parameter("residenceStatusEnumId", "RessOwn")
