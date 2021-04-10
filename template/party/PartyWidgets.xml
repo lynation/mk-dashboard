@@ -708,10 +708,10 @@
                         <set field="mortgageBalance" from="financialFlow.balance"/>
                         <set field="mortgagePaymentMonthly" from="financialFlow.amount"/>
                         <set field="mortgagePriority" from="financialFlow.sequenceNum"/>
-                        <set field="mortgagePriorityDescription" from="mortgagePriorityEnum.description"/>
-                        <set field="includePropertyTaxesMonthly" from="finWorksheetAccountAdj.include"/>
-                        <set field="propertyInsuranceCostsMonthlyIncluded" from="finWorksheetAccountAdj.include"/>
-                        <set field="hoaFeeMonthlyIncluded" from="finWorksheetAccountAdj.include"/>
+                        <set field="mortgagePriorityDescription" from="mortgagePriorityEnum?.description"/>
+                        <set field="includePropertyTaxesMonthly" from="finWorksheetAccountAdj?.include"/>
+                        <set field="propertyInsuranceCostsMonthlyIncluded" from="finWorksheetAccountAdj?.include"/>
+                        <set field="hoaFeeMonthlyIncluded" from="finWorksheetAccountAdj?.include"/>
                     </actions>
                     <widgets>
                         <container style="q-pt-md">
