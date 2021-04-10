@@ -2698,8 +2698,8 @@
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
 
                         <field name="lenderName">
-                            <default-field validate-service="mkdecision.dashboard.PartyServices.create#Mortgage">
-                                <text-line/>
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.create#Mortgage" title="Mortgage Lender Name">
+                            <text-line/>
                             </default-field>
                         </field>
                         <field name="mortgageBalance">
@@ -2710,10 +2710,48 @@
                         <field name="mortgagePaymentMonthly">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.create#Mortgage">
                                 <text-line input-type="number" format="#.##" prefix="$"/>
-                                <label text="Exclude property taxes, insurance, or HOA fees" style="text-caption"/>
+                                <label text="Include property taxes, insurance, or HOA fees paid in this mortgage payment" style="text-caption"/>
                             </default-field>
                         </field>
-
+                        <field name="mortgagePriority">
+                            <default-field title="Mortgage Priority" validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
+                                <drop-down>
+                                    <entity-options text="${description}" key="${optionValue}">
+                                        <entity-find entity-name="moqui.basic.Enumeration">
+                                            <econdition field-name="enumTypeId" value="MortgagePriority"/>
+                                            <order-by field-name="sequenceNum,description"/>
+                                        </entity-find>
+                                    </entity-options>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="mortgageAssistiveText">
+                            <default-field>
+                                <label text="Are any of the following expenses included in the mortgage payment?" type="p"/>
+                                <label text="If yes, check the included expenses:"/>
+                            </default-field>
+                        </field>
+                        <field name="propertyTaxesMonthlyIncluded">
+                            <default-field>
+                                <check>
+                                    <option key="true" text="Property Taxes Monthly"/>
+                                </check>
+                            </default-field>
+                        </field>
+                        <field name="propertyInsuranceCostsMonthlyIncluded">
+                            <default-field>
+                                <check>
+                                    <option key="true" text="Property Insurance Costs Monthly"/>
+                                </check>
+                            </default-field>
+                        </field>
+                        <field name="hoaFeeMonthlyIncluded">
+                            <default-field>
+                                <check>
+                                    <option key="true" text="HOA Fee Monthly"/>
+                                </check>
+                            </default-field>
+                        </field>
                         <field name="submit">
                             <default-field>
                                 <submit text="Save"/>
@@ -2734,7 +2772,7 @@
                         <field name="partyRelationshipId"><default-field><hidden default-value="${partyRelationshipId}"/></default-field></field>
 
                         <field name="lenderName">
-                            <default-field  validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
+                            <default-field  validate-service="mkdecision.dashboard.PartyServices.update#Mortgage" title="Mortgage Lender Name">
                                 <text-line/>
                             </default-field>
                         </field>
@@ -2746,7 +2784,46 @@
                         <field name="mortgagePaymentMonthly">
                             <default-field  validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
                                 <text-line input-type="number" format="#.##" prefix="$"/>
-                                <label text="Exclude property taxes, insurance, or HOA fees" style="text-caption"/>
+                                <label text="Include property taxes, insurance, or HOA fees paid in this mortgage payment" style="text-caption"/>
+                            </default-field>
+                        </field>
+                        <field name="mortgagePriority">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
+                                <drop-down>
+                                    <entity-options text="${description}" key="${optionValue}">
+                                        <entity-find entity-name="moqui.basic.Enumeration">
+                                            <econdition field-name="enumTypeId" value="MortgagePriority"/>
+                                            <order-by field-name="sequenceNum,description"/>
+                                        </entity-find>
+                                    </entity-options>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="mortgageAssistiveText">
+                            <default-field>
+                                <label text="Are any of the following expenses included in the mortgage payment?" type="p"/>
+                                <label text="If yes, check the included expenses:"/>
+                            </default-field>
+                        </field>
+                        <field name="propertyTaxesMonthlyIncluded">
+                            <default-field>
+                                <check>
+                                    <option key="true" text="Property Taxes Monthly"/>
+                                </check>
+                            </default-field>
+                        </field>
+                        <field name="propertyInsuranceCostsMonthlyIncluded">
+                            <default-field>
+                                <check>
+                                    <option key="true" text="Property Insurance Costs Monthly"/>
+                                </check>
+                            </default-field>
+                        </field>
+                        <field name="hoaFeeMonthlyIncluded">
+                            <default-field>
+                                <check>
+                                    <option key="true" text="HOA Fee Monthly"/>
+                                </check>
                             </default-field>
                         </field>
 
