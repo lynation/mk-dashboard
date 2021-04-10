@@ -226,6 +226,36 @@
             </widgets>
         </section>
 
+        <section name="MartialStatusSection">
+            <widgets>
+                <container style="form-no-margin">
+                    <form-single name="MartialForm" transition="saveMaritalStatus">
+                        <field name="orderId"><default-field><hidden/></default-field></field>
+                        <field name="orderPartSeqId"><default-field><hidden/></default-field></field>
+                        <field name="partyId"><default-field><hidden/></default-field></field>
+                        <field name="maritalStatusEnumId">
+                            <default-field title="${roleTypeDescription}'s Marital Status">
+                                <drop-down required-manual-select="true">
+                                    <entity-options text="${description}" key="${enumId}">
+                                        <entity-find entity-name="moqui.basic.Enumeration">
+                                            <econdition field-name="enumTypeId" value="MaritalStatus"/>
+                                            <order-by field-name="sequenceNum,description"/>
+                                        </entity-find>
+                                    </entity-options>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="continue">
+                            <default-field container-style="text-primary">
+                                <submit text="Save"/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container>
+                <container style="margin-tb-2"/>
+            </widgets>
+        </section>
+
         <section name="IdentitySection" condition="identityList.size() > 0">
             <widgets>
                 <section-iterate name="IdentityIterator" list="identityList" entry="identity">

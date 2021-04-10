@@ -20,7 +20,15 @@
         <service-call name="mkdecision.dashboard.PartyServices.delete#Mortgage" in-map="context"/>
         <default-response url="."/>
     </transition>
-    <transition name="agreement">
+    <transition name="continue">
+        <actions>
+            <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+        </actions>
+        <conditional-response url="../PrimaryApplicantMaritalStatus">
+            <condition><expression>maritalStatusIsNeeded</expression></condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
         <default-response url="../Agreement"/>
     </transition>
     <transition name="property">
@@ -83,7 +91,7 @@
                         <link url="property" text="Back" style="text-black"/>
                     </row-col>
                     <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0 text-right">
-                        <link url="agreement" text="Continue" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId]"/>
+                        <link url="continue" text="Continue" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId]"/>
                     </row-col>
                 </container-row>
             </row-col>

@@ -8,16 +8,29 @@
     <parameter name="orderId"/>
     <parameter name="orderPartSeqId"/>
 
-    <transition name="agreement">
-        <default-response url="../Agreement"/>
-    </transition>
     <transition name="mortgage">
         <default-response url="../Mortgage"/>
     </transition>
-    <transition name="saveMaritalStatus" >
+    <transition name="saveMaritalStatus">
         <parameter name="maritalStatusEnumId"/>
-        
-        <default-response url="../Agreement"/>
+        <actions>
+            <service-call name="update#mantle.party.Person" in-map="[partyId: partyId, maritalStatusEnumId: maritalStatusEnumId]"/>
+
+            <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
+                <econdition field-name="orderId" from="orderId"/>
+                <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
+                <econdition field-name="roleTypeId" value="CoApplicant"/>
+            </entity-find>
+        </actions>
+        <conditional-response url="../CoApplicantMaritalStatus">
+            <condition><expression>partyList?.size() > 0</expression></condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
+        <default-response url="../Agreement">
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </default-response>
     </transition>
 
     <actions>
@@ -26,8 +39,11 @@
         <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
             <econdition field-name="orderId" from="orderId"/>
             <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
-            <econdition field-name="roleTypeId" operator="in" from="['PrimaryApplicant','JointApplicant']"/>
+            <econdition field-name="roleTypeId" value="PrimaryApplicant"/>
         </entity-find>
+        <set field="orderParty" from="partyList?.getFirst()"/>
+        <set field="partyId" from="orderParty.partyId"/>
+        <set field="roleTypeDescription" from="orderParty.roleType.description"/>
     </actions>
 
     <widgets>
@@ -66,16 +82,6 @@
                 <container-row>
                     <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0">
                         <link url="mortgage" text="Back" style="text-black"/>
-                    </row-col>
-                    <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0 text-right">
-
-                        <link url="saveMaritalStatus" text="Continue" btn-type="default"
-                              parameter-map="[
-                                  orderId: orderId,
-                                  orderPartSeqId: orderPartSeqId,
-                                  partyId: partyId,
-                                  maritalStatusEnumId: maritalStatusEnumId
-                              ]"/>
                     </row-col>
                 </container-row>
             </row-col>
