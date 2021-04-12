@@ -234,6 +234,10 @@
                         <set field="isPdf" value="true" type="Boolean"/>
                         <set field="resourceRef" from="ec.resource.getLocationReference(contentLocation)?.getFileName()"/>
 
+                        <else-if condition="ec.resource.getContentType(contentLocation) == 'application/octet-stream'">
+                            <set field="isXslFo" from="true"/>
+                            <set field="contentLocation" from="ec.web.getHostName(true) + '/fop/Agreement?agreementId='+ agreement.agreementId+ '&amp;t=' + System.currentTimeMillis()"/>
+                        </else-if>
                         <!--If an Agreement is a HTML type the Content Location for it would be null-->
                         <else-if condition="contentLocation == null">
                             <set field="resourceRef" from="orgParty?.partyName"/>
@@ -246,6 +250,9 @@
                 <field name="description">
                     <conditional-field condition="isPdf">
                         <link url="downloadPdfAgreement" text="${contentType?.description}" parameter-map="[agreementContentLocation: contentLocation]" link-type="anchor"/>
+                    </conditional-field>
+                    <conditional-field condition="isXslFo">
+                        <link url="https://${contentLocation}" target-window="_blank" text="${contentType?.description}" url-type="plain" link-type="anchor" />
                     </conditional-field>
                     <default-field container-style="">
                         <link url="viewAgreement" target-window="_blank" text="${contentType?.description}" parameter-map="[agreementId: agreement.agreementId]" link-type="anchor" />
