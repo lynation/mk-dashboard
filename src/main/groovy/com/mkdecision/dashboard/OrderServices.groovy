@@ -884,6 +884,15 @@ class OrderServices {
                         .parameter("contactMechPurposeId", "EmailPrimary")
                         .call()
             }
+
+            // create citizenship for primary, co applicants
+            sf.sync().name('create#mk.close.PartyCitizenship')
+            .parameters([
+                    partyId : partyId,
+                    geoId   : "USA",
+                    fromDate: ec.user.nowTimestamp,
+                    sequenceNum: "1"
+            ]).call()
         }
 
         // create social security number
