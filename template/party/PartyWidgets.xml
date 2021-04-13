@@ -23,7 +23,7 @@
                                 <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                                     <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
                                     <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
-                                    <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowTotalMonthlyIncome"/>
+                                    <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowWage"/>
                                     <econdition field-name="partyRelationshipId" from="employmentRelation.partyRelationshipId"/>
                                 </entity-find>
                                 <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryTelecomNumber" in-map="[partyId: employmentRelation.toPartyId]" out-map="telecomNumberResp"/>
@@ -94,7 +94,7 @@
                                 <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                                     <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
                                     <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
-                                    <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowTotalMonthlyIncome"/>
+                                    <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowWage"/>
                                     <econdition field-name="partyRelationshipId" from="employmentRelation.partyRelationshipId"/>
                                 </entity-find>
                                 <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryTelecomNumber" in-map="[partyId: employmentRelation.toPartyId]" out-map="telecomNumberResp"/>
@@ -433,7 +433,7 @@
                         <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                             <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
                             <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
-                            <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowTotalMonthlyIncome"/>
+                            <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowWage"/>
                             <econdition field-name="partyRelationshipId" from="employmentRelation.partyRelationshipId"/>
                         </entity-find>
                         <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryTelecomNumber" in-map="[partyId: employmentRelation.toPartyId]" out-map="telecomNumberResp"/>
@@ -553,7 +553,7 @@
                         <entity-find entity-name="mk.close.FinancialFlow" list="monthlyIncomeFinFlowList">
                             <econdition field-name="partyId" from="employmentRelation.fromPartyId"/>
                             <econdition field-name="entryTypeEnumId" value="MkEntryIncome"/>
-                            <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowTotalMonthlyIncome"/>
+                            <econdition field-name="financialFlowTypeEnumId" value="MkFinFlowWage"/>
                             <econdition field-name="partyRelationshipId" from="employmentRelation.partyRelationshipId"/>
                         </entity-find>
                         <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryTelecomNumber" in-map="[partyId: employmentRelation.toPartyId]" out-map="telecomNumberResp"/>
@@ -596,11 +596,11 @@
                                 </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="From Date" style="text-light-grey"/></row-col>
-                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.format(employmentRelation.fromDate, 'MM-dd-yyyy') ?: ''}"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.format(fromDate, 'MM-dd-yyyy') ?: ''}"/></row-col>
                                 </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="To Date" style="text-light-grey"/></row-col>
-                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.format(employmentRelation.thruDate, 'MM-dd-yyyy') ?: ''}"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.format(toDate, 'MM-dd-yyyy') ?: ''}"/></row-col>
                                 </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Occupation" style="text-light-grey"/></row-col>

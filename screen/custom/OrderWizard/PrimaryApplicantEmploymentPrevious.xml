@@ -49,9 +49,14 @@
         <entity-find-one entity-name="mantle.party.Person" value-field="party"/>
 
         <entity-find entity-name="mantle.party.PartyToAndRelationship" list="previousEmploymentRelationList">
+            <econdition field-name="statusId" value="VerifiedEmployee"/>
             <econdition field-name="relationshipTypeEnumId" value="PrtPreviousEmployee"/>
             <econdition field-name="fromPartyId" from="partyId"/>
-            <econdition field-name="fromRoleTypeId" value="Employee"/>
+            <econditions combine="or">
+                <econdition field-name="fromRoleTypeId" value="Employee"/>
+                <econdition field-name="fromRoleTypeId" operator="is-null" value=""/>
+                <econdition field-name="fromRoleTypeId" value=""/>
+            </econditions>
             <order-by field-name="fromDate"/>
         </entity-find>
     </actions>

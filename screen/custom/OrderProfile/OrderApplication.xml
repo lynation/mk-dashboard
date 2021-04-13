@@ -192,7 +192,11 @@
                     <entity-find entity-name="mantle.party.PartyToAndRelationship" list="currentEmploymentRelationList">
                         <econdition field-name="relationshipTypeEnumId" value="PrtEmployee"/>
                         <econdition field-name="fromPartyId" from="party.partyId"/>
-                        <econdition field-name="fromRoleTypeId" value="Employee"/>
+                        <econditions combine="or">
+                            <econdition field-name="fromRoleTypeId" value="Employee"/>
+                            <econdition field-name="fromRoleTypeId" operator="is-null" value=""/>
+                            <econdition field-name="fromRoleTypeId" value=""/>
+                        </econditions>
                         <order-by field-name="partyRelationshipId"/>
                     </entity-find>
                     <entity-find entity-name="mk.close.FinancialFlow" list="incomeFinFlowList">
@@ -201,9 +205,14 @@
                         <econdition field-name="partyRelationshipId" operator="is-null" value=""/>
                     </entity-find>
                     <entity-find entity-name="mantle.party.PartyToAndRelationship" list="previousEmploymentRelationList">
+                        <econdition field-name="statusId" value="VerifiedEmployee"/>
                         <econdition field-name="relationshipTypeEnumId" value="PrtPreviousEmployee"/>
                         <econdition field-name="fromPartyId" from="party.partyId"/>
-                        <econdition field-name="fromRoleTypeId" value="Employee"/>
+                        <econditions combine="or">
+                            <econdition field-name="fromRoleTypeId" value="Employee"/>
+                            <econdition field-name="fromRoleTypeId" operator="is-null" value=""/>
+                            <econdition field-name="fromRoleTypeId" value=""/>
+                        </econditions>
                         <order-by field-name="partyRelationshipId"/>
                     </entity-find>
 

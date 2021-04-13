@@ -851,6 +851,7 @@ class PartyServices {
                 .parameter("fromDate", fromDate)
                 .parameter("thruDate", toDate)
                 .parameter("relationshipName", jobTitle)
+                .parameter("statusId", "VerifiedEmployee")
                 .call()
         String partyRelationshipId = employmentRelationshipResp.get("partyRelationshipId")
 
@@ -866,9 +867,9 @@ class PartyServices {
                 .parameter("partyId", partyId)
                 .parameter("partyRelationshipId", partyRelationshipId)
                 .parameter("entryTypeEnumId", "MkEntryIncome")
-                .parameter("financialFlowTypeEnumId", "MkFinFlowTotalMonthlyIncome")
+                .parameter("financialFlowTypeEnumId", "MkFinFlowWage")
                 .parameter("amount", monthlyIncome)
-                .parameter("fromDate", fromDate)
+                .parameter("fromDate", fromDate.getTime())
                 .parameter("thruDate", toDate)
                 .call()
 
@@ -1009,6 +1010,7 @@ class PartyServices {
                 .parameter("fromDate", fromDate)
                 .parameter("thruDate", toDate)
                 .parameter("relationshipName", jobTitle)
+                .parameter("statusId", "VerifiedEmployee")
                 .call()
 
         // update employment status relationship setting
@@ -1023,13 +1025,15 @@ class PartyServices {
                 .condition("partyId", partyId)
                 .condition("partyRelationshipId", partyRelationshipId)
                 .condition("entryTypeEnumId", "MkEntryIncome")
-                .condition("financialFlowTypeEnumId", "MkFinFlowTotalMonthlyIncome")
+                .condition("financialFlowTypeEnumId", "MkFinFlowWage")
                 .list()
                 .getFirst()
+
         sf.sync().name("update#mk.close.FinancialFlow")
                 .parameter("financialFlowId", monthlyIncomeFinFlow.getString("financialFlowId"))
                 .parameter("amount", monthlyIncome)
                 .parameter("fromDate", fromDate)
+                .parameter("thruDate", toDate)
                 .call()
 
         // return the output parameters
@@ -1065,7 +1069,7 @@ class PartyServices {
         EntityValue incomeFinancialFlow = ef.find("mk.close.FinancialFlow")
                 .condition("partyId", partyId)
                 .condition("entryTypeEnumId", "MkEntryIncome")
-                .condition("financialFlowTypeEnumId", "MkFinFlowTotalMonthlyIncome")
+                .condition("financialFlowTypeEnumId", "MkFinFlowWage")
                 .condition("partyRelationshipId", partyRelationshipId)
                 .list()
                 .getFirst()
