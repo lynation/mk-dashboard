@@ -211,9 +211,9 @@
                                 <set field="mortgageBalance" from="mortgageFinFlow.balance"/>
                                 <set field="mortgagePaymentMonthly" from="mortgageFinFlow.amount"/>
                                 <set field="mortgagePriority" from="mortgageFinFlow.sequenceNum"/>
-                                <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include == 'N' ? true : false"/>
-                                <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include == 'N' ? true : false"/>
-                                <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include == 'N' ? true : false"/>
+                                <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include"/>
+                                <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include"/>
+                                <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include"/>
                             </actions>
                             <widgets>
                                 <container-row>

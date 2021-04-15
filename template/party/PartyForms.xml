@@ -2807,22 +2807,22 @@
                         </field>
                         <field name="propertyTaxesMonthlyIncluded">
                             <default-field>
-                                <check>
-                                    <option key="true" text="Property Taxes Monthly"/>
+                                <check no-current-selected-key="N">
+                                    <option key="Y" text="Property Taxes Monthly"/>
                                 </check>
                             </default-field>
                         </field>
                         <field name="propertyInsuranceCostsMonthlyIncluded">
                             <default-field>
-                                <check>
-                                    <option key="true" text="Property Insurance Costs Monthly"/>
+                                <check no-current-selected-key="N">
+                                    <option key="Y" text="Property Insurance Costs Monthly"/>
                                 </check>
                             </default-field>
                         </field>
                         <field name="hoaFeeMonthlyIncluded">
                             <default-field>
-                                <check>
-                                    <option key="true" text="HOA Fee Monthly"/>
+                                <check no-current-selected-key="N">
+                                    <option key="Y" text="HOA Fee Monthly"/>
                                 </check>
                             </default-field>
                         </field>

@@ -1587,9 +1587,9 @@ class PartyServices {
         BigDecimal mortgageBalance = (BigDecimal) cs.getOrDefault("mortgageBalance", null)
         BigDecimal mortgagePaymentMonthly = (BigDecimal) cs.getOrDefault("mortgagePaymentMonthly", null)
         String mortgagePriority = (String) cs.getOrDefault("mortgagePriority", null)
-        Boolean includePropertyTaxesMonthly = (Boolean) cs.getOrDefault("propertyTaxesMonthlyIncluded", false)
-        Boolean includePropertyInsuranceCostsMonthly = (Boolean) cs.getOrDefault("propertyInsuranceCostsMonthlyIncluded", false)
-        Boolean includeHOAFeeMonthly = (Boolean) cs.getOrDefault("hoaFeeMonthlyIncluded", false)
+        String includePropertyTaxesMonthly = (String) cs.getOrDefault("propertyTaxesMonthlyIncluded", "N")
+        String includePropertyInsuranceCostsMonthly = (String) cs.getOrDefault("propertyInsuranceCostsMonthlyIncluded", "N")
+        String includeHOAFeeMonthly = (String) cs.getOrDefault("hoaFeeMonthlyIncluded", "N")
 
         // validate fields
         sf.sync().name("mkdecision.dashboard.PartyServices.validate#MortgageFields")
@@ -1663,7 +1663,7 @@ class PartyServices {
                     .parameter("accountId", propertyTaxAccountId)
                     .parameter("adjusterUserId", ec.user.getUserId())
                     .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-                    .parameter("include", includePropertyTaxesMonthly ? 'N' : 'Y')
+                    .parameter("include", includePropertyTaxesMonthly)
                     .call()
         }
 
@@ -1696,7 +1696,7 @@ class PartyServices {
                     .parameter("accountId", monthlyInsuranceCostsId)
                     .parameter("adjusterUserId", ec.user.getUserId())
                     .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-                    .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
+                    .parameter("include", includePropertyInsuranceCostsMonthly)
                     .call()
         }
 
@@ -1729,7 +1729,7 @@ class PartyServices {
                     .parameter("accountId", hoaMonthlyFeeId)
                     .parameter("adjusterUserId", ec.user.getUserId())
                     .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-                    .parameter("include", includeHOAFeeMonthly ? 'N' : 'Y')
+                    .parameter("include", includeHOAFeeMonthly)
                     .call()
         }
 
