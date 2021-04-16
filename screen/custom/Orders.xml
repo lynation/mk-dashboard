@@ -30,7 +30,10 @@
         </entity-find>
         <set field="productCategoryIdSet" from="new TreeSet(categoryList*.productCategoryId)"/>
 
-        <set field="evergreenOrderState" from="['OrderOpen', 'OrderRequested', 'OrderProposed', 'OrderConditionalApproved', 'OrderCustomerProcessing', 'OrderFundingRequested', 'OrderApproved', 'OrderSent', 'OrderPendingRejected', 'OrderRejected', 'OrderCancelled', 'OrderCancelledTest']"/>
+        <entity-find entity-name="moqui.basic.StatusFlowItem" list="orderStatuses">
+            <econdition field-name="statusFlowId" from="ec.user.getPreference('UsrPrfMkDashboardAvailableOrderStatuses')"/>
+        </entity-find>
+        <set field="evergreenOrderState" from="orderStatuses?.statusId"/>
     </actions>
     
     <widgets>
