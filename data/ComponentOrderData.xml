@@ -5,6 +5,29 @@
     <moqui.basic.StatusFlow statusFlowId="MkStorePartyEditableOrderStatuses" description="List of statuses where an Order is editable by the store party"/>
     <moqui.basic.StatusFlowItem statusFlowId="MkStorePartyEditableOrderStatuses" statusId="OrderOpen"/>
 
+    <moqui.basic.StatusFlow statusFlowId="MkDashboardOrderStatuses" description="List of available order statuses"/>
+    <!--Available Order statuses in flow -->
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderOpen"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderRequested"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderProposed"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderConditionalApproved"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderCustomerProcessing"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderFundingRequested"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderApproved"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderSent"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderPendingRejected"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderRejected"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderCancelled"/>
+    <moqui.basic.StatusFlowItem statusFlowId="MkDashboardOrderStatuses" statusId="OrderCancelledTest"/>
+
+    <!-- User Group Preference for available status in flow -->
+    <moqui.security.UserGroupPreference userGroupId="FINANCE_MANAGER" preferenceKey="UsrPrfMkDashboardAvailableOrderStatuses" preferenceValue="MkDashboardOrderStatuses"/>
+    <moqui.security.UserGroupPreference userGroupId="SALES_REPRESENTATIVE" preferenceKey="UsrPrfMkDashboardAvailableOrderStatuses" preferenceValue="MkDashboardOrderStatuses"/>
+
+    <!-- Editable order user group preferences -->
+    <moqui.security.UserGroupPreference userGroupId="FINANCE_MANAGER" preferenceKey="UsrPrfMkDashboardEditableOrderStatuses" preferenceValue="MkStorePartyEditableOrderStatuses"/>
+    <moqui.security.UserGroupPreference userGroupId="SALES_REPRESENTATIVE" preferenceKey="UsrPrfMkDashboardEditableOrderStatuses" preferenceValue="MkStorePartyEditableOrderStatuses"/>
+
     <!-- Editable order user group preferences -->
     <moqui.security.UserGroupPreference userGroupId="FINANCE_MANAGER" preferenceKey="UsrPrfMkDashboardEditableOrderStatuses" preferenceValue="MkStorePartyEditableOrderStatuses"/>
     <moqui.security.UserGroupPreference userGroupId="SALES_REPRESENTATIVE" preferenceKey="UsrPrfMkDashboardEditableOrderStatuses" preferenceValue="MkStorePartyEditableOrderStatuses"/>
