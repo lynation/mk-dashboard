@@ -659,12 +659,6 @@ class OrderServices {
             return
         }
 
-        // validate marital status
-        if (StringUtils.isBlank(maritalStatusEnumId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_MARITAL_STATUS"))
-            return
-        }
-
         // validate contact number
         if (StringUtils.isBlank(contactNumber)) {
             mf.addError(lf.localize("DASHBOARD_INVALID_PHONE_NUMBER"))
@@ -1490,5 +1484,46 @@ class OrderServices {
 
         // return the output parameters
         return new HashMap<>()
+    }
+
+    static Map<String, Object> checkMaritalStatusIsNeeded(ExecutionContext ec) {
+        // shortcuts for convenience
+        ContextStack cs = ec.getContext()
+        EntityFacade ef = ec.getEntity()
+
+        // get the parameters
+        String orderId = cs.getByString("orderId")
+        String orderPartSeqId = cs.getByString("orderPartSeqId")
+        String orderItemSeqId = cs.getByString("orderItemSeqId")
+
+        //set parameter
+        def communityPropertyStates = ["USA_AZ", "USA_CA", "USA_ID", "USA_LA", "USA_NM", "USA_NV", "USA_TX", "USA_WA", "USA_WI"]
+
+        //if the product is a secured loan, marital status is needed
+        def item = ef.find('mantle.order.OrderItem').condition([orderId: orderId, orderItemSeqId: orderItemSeqId]).one()
+        def productClass = (item.product as EntityValue).productClassEnumId
+
+        if (productClass == 'IndirectSecuredLoan') {
+            return [maritalStatusIsNeeded: true]
+        }
+
+        //if the primary applicant lives in a Community Property State, marital status is needed
+        def primaryApplicantPartyId = ef.find('mantle.order.OrderPartParty')
+            .condition(orderId        : orderId)
+            .condition(orderPartSeqId : orderPartSeqId)
+            .condition(roleTypeId     : 'PrimaryApplicant')
+            .one().partyId
+
+        def primaryApplicantState = ef.find('mantle.party.contact.PartyContactMechPostalAddress')
+            .condition(partyId              : primaryApplicantPartyId)
+            .condition(contactMechPurposeId : 'PostalPrimary')
+            .list().stateProvinceGeoId
+
+        if (!primaryApplicantState.disjoint(communityPropertyStates)){
+            return [maritalStatusIsNeeded: true]
+        }
+
+        return [maritalStatusIsNeeded: false]
+
     }
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.1.xsd"
+        default-menu-title="Marital Status"
+        default-menu-include="false"
+        default-menu-index="16">
+
+    <parameter name="orderId"/>
+    <parameter name="orderPartSeqId"/>
+
+    <transition name="primaryApplicantMaritalStatus">
+        <default-response url="../PrimaryApplicantMaritalStatus">
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </default-response>
+    </transition>
+    <transition name="saveMaritalStatus" >
+        <parameter name="maritalStatusEnumId"/>
+        <actions>
+            <service-call name="update#mantle.party.Person" in-map="[partyId: partyId, maritalStatusEnumId: maritalStatusEnumId]"/>
+        </actions>
+        <default-response url="../Agreement">
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </default-response>
+    </transition>
+
+    <actions>
+        <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
+        <entity-find-one entity-name="mantle.order.OrderPart" value-field="orderPart"/>
+        <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
+            <econdition field-name="orderId" from="orderId"/>
+            <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
+            <econdition field-name="roleTypeId" value="CoApplicant"/>
+        </entity-find>
+        <set field="orderParty" from="partyList?.getFirst()"/>
+        <set field="partyId" from="orderParty.partyId"/>
+        <set field="roleTypeDescription" from="orderParty.roleType.description"/>
+    </actions>
+
+    <widgets>
+        <container-row>
+            <row-col xs="0" sm="1" md="3" lg="3"/>
+            <row-col xs="12" sm="10" md="6" lg="6">
+                <container style="stepper margin-b-1">
+                    <render-mode>
+                        <text type="qvt"><![CDATA[
+                            <q-stepper ref="stepper" value="s3" color="primary" :flat="true">
+                                <q-step name="s1" title="Order Items" icon="shopping_cart"/>
+                                <q-step name="s2" title="Eligibility" icon="policy"/>
+                                <q-step name="s3" title="Applicants" icon="person"/>
+                                <q-step name="s4" title="Property" icon="home"/>
+                                <q-step name="s5" title="Agreements" icon="done"/>
+                            </q-stepper>
+                        ]]></text>
+                    </render-mode>
+                </container>
+            </row-col>
+            <row-col xs="0" sm="1" md="3" lg="3"/>
+        </container-row>
+
+        <container-row style="form-no-margin">
+            <row-col xs="0" sm="1" md="3" lg="3"/>
+            <row-col xs="12" sm="10" md="6" lg="6">
+
+                <label text="New Application" type="h4" style="margin-b-1"/>
+
+                <label text="Marital Status" type="h5" style="margin-b-1"/>
+                <label text="Please enter marital status for applicant(s)" style="margin-b-1"/>
+                <container style="h-separator margin-tb-2"/>
+
+                <section-include name="MartialStatusSection" location="component://mk-dashboard/template/party/PartyWidgets.xml"/>
+
+                <container-row>
+                    <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0">
+                        <link url="primaryApplicantMaritalStatus" text="Back" style="text-black"/>
+                    </row-col>
+                </container-row>
+            </row-col>
+            <row-col xs="0" sm="1" md="3" lg="3"/>
+        </container-row>
+    </widgets>
+
+</screen>

@@ -18,7 +18,26 @@
         </service-call>
         <default-response url="../../OrderProfile"/>
     </transition>
-    <transition name="mortgage">
+    <transition name="back">
+        <actions>
+            <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+
+            <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
+                <econdition field-name="orderId" from="orderId"/>
+                <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
+                <econdition field-name="roleTypeId" value="CoApplicant"/>
+            </entity-find>
+        </actions>
+        <conditional-response url="../CoApplicantMaritalStatus">
+            <condition><expression>maritalStatusIsNeeded &amp;&amp; partyList?.size() > 0</expression></condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
+        <conditional-response url="../PrimaryApplicantMaritalStatus">
+            <condition><expression>maritalStatusIsNeeded &amp;&amp; partyList?.size() == 0</expression></condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
         <default-response url="../Mortgage">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
@@ -75,7 +94,7 @@
                 </field>
                 <field name="backButton">
                     <default-field container-style="dark-link">
-                        <link url="mortgage" text="Back" btn-type="default"/>
+                        <link url="back" text="Back" btn-type="default"/>
                     </default-field>
                 </field>
 

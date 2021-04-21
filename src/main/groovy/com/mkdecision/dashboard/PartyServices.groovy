@@ -275,12 +275,6 @@ class PartyServices {
             return
         }
 
-        // validate marital status
-        if (StringUtils.isBlank(maritalStatusEnumId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_MARITAL_STATUS"))
-            return
-        }
-
     }
 
     static Map<String, Object> updatePerson(ExecutionContext ec) {
