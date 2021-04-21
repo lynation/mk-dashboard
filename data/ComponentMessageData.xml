@@ -62,6 +62,8 @@
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_BALANCE" locale="en" localized="Invalid mortgage balance."/>
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_PAYMENT_MONTHLY" locale="en" localized="Invalid mortgage payment monthly."/>
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE" locale="en" localized="Invalid mortgage."/>
+    <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_PRIORITY" locale="en" localized="Invalid mortgage priority."/>
+
 
     <moqui.basic.LocalizedMessage original="DASHBOARD_ORDER_ACCESS_DENIED" locale="en" localized="Access to order was denied."/>
     <moqui.basic.LocalizedMessage original="DASHBOARD_ORDER_NOT_EDITABLE" locale="en" localized="Order is not currently editable."/>

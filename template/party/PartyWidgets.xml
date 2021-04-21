@@ -196,11 +196,24 @@
                                     <field-map field-name="entryTypeEnumId" value="MkEntryExpense"/>
                                     <field-map field-name="partyRelationshipId" from="mortgageRelation.partyRelationshipId"/>
                                 </entity-find-one>
+                                <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="monthlyPropertyTaxesAdj">
+                                    <field-map field-name="accountId" from="mortgageRelation.fromPartyId + '[' + mortgageFinFlow.sequenceNum +']:MkFinFlowMonthlyPropertyTaxes'"/>
+                                </entity-find-one>
+                                <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="monthlyInsuranceCostsAdj">
+                                    <field-map field-name="accountId" from="mortgageRelation.fromPartyId +  '[' + mortgageFinFlow.sequenceNum +']:MkFinFlowMonthlyInsuranceCosts'"/>
+                                </entity-find-one>
+                                <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="hoaMonthlyFeeAdj">
+                                    <field-map field-name="accountId" from="mortgageRelation.fromPartyId +  '[' + mortgageFinFlow.sequenceNum +']:MkFinFlowHoaMonthlyFee'"/>
+                                </entity-find-one>
 
                                 <set field="partyRelationshipId" from="mortgageRelation.partyRelationshipId"/>
                                 <set field="lenderName" from="mortgageRelation.organizationName"/>
                                 <set field="mortgageBalance" from="mortgageFinFlow.balance"/>
                                 <set field="mortgagePaymentMonthly" from="mortgageFinFlow.amount"/>
+                                <set field="mortgagePriority" from="mortgageFinFlow.sequenceNum"/>
+                                <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include"/>
+                                <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include"/>
+                                <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include"/>
                             </actions>
                             <widgets>
                                 <container-row>
@@ -706,11 +719,29 @@
                             <field-map field-name="entryTypeEnumId" value="MkEntryExpense"/>
                             <field-map field-name="partyRelationshipId" from="mortgageRelation.partyRelationshipId"/>
                         </entity-find-one>
+                        <entity-find-one entity-name="moqui.basic.Enumeration" value-field="mortgagePriorityEnum">
+                            <field-map field-name="enumTypeId" value="MortgagePriority"/>
+                            <field-map field-name="sequenceNum" from="financialFlow.sequenceNum"/>
+                        </entity-find-one>
+                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="finWorksheetAccountAdj">
+                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + ':MkFinFlowMonthlyPropertyTaxes'"/>
+                        </entity-find-one>
+                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="finWorksheetAccountAdj">
+                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + ':MkFinFlowMonthlyInsuranceCosts'"/>
+                        </entity-find-one>
+                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="finWorksheetAccountAdj">
+                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + ':MkFinFlowHoaMonthlyFee'"/>
+                        </entity-find-one>
 
                         <set field="partyRelationshipId" from="mortgageRelation.partyRelationshipId"/>
                         <set field="lenderName" from="mortgageRelation.organizationName"/>
                         <set field="mortgageBalance" from="financialFlow.balance"/>
                         <set field="mortgagePaymentMonthly" from="financialFlow.amount"/>
+                        <set field="mortgagePriority" from="financialFlow.sequenceNum"/>
+                        <set field="mortgagePriorityDescription" from="mortgagePriorityEnum?.description"/>
+                        <set field="includePropertyTaxesMonthly" from="finWorksheetAccountAdj?.include"/>
+                        <set field="propertyInsuranceCostsMonthlyIncluded" from="finWorksheetAccountAdj?.include"/>
+                        <set field="hoaFeeMonthlyIncluded" from="finWorksheetAccountAdj?.include"/>
                     </actions>
                     <widgets>
                         <container style="q-pt-md">
@@ -727,7 +758,7 @@
                                     <row-col lg="12" md="12" sm="12" xs="12" style="padding-all-0"><label text="Mortgage ${sectionEntryIndex + 1}" style="text-light-grey"/></row-col>
                                 </container-row>
                                 <container-row>
-                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Lender Name" style="text-light-grey"/></row-col>
+                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Mortgage Lender Name" style="text-light-grey"/></row-col>
                                     <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${lenderName ?: '-'}"/></row-col>
                                 </container-row>
                                 <container-row>
@@ -737,6 +768,10 @@
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Mortgage Payment Monthly" style="text-light-grey"/></row-col>
                                     <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(mortgagePaymentMonthly, orderHeader.currencyUomId)}"/></row-col>
+                                </container-row>
+                                <container-row>
+                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Mortgage Priority" style="text-light-grey"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${mortgagePriorityDescription}"/></row-col>
                                 </container-row>
                             </container>
                         </container>

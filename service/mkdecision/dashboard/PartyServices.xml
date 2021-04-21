@@ -483,10 +483,12 @@
             <parameter name="lenderName"/>
             <parameter name="mortgageBalance" type="BigDecimal"/>
             <parameter name="mortgagePaymentMonthly" type="BigDecimal"/>
+            <parameter name="mortgagePriority"/>
         </in-parameters>
     </service>
     <service verb="create" noun="Mortgage" type="java" location="com.mkdecision.dashboard.PartyServices" method="createMortgage">
         <in-parameters>
+            <parameter name="orderId"/>
             <parameter name="partyId" required="true"/>
             <parameter name="lenderName" required="true"/>
             <parameter name="mortgageBalance" type="BigDecimal" required="true">
@@ -495,6 +497,10 @@
             <parameter name="mortgagePaymentMonthly" type="BigDecimal" required="true">
                 <number-range min="0" min-include-equals="false" message="Please enter the Mortgage Payment Monthly"/>
             </parameter>
+            <parameter name="mortgagePriority" required="true"/>
+            <parameter name="propertyTaxesMonthlyIncluded" type="Boolean" default="false"/>
+            <parameter name="propertyInsuranceCostsMonthlyIncluded" type="Boolean" default="false"/>
+            <parameter name="hoaFeeMonthlyIncluded" type="Boolean" default="false"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
@@ -503,6 +509,7 @@
     </service>
     <service verb="update" noun="Mortgage" type="java" location="com.mkdecision.dashboard.PartyServices" method="updateMortgage">
         <in-parameters>
+            <parameter name="orderId"/>
             <parameter name="partyId" required="true"/>
             <parameter name="partyRelationshipId" required="true"/>
             <parameter name="lenderName" required="true"/>
@@ -512,6 +519,10 @@
             <parameter name="mortgagePaymentMonthly" type="BigDecimal" required="true">
                 <number-range min="0" min-include-equals="false" message="Please enter the Mortgage Payment Monthly"/>
             </parameter>
+            <parameter name="mortgagePriority" required="true"/>
+            <parameter name="propertyTaxesMonthlyIncluded" default="N"/>
+            <parameter name="propertyInsuranceCostsMonthlyIncluded" default="N"/>
+            <parameter name="hoaFeeMonthlyIncluded" default="N"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
