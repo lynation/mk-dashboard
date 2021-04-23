@@ -312,7 +312,7 @@
                         </section>
                     </widgets>
                 </section-iterate>
-                <link url="cancelOrder" text="Cancel" btn-type="danger" condition="orderStatus?.statusId != 'OrderCancelled'"/>
+                <link url="cancelOrder" text="Cancel" btn-type="danger" condition="orderStatus?.statusId != 'OrderCancelled'" confirmation="Are you sure you want to cancel this order?"/>
             </row-col>
         </container-row>
 
