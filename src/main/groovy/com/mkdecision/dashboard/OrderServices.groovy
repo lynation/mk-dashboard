@@ -1496,6 +1496,12 @@ class OrderServices {
         String orderPartSeqId = cs.getByString("orderPartSeqId")
         String orderItemSeqId = cs.getByString("orderItemSeqId")
 
+        //set parameters
+        def communityPropertyStates = ef.find('moqui.basic.GeoAssoc')
+            .condition(geoId              :'US_COMMUNITY_PROPERTY')
+            .condition(geoAssocTypeEnumId :'GAT_GROUP_MEMBER'     )
+            .list().toGeoId
+
         //if application is joint, marital status is needed
         def jointApplicant = ef.find('mantle.order.OrderPartParty')
             .condition(orderId        : orderId         )
@@ -1506,9 +1512,6 @@ class OrderServices {
         if (jointApplicant){
             return [maritalStatusIsNeeded: true]
         }
-
-        //set parameter
-        def communityPropertyStates = ["USA_AZ", "USA_CA", "USA_ID", "USA_LA", "USA_NM", "USA_NV", "USA_TX", "USA_WA", "USA_WI"]
 
         //if the product is a secured loan, marital status is needed
         def item = ef.find('mantle.order.OrderItem')
