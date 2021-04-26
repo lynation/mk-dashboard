@@ -1496,11 +1496,25 @@ class OrderServices {
         String orderPartSeqId = cs.getByString("orderPartSeqId")
         String orderItemSeqId = cs.getByString("orderItemSeqId")
 
+        //if application is joint, marital status is needed
+        def jointApplicant = ef.find('mantle.order.OrderPartParty')
+            .condition(orderId        : orderId         )
+            .condition(orderPartSeqId : orderPartSeqId  )
+            .condition(roleTypeId     : 'CoApplicant'   )
+            .one()
+
+        if (jointApplicant){
+            return [maritalStatusIsNeeded: true]
+        }
+
         //set parameter
         def communityPropertyStates = ["USA_AZ", "USA_CA", "USA_ID", "USA_LA", "USA_NM", "USA_NV", "USA_TX", "USA_WA", "USA_WI"]
 
         //if the product is a secured loan, marital status is needed
-        def item = ef.find('mantle.order.OrderItem').condition([orderId: orderId, orderItemSeqId: orderItemSeqId]).one()
+        def item = ef.find('mantle.order.OrderItem')
+            .condition(orderId        : orderId       )
+            .condition(orderItemSeqId : orderItemSeqId)
+            .one()
         def productClass = (item.product as EntityValue).productClassEnumId
 
         if (productClass == 'IndirectSecuredLoan') {
@@ -1509,8 +1523,8 @@ class OrderServices {
 
         //if the primary applicant lives in a Community Property State, marital status is needed
         def primaryApplicantPartyId = ef.find('mantle.order.OrderPartParty')
-            .condition(orderId        : orderId)
-            .condition(orderPartSeqId : orderPartSeqId)
+            .condition(orderId        : orderId           )
+            .condition(orderPartSeqId : orderPartSeqId    )
             .condition(roleTypeId     : 'PrimaryApplicant')
             .one().partyId
 
