@@ -2763,9 +2763,14 @@
         </section>
 
         <section name="EditMortgage">
+            <actions>
+<!--                <log level="error" message="${propertyInsuranceCostsMonthlyIncluded}"/>-->
+<!--                <log level="error" message="${propertyTaxesMonthlyIncluded}"/>-->
+<!--                <log level="error" message="${hoaFeeMonthlyIncluded}"/>-->
+            </actions>
             <widgets>
                 <container-dialog id="EditMortgageDialog" button-text="Edit" condition="orderEditable">
-                    <form-single name="EditMortgageForm" transition="updateMortgage">
+                    <form-single name="EditMortgageForm" transition="updateMortgage" pass-through-parameters="false">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
@@ -2807,22 +2812,22 @@
                         </field>
                         <field name="propertyTaxesMonthlyIncluded">
                             <default-field>
-                                <check no-current-selected-key="N">
-                                    <option key="Y" text="Property Taxes Monthly"/>
+                                <check>
+                                    <option key="true" text="Property Taxes Monthly"/>
                                 </check>
                             </default-field>
                         </field>
                         <field name="propertyInsuranceCostsMonthlyIncluded">
                             <default-field>
-                                <check no-current-selected-key="N">
-                                    <option key="Y" text="Property Insurance Costs Monthly"/>
+                                <check>
+                                    <option key="true" text="Property Insurance Costs Monthly"/>
                                 </check>
                             </default-field>
                         </field>
                         <field name="hoaFeeMonthlyIncluded">
                             <default-field>
-                                <check no-current-selected-key="N">
-                                    <option key="Y" text="HOA Fee Monthly"/>
+                                <check>
+                                    <option key="true" text="HOA Fee Monthly"/>
                                 </check>
                             </default-field>
                         </field>

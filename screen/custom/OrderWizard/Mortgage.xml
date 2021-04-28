@@ -13,7 +13,27 @@
         <default-response url="."/>
     </transition>
     <transition name="updateMortgage">
-        <service-call name="mkdecision.dashboard.PartyServices.update#Mortgage" in-map="context"/>
+        <actions>
+            <if condition="propertyInsuranceCostsMonthlyIncluded.length() == 0">
+                <set field="propertyInsuranceCostsMonthlyIncluded" from="false"/>
+                <else>
+                    <set field="propertyInsuranceCostsMonthlyIncluded" from="true"/>
+                </else>
+            </if>
+            <if condition="propertyTaxesMonthlyIncluded.length() == 0">
+                <set field="propertyTaxesMonthlyIncluded" from="false"/>
+                <else>
+                    <set field="propertyTaxesMonthlyIncluded" from="true"/>
+                </else>
+            </if>
+            <if condition="hoaFeeMonthlyIncluded.length() == 0">
+                <set field="hoaFeeMonthlyIncluded" from="false"/>
+                <else>
+                    <set field="hoaFeeMonthlyIncluded" from="true"/>
+                </else>
+            </if>
+            <service-call name="mkdecision.dashboard.PartyServices.update#Mortgage" in-map="context"/>
+        </actions>
         <default-response url="."/>
     </transition>
     <transition name="deleteMortgage">
