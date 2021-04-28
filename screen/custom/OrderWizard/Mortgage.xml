@@ -13,28 +13,7 @@
         <default-response url="."/>
     </transition>
     <transition name="updateMortgage">
-        <actions>
-            <if condition="propertyInsuranceCostsMonthlyIncluded.length() > 5">
-                <set field="propertyInsuranceCostsMonthlyIncluded" from="true"/>
-            </if>
-            <if condition="propertyTaxesMonthlyIncluded.length() > 5">
-                <set field="propertyTaxesMonthlyIncluded" from="true"/>
-            </if>
-            <if condition="hoaFeeMonthlyIncluded.length() > 5">
-                <set field="hoaFeeMonthlyIncluded" from="true"/>
-            </if>
-
-            <if condition="!Boolean.valueOf(propertyInsuranceCostsMonthlyIncluded) &amp;&amp; propertyInsuranceCostsMonthlyIncluded.length() == 0">
-                <set field="propertyInsuranceCostsMonthlyIncluded" from="false"/>
-            </if>
-            <if condition="!Boolean.valueOf(propertyTaxesMonthlyIncluded) &amp;&amp; propertyTaxesMonthlyIncluded.length() == 0">
-                <set field="propertyTaxesMonthlyIncluded" from="false"/>
-            </if>
-            <if condition="!Boolean.valueOf(hoaFeeMonthlyIncluded) &amp;&amp; hoaFeeMonthlyIncluded.length() == 0">
-                <set field="hoaFeeMonthlyIncluded" from="false"/>
-            </if>
-            <service-call name="mkdecision.dashboard.PartyServices.update#Mortgage" in-map="context"/>
-        </actions>
+        <service-call name="mkdecision.dashboard.PartyServices.update#Mortgage" in-map="context"/>
         <default-response url="."/>
     </transition>
     <transition name="deleteMortgage">

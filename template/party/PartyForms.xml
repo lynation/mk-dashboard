@@ -2732,24 +2732,27 @@
                             </default-field>
                         </field>
                         <field name="propertyTaxesMonthlyIncluded">
-                            <default-field>
-                                <check>
-                                    <option key="true" text="Property Taxes Monthly"/>
-                                </check>
+                            <default-field title="Property Taxes Monthly">
+                                <radio no-current-selected-key="false">
+                                    <option key="true" text="Yes"/>
+                                    <option key="false" text="No"/>
+                                </radio>
                             </default-field>
                         </field>
                         <field name="propertyInsuranceCostsMonthlyIncluded">
-                            <default-field>
-                                <check>
-                                    <option key="true" text="Property Insurance Costs Monthly"/>
-                                </check>
+                            <default-field title="Property Insurance Costs Monthly">
+                                <radio no-current-selected-key="false">
+                                    <option key="true" text="Yes"/>
+                                    <option key="false" text="No"/>
+                                </radio>
                             </default-field>
                         </field>
                         <field name="hoaFeeMonthlyIncluded">
-                            <default-field>
-                                <check>
-                                    <option key="true" text="HOA Fee Monthly"/>
-                                </check>
+                            <default-field title="HOA Fee Monthly">
+                                <radio no-current-selected-key="false">
+                                    <option key="true" text="Yes"/>
+                                    <option key="false" text="No"/>
+                                </radio>
                             </default-field>
                         </field>
                         <field name="submit">
@@ -2806,24 +2809,27 @@
                             </default-field>
                         </field>
                         <field name="propertyTaxesMonthlyIncluded">
-                            <default-field>
-                                <check>
-                                    <option key="true" text="Property Taxes Monthly"/>
-                                </check>
+                            <default-field title="Property Taxes Monthly">
+                                <radio>
+                                    <option key="true" text="Yes"/>
+                                    <option key="false" text="No"/>
+                                </radio>
                             </default-field>
                         </field>
                         <field name="propertyInsuranceCostsMonthlyIncluded">
-                            <default-field>
-                                <check>
-                                    <option key="true" text="Property Insurance Costs Monthly"/>
-                                </check>
+                            <default-field title="Property Insurance Costs Monthly">
+                                <radio>
+                                    <option key="true" text="Yes"/>
+                                    <option key="false" text="No"/>
+                                </radio>
                             </default-field>
                         </field>
                         <field name="hoaFeeMonthlyIncluded">
-                            <default-field>
-                                <check>
-                                    <option key="true" text="HOA Fee Monthly"/>
-                                </check>
+                            <default-field title="HOA Fee Monthly">
+                                <radio>
+                                    <option key="true" text="Yes"/>
+                                    <option key="false" text="No"/>
+                                </radio>
                             </default-field>
                         </field>
 

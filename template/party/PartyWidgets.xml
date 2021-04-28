@@ -723,14 +723,14 @@
                             <field-map field-name="enumTypeId" value="MortgagePriority"/>
                             <field-map field-name="sequenceNum" from="financialFlow.sequenceNum"/>
                         </entity-find-one>
-                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="finWorksheetAccountAdj">
-                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + ':MkFinFlowMonthlyPropertyTaxes'"/>
+                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="monthlyPropertyTaxesAdj">
+                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + '[' + financialFlow.sequenceNum +']:MkFinFlowMonthlyPropertyTaxes'"/>
                         </entity-find-one>
-                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="finWorksheetAccountAdj">
-                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + ':MkFinFlowMonthlyInsuranceCosts'"/>
+                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="monthlyInsuranceCostsAdj">
+                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId +  '[' + financialFlow.sequenceNum +']:MkFinFlowMonthlyInsuranceCosts'"/>
                         </entity-find-one>
-                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="finWorksheetAccountAdj">
-                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId + ':MkFinFlowHoaMonthlyFee'"/>
+                        <entity-find-one entity-name="mk.financial.worksheet.FinancialWorksheetAccountAdjustment" value-field="hoaMonthlyFeeAdj">
+                            <field-map field-name="accountId" from="mortgageRelation.fromPartyId +  '[' + financialFlow.sequenceNum +']:MkFinFlowHoaMonthlyFee'"/>
                         </entity-find-one>
 
                         <set field="partyRelationshipId" from="mortgageRelation.partyRelationshipId"/>
@@ -739,9 +739,11 @@
                         <set field="mortgagePaymentMonthly" from="financialFlow.amount"/>
                         <set field="mortgagePriority" from="financialFlow.sequenceNum"/>
                         <set field="mortgagePriorityDescription" from="mortgagePriorityEnum?.description"/>
-                        <set field="propertyTaxesMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? false : true"/>
-                        <set field="propertyInsuranceCostsMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? false : true"/>
-                        <set field="hoaFeeMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? false : true"/>
+                        <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include == 'Y' ? false : true"/>
+                        <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include == 'Y' ? false : true"/>
+                        <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include == 'Y' ? false : true"/>
+
+
                     </actions>
                     <widgets>
                         <container style="q-pt-md">
