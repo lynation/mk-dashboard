@@ -211,9 +211,9 @@
                                 <set field="mortgageBalance" from="mortgageFinFlow.balance"/>
                                 <set field="mortgagePaymentMonthly" from="mortgageFinFlow.amount"/>
                                 <set field="mortgagePriority" from="mortgageFinFlow.sequenceNum"/>
-                                <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include == 'Y' ? true : false"/>
-                                <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include == 'Y' ? true : false"/>
-                                <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include == 'Y' ? true : false"/>
+                                <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include == 'Y' ? false : true"/>
+                                <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include == 'Y' ? false : true"/>
+                                <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include == 'Y' ? false : true"/>
                             </actions>
                             <widgets>
                                 <container-row>
@@ -739,9 +739,9 @@
                         <set field="mortgagePaymentMonthly" from="financialFlow.amount"/>
                         <set field="mortgagePriority" from="financialFlow.sequenceNum"/>
                         <set field="mortgagePriorityDescription" from="mortgagePriorityEnum?.description"/>
-                        <set field="propertyTaxesMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? true : false"/>
-                        <set field="propertyInsuranceCostsMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? true : false"/>
-                        <set field="hoaFeeMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? true : false"/>
+                        <set field="propertyTaxesMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? false : true"/>
+                        <set field="propertyInsuranceCostsMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? false : true"/>
+                        <set field="hoaFeeMonthlyIncluded" from="finWorksheetAccountAdj?.include == 'Y' ? false : true"/>
                     </actions>
                     <widgets>
                         <container style="q-pt-md">

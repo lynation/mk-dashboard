@@ -1514,7 +1514,7 @@ class PartyServices {
                 .parameter("accountId", accountId)
                 .parameter("adjusterUserId", ec.user.getUserId())
                 .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-                .parameter("include", includePropertyTaxesMonthly ? 'Y' : 'N')
+                .parameter("include", includePropertyTaxesMonthly ? 'N' : 'Y')
                 .call()
 
 
@@ -1540,7 +1540,7 @@ class PartyServices {
                 .parameter("accountId", accountId)
                 .parameter("adjusterUserId", ec.user.getUserId())
                 .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includePropertyInsuranceCostsMonthly ? 'Y' : 'N')
+            .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
                 .call()
 
         // Creating accountId. including mortgagePriority to differentiate the MkFinFlowHoaMonthlyFee
@@ -1565,7 +1565,7 @@ class PartyServices {
                 .parameter("accountId", accountId)
                 .parameter("adjusterUserId", ec.user.getUserId())
                 .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-                .parameter("include", includeHOAFeeMonthly ? 'Y' : 'N')
+                .parameter("include", includeHOAFeeMonthly ? 'N' : 'Y')
                 .call()
 
         // update person to show residence has mortgage
@@ -1658,7 +1658,7 @@ class PartyServices {
             .parameter("fromDate", accounts.find {it.accountId == propertyTaxAccountId}.fromDate)
             .parameter("adjusterUserId", ec.user.getUserId())
             .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includePropertyTaxesMonthly ? 'Y' : 'N')
+            .parameter("include", includePropertyTaxesMonthly ? 'N' : 'Y')
             .call()
 
         String monthlyInsuranceCostsId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
@@ -1668,7 +1668,7 @@ class PartyServices {
             .parameter("fromDate", accounts.find {it.accountId == monthlyInsuranceCostsId}.fromDate)
             .parameter("adjusterUserId", ec.user.getUserId())
             .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includePropertyInsuranceCostsMonthly ? 'Y' : 'N')
+            .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
             .call()
 
         String hoaMonthlyFeeId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
@@ -1678,7 +1678,7 @@ class PartyServices {
             .parameter("fromDate", accounts.find {it.accountId == hoaMonthlyFeeId}.fromDate)
             .parameter("adjusterUserId", ec.user.getUserId())
             .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includeHOAFeeMonthly ? 'Y' : 'N')
+            .parameter("include", includeHOAFeeMonthly ? 'N' : 'Y')
             .call()
 
         // return the output parameters
