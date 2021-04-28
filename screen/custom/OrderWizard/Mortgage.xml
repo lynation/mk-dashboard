@@ -14,23 +14,24 @@
     </transition>
     <transition name="updateMortgage">
         <actions>
-            <if condition="propertyInsuranceCostsMonthlyIncluded.length() == 0">
+            <if condition="propertyInsuranceCostsMonthlyIncluded.length() > 5">
+                <set field="propertyInsuranceCostsMonthlyIncluded" from="true"/>
+            </if>
+            <if condition="propertyTaxesMonthlyIncluded.length() > 5">
+                <set field="propertyTaxesMonthlyIncluded" from="true"/>
+            </if>
+            <if condition="hoaFeeMonthlyIncluded.length() > 5">
+                <set field="hoaFeeMonthlyIncluded" from="true"/>
+            </if>
+
+            <if condition="!Boolean.valueOf(propertyInsuranceCostsMonthlyIncluded) &amp;&amp; propertyInsuranceCostsMonthlyIncluded.length() == 0">
                 <set field="propertyInsuranceCostsMonthlyIncluded" from="false"/>
-                <else>
-                    <set field="propertyInsuranceCostsMonthlyIncluded" from="true"/>
-                </else>
             </if>
-            <if condition="propertyTaxesMonthlyIncluded.length() == 0">
+            <if condition="!Boolean.valueOf(propertyTaxesMonthlyIncluded) &amp;&amp; propertyTaxesMonthlyIncluded.length() == 0">
                 <set field="propertyTaxesMonthlyIncluded" from="false"/>
-                <else>
-                    <set field="propertyTaxesMonthlyIncluded" from="true"/>
-                </else>
             </if>
-            <if condition="hoaFeeMonthlyIncluded.length() == 0">
+            <if condition="!Boolean.valueOf(hoaFeeMonthlyIncluded) &amp;&amp; hoaFeeMonthlyIncluded.length() == 0">
                 <set field="hoaFeeMonthlyIncluded" from="false"/>
-                <else>
-                    <set field="hoaFeeMonthlyIncluded" from="true"/>
-                </else>
             </if>
             <service-call name="mkdecision.dashboard.PartyServices.update#Mortgage" in-map="context"/>
         </actions>
