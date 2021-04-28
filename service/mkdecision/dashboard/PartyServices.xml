@@ -531,6 +531,7 @@
     </service>
     <service verb="delete" noun="Mortgage" type="java" location="com.mkdecision.dashboard.PartyServices" method="deleteMortgage">
         <in-parameters>
+            <parameter name="orderId"/>
             <parameter name="partyId" required="true"/>
             <parameter name="partyRelationshipId" required="true"/>
         </in-parameters>
