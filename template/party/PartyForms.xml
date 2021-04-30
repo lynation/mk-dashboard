@@ -2728,7 +2728,6 @@
                         <field name="mortgageAssistiveText">
                             <default-field>
                                 <label text="Are any of the following expenses included in the mortgage payment?" type="p"/>
-                                <label text="If yes, check the included expenses:"/>
                             </default-field>
                         </field>
                         <field name="propertyTaxesMonthlyIncluded">
@@ -2805,7 +2804,6 @@
                         <field name="mortgageAssistiveText">
                             <default-field>
                                 <label text="Are any of the following expenses included in the mortgage payment?" type="p"/>
-                                <label text="If yes, check the included expenses:"/>
                             </default-field>
                         </field>
                         <field name="propertyTaxesMonthlyIncluded">
