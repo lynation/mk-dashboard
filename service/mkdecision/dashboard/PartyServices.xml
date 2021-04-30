@@ -520,9 +520,9 @@
                 <number-range min="0" min-include-equals="false" message="Please enter the Mortgage Payment Monthly"/>
             </parameter>
             <parameter name="mortgagePriority" required="true"/>
-            <parameter name="propertyTaxesMonthlyIncluded" default="N"/>
-            <parameter name="propertyInsuranceCostsMonthlyIncluded" default="N"/>
-            <parameter name="hoaFeeMonthlyIncluded" default="N"/>
+            <parameter name="propertyTaxesMonthlyIncluded" type="Boolean"/>
+            <parameter name="propertyInsuranceCostsMonthlyIncluded" type="Boolean"/>
+            <parameter name="hoaFeeMonthlyIncluded" type="Boolean"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
@@ -531,6 +531,7 @@
     </service>
     <service verb="delete" noun="Mortgage" type="java" location="com.mkdecision.dashboard.PartyServices" method="deleteMortgage">
         <in-parameters>
+            <parameter name="orderId"/>
             <parameter name="partyId" required="true"/>
             <parameter name="partyRelationshipId" required="true"/>
         </in-parameters>
