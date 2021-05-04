@@ -252,7 +252,7 @@
                         <field name="orderPartSeqId"><default-field><hidden/></default-field></field>
                         <field name="partyId"><default-field><hidden/></default-field></field>
                         <field name="maritalStatusEnumId">
-                            <conditional-field condition="maritalStatusOptions.size() > 0">
+                            <conditional-field title="${roleTypeDescription}'s Marital Status" condition="maritalStatusOptions.size() > 0">
                                 <drop-down required-manual-select="true">
                                     <entity-options text="${description}" key="${enumId}">
                                         <entity-find entity-name="moqui.basic.Enumeration">
