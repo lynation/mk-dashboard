@@ -2660,7 +2660,6 @@
                         <field name="propertyHelperText">
                             <default-field>
                                 <label text="Please enter monthly property expenses, input \$0.00 if not applicable." type="p"/>
-                                <label text="If paid annually, divide the amount by 12 and round to 2 decimal places." style="margin-b-1"/>
                             </default-field>
                         </field>
                         <field name="propertyTaxesMonthly">
