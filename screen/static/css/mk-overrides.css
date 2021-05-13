@@ -1,5 +1,6 @@
 #top { background:white !important; color:black; }
 body.body--dark #top { background:black !important; color:white; }
+body #top img { background:black !important; color:white; }
 
 body.dev #top { background:#075aaa !important; color:black; }
 body.dev.body--dark #top { background:#072238 !important; color:white; }
