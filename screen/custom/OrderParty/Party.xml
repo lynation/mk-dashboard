@@ -40,6 +40,11 @@
     <actions>
         <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
         <entity-find-one entity-name="mantle.order.OrderPart" value-field="orderPart"/>
+        <entity-find-one entity-name="mantle.party.PartySetting" value-field="serviceableStatesSetting">
+            <field-map field-name="partyId" from="orderPart?.vendorPartyId"/>
+            <field-map field-name="partySettingTypeId" value="ServiceableStates"/>
+        </entity-find-one>
+        <set field="geoRegion" from="serviceableStatesSetting?.settingValue ?: 'USA'"/>
 
         <if condition="partyId != null">
             <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="partyRole"/>
@@ -220,7 +225,7 @@
                         <drop-down required-manual-select="true">
                             <entity-options text="${geoName}" key="${toGeoId}">
                                 <entity-find entity-name="moqui.basic.GeoAssocAndToDetail">
-                                    <econdition field-name="geoId" value="USA"/>
+                                    <econdition field-name="geoId" from="geoRegion"/>
                                     <econdition field-name="geoTypeEnumId" value="GEOT_STATE"/>
                                     <order-by field-name="geoName"/>
                                 </entity-find>

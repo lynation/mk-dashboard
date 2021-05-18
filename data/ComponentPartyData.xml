@@ -23,5 +23,7 @@
     <moqui.basic.Enumeration enumTypeId="AssetClass" parentEnumId="AsClsProperty" enumId="AsClsPropertyUnit" description="2-unit" sequenceNum="3"/>
     <moqui.basic.Enumeration enumTypeId="AssetClass" parentEnumId="AsClsProperty" enumId="AsClsPropertyCondo" description="Condo" sequenceNum="4"/>
     <moqui.basic.Enumeration enumTypeId="AssetClass" parentEnumId="AsClsProperty" enumId="AsClsPropertyOther" description="Other" sequenceNum="5"/>
-
+    
+    <!-- Party Settings -->
+    <mantle.party.PartySettingType partySettingTypeId="ServiceableStates" description="Customized list of States as Enum Group"/>
 </entity-facade-xml>
