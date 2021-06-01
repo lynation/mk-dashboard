@@ -134,6 +134,7 @@
                 <entity-find entity-name="mkdecision.dashboard.OrderContentDetail" list="orderContentList" distinct="true">
                     <econdition field-name="orderId" from="orderId"/>
                     <econdition field-name="productStoreId" from="orderHeader.productStoreId"/>
+                    <econdition field-name="orderContentTypeEnumId" operator="not-equals" value="OcntFinancialSummary"/>
                     <econditions combine="or">
                         <econdition field-name="storePartyRoleTypeId" value="FinanceManager"/>
                         <econdition field-name="storePartyRoleTypeId" value="SalesRepresentative"/>
@@ -154,6 +155,7 @@
                     <econdition field-name="productStoreId" from="orderHeader.productStoreId"/>
                     <econdition field-name="storePartyRoleTypeId" value="SalesRepresentative"/>
                     <econdition field-name="userId" from="ec.user.userId"/>
+                    <econdition field-name="orderContentTypeEnumId" operator="not-equals" value="OcntFinancialSummary"/>
                     <select-field field-name="orderContentId"/>
                     <select-field field-name="orderContentTypeEnumId"/>
                     <select-field field-name="orderId"/>
