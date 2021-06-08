@@ -239,7 +239,7 @@
                         <field name="idIssuedBy">
                             <default-field title="State Issued" validate-service="mkdecision.dashboard.PartyServices.add#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.GeoAssocAndToDetail">
                                             <econdition field-name="geoId" value="USA"/>
                                             <econdition field-name="geoTypeEnumId" value="GEOT_STATE"/>
@@ -287,7 +287,7 @@
                         <field name="idIssuedBy">
                             <default-field title="State Issued" validate-service="mkdecision.dashboard.PartyServices.update#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.GeoAssocAndToDetail">
                                             <econdition field-name="geoId" value="USA"/>
                                             <econdition field-name="geoTypeEnumId" value="GEOT_STATE"/>
@@ -335,7 +335,7 @@
                         <field name="idIssuedBy">
                             <default-field title="State Issued" validate-service="mkdecision.dashboard.PartyServices.add#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.GeoAssocAndToDetail">
                                             <econdition field-name="geoId" value="USA"/>
                                             <econdition field-name="geoTypeEnumId" value="GEOT_STATE"/>
@@ -383,7 +383,7 @@
                         <field name="idIssuedBy">
                             <default-field title="State Issued" validate-service="mkdecision.dashboard.PartyServices.update#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.GeoAssocAndToDetail">
                                             <econdition field-name="geoId" value="USA"/>
                                             <econdition field-name="geoTypeEnumId" value="GEOT_STATE"/>
@@ -431,7 +431,7 @@
                         <field name="idIssuedBy">
                             <default-field title="Country Issued" validate-service="mkdecision.dashboard.PartyServices.add#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.Geo">
                                             <econdition field-name="geoId" value="USA"/>
                                             <order-by field-name="geoName"/>
@@ -478,7 +478,7 @@
                         <field name="idIssuedBy">
                             <default-field title="Country Issued" validate-service="mkdecision.dashboard.PartyServices.update#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.Geo">
                                             <econdition field-name="geoId" value="USA"/>
                                             <order-by field-name="geoName"/>
@@ -525,7 +525,7 @@
                         <field name="idIssuedBy">
                             <default-field title="Country Issued" validate-service="mkdecision.dashboard.PartyServices.add#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.Geo">
                                             <econdition field-name="geoId" value="USA"/>
                                             <order-by field-name="geoName"/>
@@ -572,7 +572,7 @@
                         <field name="idIssuedBy">
                             <default-field title="Country Issued" validate-service="mkdecision.dashboard.PartyServices.update#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.Geo">
                                             <econdition field-name="geoId" value="USA"/>
                                             <order-by field-name="geoName"/>
@@ -619,7 +619,7 @@
                         <field name="idIssuedBy">
                             <default-field title="Country Issued" validate-service="mkdecision.dashboard.PartyServices.add#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.Geo">
                                             <econdition field-name="geoId" value="USA"/>
                                             <order-by field-name="geoName"/>
@@ -661,7 +661,7 @@
                         <field name="idIssuedBy">
                             <default-field title="Country Issued" validate-service="mkdecision.dashboard.PartyServices.update#Identity">
                                 <drop-down required-manual-select="true">
-                                    <entity-options text="${geoName}" key="${geoName}">
+                                    <entity-options text="${geoName}" key="${toGeoId}">
                                         <entity-find entity-name="moqui.basic.Geo">
                                             <econdition field-name="geoId" value="USA"/>
                                             <order-by field-name="geoName"/>
