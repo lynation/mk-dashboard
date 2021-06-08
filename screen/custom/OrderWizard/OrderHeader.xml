@@ -399,6 +399,10 @@
                 </field-layout>
             </form-single>
         </container>
+
+        <container style="text-center margin-tb-05">
+            <image url="https://assets.ccos.mkdecision.com/icons/equal-housing-lender_member-fdic.svg" url-type="plain" alt="FDIC Logo"/>
+        </container>
     </widgets>
 
 </screen>
