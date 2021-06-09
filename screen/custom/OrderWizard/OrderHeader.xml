@@ -167,6 +167,11 @@
 
         <set field="salesRepresentativeId" from="ec.user.userAccount.partyId"/>
 
+        <!-- Find the fdicUrl if any -->
+        <service-call name="close.StoreServices.find#SharedStoreSetting" in-map="[settingName: 'FdicUrl', productStoreId: productStoreIdSet[0]]" out-map="productStoreSetting"/>
+        <if condition="productStoreSetting?.settingValue">
+            <set field="FdicUrl" from="productStoreSetting.settingValue" type="String"/>
+        </if>
     </actions>
 
     <widgets>
@@ -401,7 +406,7 @@
         </container>
 
         <container style="text-center margin-tb-05">
-            <image url="https://assets.ccos.mkdecision.com/icons/equal-housing-lender_member-fdic.svg" url-type="plain" alt="FDIC Logo"/>
+            <image url="${FdicUrl}" url-type="plain" alt="FDIC Logo"/>
         </container>
     </widgets>
 
