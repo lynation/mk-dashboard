@@ -67,6 +67,21 @@
         <set field="isFinanceManager" from="financeManagerCount > 0"/>
         <set field="isUnderwriter" from="underwriterCount > 0"/>
 
+        <service-call name="close.StoreServices.find#SharedStoreSetting"
+                      in-map="[productStoreId: orderHeader.productStoreId,
+                              vendorPartyId: orderHeader.parts.vendorPartyId,
+                              settingName: 'OrderDocumentsToViewByFinanceManager']"
+                      out-map="financeOrderDocumentView"/>
+
+        <service-call name="close.StoreServices.find#SharedStoreSetting"
+                      in-map="[productStoreId: orderHeader.productStoreId,
+                              vendorPartyId: orderHeader.parts.vendorPartyId,
+                              settingName: 'OrderDocumentsToViewBySalesRep']"
+                      out-map="salesRepOrderDocumentView"/>
+
+        <set field="listOrderDocumentViewFinanceManager" from="(financeOrderDocumentView.settingValue ?: '' as String).split(',')" type="List"/>
+        <set field="listOrderDocumentViewSalesRep" from="(salesRepOrderDocumentView.settingValue ?: '' as String).split(',')" type="List"/>
+
         <if condition="isUnderwriter">
             <entity-find entity-name="mkdecision.dashboard.PartyContentDetail" list="partyContentList" distinct="true">
                 <econdition field-name="partyId" operator="in" from="partyIdList"/>
@@ -134,7 +149,7 @@
                 <entity-find entity-name="mkdecision.dashboard.OrderContentDetail" list="orderContentList" distinct="true">
                     <econdition field-name="orderId" from="orderId"/>
                     <econdition field-name="productStoreId" from="orderHeader.productStoreId"/>
-                    <econdition field-name="orderContentTypeEnumId" operator="not-equals" value="OcntFinancialSummary"/>
+                    <econdition field-name="orderContentTypeEnumId" operator="in" from="listOrderDocumentViewFinanceManager"/>
                     <econditions combine="or">
                         <econdition field-name="storePartyRoleTypeId" value="FinanceManager"/>
                         <econdition field-name="storePartyRoleTypeId" value="SalesRepresentative"/>
@@ -155,7 +170,7 @@
                     <econdition field-name="productStoreId" from="orderHeader.productStoreId"/>
                     <econdition field-name="storePartyRoleTypeId" value="SalesRepresentative"/>
                     <econdition field-name="userId" from="ec.user.userId"/>
-                    <econdition field-name="orderContentTypeEnumId" operator="not-equals" value="OcntFinancialSummary"/>
+                    <econdition field-name="orderContentTypeEnumId" operator="in" from="listOrderDocumentViewSalesRep"/>
                     <select-field field-name="orderContentId"/>
                     <select-field field-name="orderContentTypeEnumId"/>
                     <select-field field-name="orderId"/>
