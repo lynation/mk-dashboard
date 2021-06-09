@@ -167,6 +167,11 @@
 
         <set field="salesRepresentativeId" from="ec.user.userAccount.partyId"/>
 
+        <!-- Find the fdicUrl if any -->
+        <service-call name="close.StoreServices.find#SharedStoreSetting" in-map="[settingName: 'FdicUrl', productStoreId: productStoreIdSet[0]]" out-map="productStoreSetting"/>
+        <if condition="productStoreSetting?.settingValue">
+            <set field="fdicUrl" from="productStoreSetting.settingValue" type="String"/>
+        </if>
     </actions>
 
     <widgets>
@@ -398,6 +403,10 @@
                     </field-col-row>
                 </field-layout>
             </form-single>
+        </container>
+
+        <container style="text-center margin-tb-05">
+            <image url="${fdicUrl}" url-type="plain" alt="FDIC Logo"/>
         </container>
     </widgets>
 
