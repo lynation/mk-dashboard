@@ -170,7 +170,7 @@
         <!-- Find the fdicUrl if any -->
         <service-call name="close.StoreServices.find#SharedStoreSetting" in-map="[settingName: 'FdicUrl', productStoreId: productStoreIdSet[0]]" out-map="productStoreSetting"/>
         <if condition="productStoreSetting?.settingValue">
-            <set field="FdicUrl" from="productStoreSetting.settingValue" type="String"/>
+            <set field="fdicUrl" from="productStoreSetting.settingValue" type="String"/>
         </if>
     </actions>
 
@@ -406,7 +406,7 @@
         </container>
 
         <container style="text-center margin-tb-05">
-            <image url="${FdicUrl}" url-type="plain" alt="FDIC Logo"/>
+            <image url="${fdicUrl}" url-type="plain" alt="FDIC Logo"/>
         </container>
     </widgets>
 
