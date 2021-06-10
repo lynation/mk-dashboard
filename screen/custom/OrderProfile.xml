@@ -312,7 +312,7 @@
                         </section>
                     </widgets>
                 </section-iterate>
-                <link url="cancelOrder" text="Cancel" btn-type="danger" condition="orderStatus?.statusId != 'OrderCancelled'" confirmation="Are you sure you want to cancel this order?"/>
+                <link url="cancelOrder" text="Cancel" btn-type="danger" condition="orderStatus?.statusId != 'OrderCancelled' &amp;&amp; (ec.user.hasPermission('MK_DASHBOARD_CANCEL_ONLY_ON_OPEN_STATUS') &amp;&amp; orderStatus?.statusId == 'OrderOpen' || ec.user.hasPermission('MK_DASHBOARD_CANCEL_ON_ANY_STATUS'))" confirmation="Are you sure you want to cancel this order?"/>
             </row-col>
         </container-row>
 
