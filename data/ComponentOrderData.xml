@@ -32,4 +32,12 @@
     <moqui.security.UserGroupPreference userGroupId="FINANCE_MANAGER" preferenceKey="UsrPrfMkDashboardEditableOrderStatuses" preferenceValue="MkStorePartyEditableOrderStatuses"/>
     <moqui.security.UserGroupPreference userGroupId="SALES_REPRESENTATIVE" preferenceKey="UsrPrfMkDashboardEditableOrderStatuses" preferenceValue="MkStorePartyEditableOrderStatuses"/>
 
+    <!-- Store/Party Setting for list of documents to view by Finance Manager -->
+    <moqui.basic.Enumeration enumTypeId="ProductStoreSettingType" enumId="PsstOrderDocumentsToViewByFinanceManager" description="List Of Order Documents To View By Finance Manager" />
+    <mantle.party.PartySettingType partySettingTypeId="OrgOrderDocumentsToViewByFinanceManager" description="List Of Order Documents To View By Finance Manager"/>
+
+    <!-- Store/Party Setting for list of documents to view by Sales Rep -->
+    <moqui.basic.Enumeration enumTypeId="ProductStoreSettingType" enumId="PsstOrderDocumentsToViewBySalesRep" description="List Of Order Documents To View By Sales Representative" />
+    <mantle.party.PartySettingType partySettingTypeId="OrgOrderDocumentsToViewBySalesRep" description="List Of Order Documents To View By Sales Representative"/>
+
 </entity-facade-xml>
