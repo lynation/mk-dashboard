@@ -7,23 +7,32 @@
 
     <parameter name="orderId" required="true"/>
     <parameter name="orderPartSeqId" required="true"/>
+    <parameter name="isUnsecured" required="true"/>
 
     <transition name="coApplicant">
         <default-response url="../CoApplicant">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
     <transition name="primaryApplicantEmployment">
         <default-response url="../PrimaryApplicantEmployment">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
     <transition name="property">
         <default-response url="../Property">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
+        </default-response>
+    </transition>
+    <transition name="mortgage">
+        <default-response url="../Mortgage">
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
 
@@ -51,7 +60,6 @@
         <container-row style="form-no-margin">
             <row-col xs="0" sm="1" md="3" lg="3"/>
             <row-col xs="12" sm="10" md="6" lg="6">
-                <label text="New Application" type="h4" style="margin-b-1"/>
                 <label text="Add Co-Applicant (Optional)" type="h5" style="margin-b-1"/>
                 <label text="Co-applicant must reside in the property and be a spouse or be a co-owner of the property." style="margin-b-1"/>
                 <container style="h-separator margin-tb-2"/>
@@ -65,7 +73,8 @@
                         <link url="primaryApplicantEmployment" text="Back" style="text-black"/>
                     </row-col>
                     <row-col xs="6" sm="6" md="6" lg="6" style="padding-all-0 text-right">
-                        <link url="property" text="Continue" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId]"/>
+                        <link condition="isUnsecured == 'false'" url="property" text="Continue" style="text-primary" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId]"/>
+                        <link condition="isUnsecured == 'true'" url="mortgage" text="Continue" style="text-primary" btn-type="default" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId]"/>
                     </row-col>
                 </container-row>
             </row-col>

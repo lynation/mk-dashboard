@@ -357,6 +357,12 @@
             <parameter name="jobTitle" required="true">
                 <matches regexp="^[- A-Za-z']+$" message="Please enter an occupation using only letters, apostrophes or hyphens."/>
             </parameter>
+            <parameter name="years" type="Integer" required="true">
+                <number-range min="0" max="100" max-include-equals="true" message="Please enter a number between 0 and 100."/>
+            </parameter>
+            <parameter name="months" type="Integer" required="true">
+                <number-range min="0" max="11" max-include-equals="true" message="Please enter a number between 0 and 11."/>
+            </parameter>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
@@ -369,6 +375,12 @@
             <parameter name="relationshipTypeEnumId"/>
             <parameter name="jobTitle" required="true">
                 <matches regexp="^[- A-Za-z']+$" message="Please enter an occupation using only letters, apostrophes or hyphens."/>
+            </parameter>
+            <parameter name="years" type="Integer" required="true">
+                <number-range min="0" max="100" max-include-equals="true" message="Please enter a number between 0 and 100."/>
+            </parameter>
+            <parameter name="months" type="Integer" required="true">
+                <number-range min="0" max="11" max-include-equals="true" message="Please enter a number between 0 and 11."/>
             </parameter>
         </in-parameters>
         <out-parameters>
@@ -389,6 +401,11 @@
             <parameter name="partyId"/>
             <parameter name="financialFlowTypeEnumId"/>
             <parameter name="amount" type="BigDecimal"/>
+        </in-parameters>
+    </service>
+    <service verb="validate" noun="IncomeSourceDuration" type="java" location="com.mkdecision.dashboard.PartyServices" method="validateIncomeSourceDuration">
+        <in-parameters>
+            <parameter name="partyId"/>
             <parameter name="years" type="Integer"/>
             <parameter name="months" type="Integer"/>
         </in-parameters>
@@ -397,13 +414,13 @@
         <in-parameters>
             <parameter name="partyId"/>
             <parameter name="financialFlowTypeEnumId"/>
-            <parameter name="amount" type="BigDecimal" required="true">
+            <parameter name="amount" type="BigDecimal">
                 <number-range min="0" min-include-equals="false" message="Please enter a valid amount."/>
             </parameter>
-            <parameter name="years" type="Integer" required="true">
+            <parameter name="years" type="Integer">
                 <number-range min="0" max="100" max-include-equals="true" message="Please enter a number between 0 and 100."/>
             </parameter>
-            <parameter name="months" type="Integer" required="true">
+            <parameter name="months" type="Integer">
                 <number-range min="0" max="11" max-include-equals="true" message="Please enter a number between 0 and 11."/>
             </parameter>
         </in-parameters>
@@ -417,13 +434,13 @@
             <parameter name="partyId"/>
             <parameter name="financialFlowId"/>
             <parameter name="financialFlowTypeEnumId"/>
-            <parameter name="amount" type="BigDecimal" required="true">
+            <parameter name="amount" type="BigDecimal">
                 <number-range min="0" min-include-equals="false" message="Please enter a valid amount."/>
             </parameter>
-            <parameter name="years" type="Integer" required="true">
+            <parameter name="years" type="Integer">
                 <number-range min="0" max="100" max-include-equals="true" message="Please enter a number between 0 and 100."/>
             </parameter>
-            <parameter name="months" type="Integer" required="true">
+            <parameter name="months" type="Integer">
                 <number-range min="0" max="11" max-include-equals="true" message="Please enter a number between 0 and 11."/>
             </parameter>
         </in-parameters>
@@ -484,6 +501,7 @@
             <parameter name="mortgageBalance" type="BigDecimal"/>
             <parameter name="mortgagePaymentMonthly" type="BigDecimal"/>
             <parameter name="mortgagePriority"/>
+            <parameter name="isUnsecured" required="true" type="Boolean"/>
         </in-parameters>
     </service>
     <service verb="create" noun="Mortgage" type="java" location="com.mkdecision.dashboard.PartyServices" method="createMortgage">
@@ -491,16 +509,17 @@
             <parameter name="orderId"/>
             <parameter name="partyId" required="true"/>
             <parameter name="lenderName" required="true"/>
-            <parameter name="mortgageBalance" type="BigDecimal" required="true">
+            <parameter name="mortgageBalance" type="BigDecimal">
                 <number-range min="0" min-include-equals="false" message="Please enter the current Mortgage Balance"/>
             </parameter>
             <parameter name="mortgagePaymentMonthly" type="BigDecimal" required="true">
                 <number-range min="0" min-include-equals="false" message="Please enter the Mortgage Payment Monthly"/>
             </parameter>
-            <parameter name="mortgagePriority" required="true"/>
+            <parameter name="mortgagePriority"/>
             <parameter name="propertyTaxesMonthlyIncluded" type="Boolean" default="false"/>
             <parameter name="propertyInsuranceCostsMonthlyIncluded" type="Boolean" default="false"/>
             <parameter name="hoaFeeMonthlyIncluded" type="Boolean" default="false"/>
+            <parameter name="isUnsecured" required="true" type="Boolean"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
@@ -512,14 +531,15 @@
             <parameter name="orderId"/>
             <parameter name="partyId" required="true"/>
             <parameter name="partyRelationshipId" required="true"/>
+            <parameter name="isUnsecured" required="true" type="Boolean"/>
             <parameter name="lenderName" required="true"/>
-            <parameter name="mortgageBalance" type="BigDecimal" required="true">
+            <parameter name="mortgageBalance" type="BigDecimal">
                 <number-range min="0" min-include-equals="false" message="Please enter the current Mortgage Balance"/>
             </parameter>
             <parameter name="mortgagePaymentMonthly" type="BigDecimal" required="true">
                 <number-range min="0" min-include-equals="false" message="Please enter the Mortgage Payment Monthly"/>
             </parameter>
-            <parameter name="mortgagePriority" required="true"/>
+            <parameter name="mortgagePriority"/>
             <parameter name="propertyTaxesMonthlyIncluded" type="Boolean"/>
             <parameter name="propertyInsuranceCostsMonthlyIncluded" type="Boolean"/>
             <parameter name="hoaFeeMonthlyIncluded" type="Boolean"/>

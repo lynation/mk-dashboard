@@ -7,9 +7,14 @@
 
     <parameter name="orderId" required="true"/>
     <parameter name="orderPartSeqId" required="true"/>
+    <parameter name="isUnsecured" required="true"/>
 
     <transition name="storeProperty">
-        <service-call name="mkdecision.dashboard.OrderServices.store#Property" in-map="context" out-map="context"/>
+        <actions>
+            <if condition="isUnsecured == 'false'">
+                <service-call name="mkdecision.dashboard.OrderServices.store#Property" in-map="context" out-map="context"/>
+            </if>
+        </actions>
         <default-response url="../Mortgage"/>
     </transition>
     <transition name="coApplicant">
@@ -26,10 +31,12 @@
             </condition>
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </conditional-response>
         <default-response url="../CoApplicantEmployment">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
 
@@ -101,12 +108,12 @@
             <form-single name="PropertyForm" map="asset" transition="storeProperty">
                 <field name="orderId"><default-field><hidden/></default-field></field>
                 <field name="orderPartSeqId"><default-field><hidden/></default-field></field>
+                <field name="isUnsecured"><default-field><hidden/></default-field></field>
                 <field name="partyId"><default-field><hidden/></default-field></field>
                 <field name="assetId"><default-field><hidden/></default-field></field>
 
                 <field name="propertyHeader">
                     <default-field>
-                        <label text="New Application" type="h4" style="margin-b-1"/>
                         <label text="Property" type="h5" style="margin-b-1"/>
                         <label text="Please enter property information to continue" style="margin-b-1"/>
                         <container style="h-separator margin-tb-2"/>

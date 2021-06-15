@@ -7,6 +7,7 @@
 
     <parameter name="orderId" required="true"/>
     <parameter name="orderPartSeqId" required="true"/>
+    <parameter name="isUnsecured" required="true"/>
 
     <transition-include name="addEmployment" location="component://mk-dashboard/screen/custom/OrderParty/PartyEmployment.xml"/>
     <transition-include name="updateEmployment" location="component://mk-dashboard/screen/custom/OrderParty/PartyEmployment.xml"/>
@@ -19,6 +20,7 @@
         <default-response url="../CoApplicantIdentity">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
     <transition name="checkEmployment">
@@ -45,9 +47,17 @@
             </if>
         </actions>
 
+        <conditional-response url="../Mortgage">
+            <condition>
+                <expression>employmentYear >= 2 &amp;&amp; isUnsecured == 'true'</expression>
+            </condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+        </conditional-response>
+
         <conditional-response url="../Property">
             <condition>
-                <expression>employmentYear >= 2</expression>
+                <expression>employmentYear >= 2 &amp;&amp; isUnsecured == 'false'</expression>
             </condition>
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
@@ -56,6 +66,7 @@
         <default-response url="../CoApplicantEmploymentPrevious">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
 
@@ -112,15 +123,13 @@
         <container-row style="form-no-margin">
             <row-col xs="0" sm="1" md="3" lg="3"/>
             <row-col xs="12" sm="10" md="6" lg="6">
-                <label text="New Application" type="h4" style="margin-b-1"/>
-
-                <label text="Co-Applicant Current Employment" type="h5" style="margin-b-1"/>
+                <label text="Co-Applicant Employment" type="h5" style="margin-b-1"/>
                 <label text="Add all current employment sources" style="margin-b-1"/>
                 <container style="h-separator margin-tb-2"/>
 
                 <section-include name="CurrentEmploymentSection" location="component://mk-dashboard/template/party/PartyWidgets.xml"/>
 
-                <label text="Current Non-Employment Income" type="h5" style="margin-t-2 margin-b-1"/>
+                <label text="Non-Employment Income" type="h5" style="margin-t-2 margin-b-1"/>
                 <label text="Add all current non-employment income sources. Alimony, child support, or separate maintenance income need not be provided if applicant does not wish it to be considered as a basis for repaying this obligation." style="margin-b-1"/>
                 <container style="h-separator margin-tb-2"/>
 

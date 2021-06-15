@@ -722,28 +722,15 @@ class PartyServices {
         }
 
         // validate duration
-        if (StringUtils.equals(relationshipTypeEnumId, "PrtEmployee")) {
-            if (years == null || years < 0) {
-                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
-                return
-            } else if (months == null || months < 0) {
-                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
-                return
-            } else if (years == 0 && months == 0) {
-                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
-                return
-            }
-        } else if (StringUtils.equals(relationshipTypeEnumId, "PrtPreviousEmployee")) {
-            if (fromDate == null || toDate == null) {
-                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
-                return
-            } else if (fromDate.after(toDate)) {
-                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
-                return
-            } else if (toDate.after(new Date())) {
-                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
-                return
-            }
+        if (years == null || years < 0) {
+            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
+            return
+        } else if (months == null || months < 0) {
+            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
+            return
+        } else if (years == 0 && months == 0) {
+            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT_DURATION"))
+            return
         }
 
         // validate monthly income
@@ -790,7 +777,7 @@ class PartyServices {
         }
 
         // calculate from date
-        if (StringUtils.equals(relationshipTypeEnumId, "PrtEmployee")) {
+        if (years >= 0 && months >= 0) {
             fromDate = new Date()
             fromDate = DateUtils.addYears(fromDate, -years)
             fromDate = DateUtils.addMonths(fromDate, -months)
@@ -913,7 +900,7 @@ class PartyServices {
         }
 
         // calculate from date
-        if (StringUtils.equals(relationshipTypeEnumId, "PrtEmployee")) {
+        if (years >= 0 && months >= 0) {
             fromDate = new Date()
             fromDate = DateUtils.addYears(fromDate, -years)
             fromDate = DateUtils.addMonths(fromDate, -months)
@@ -1098,8 +1085,6 @@ class PartyServices {
         String partyId = (String) cs.getOrDefault("partyId", null)
         String financialFlowTypeEnumId = (String) cs.getOrDefault("financialFlowTypeEnumId", null)
         BigDecimal amount = (BigDecimal) cs.getOrDefault("amount", null)
-        Integer years = (Integer) cs.getOrDefault("years", null)
-        Integer months = (Integer) cs.getOrDefault("months", null)
 
         // validate financial flow type
         if (StringUtils.isBlank(financialFlowTypeEnumId)) {
@@ -1110,6 +1095,20 @@ class PartyServices {
         if (amount == null || amount <= 0) {
             mf.addError(lf.localize("DASHBOARD_INVALID_INCOME_SOURCE_AMOUNT"))
         }
+    }
+
+    static void validateIncomeSourceDuration(ExecutionContext ec) {
+
+        // shortcuts for convenience
+        ContextStack cs = ec.getContext()
+        EntityFacade ef = ec.getEntity()
+        MessageFacade mf = ec.getMessage()
+        L10nFacade lf = ec.getL10n()
+
+        // get the parameters
+        String partyId = (String) cs.getOrDefault("partyId", null)
+        Integer years = (Integer) cs.getOrDefault("years", null)
+        Integer months = (Integer) cs.getOrDefault("months", null)
 
         // validate duration
         if (years == null || years < 0) {
@@ -1140,16 +1139,25 @@ class PartyServices {
 
         // validate fields
         sf.sync().name("mkdecision.dashboard.PartyServices.validate#IncomeSourceFields")
-                .parameters(cs)
-                .call()
+            .parameters(cs)
+            .call()
         if (mf.hasError()) {
             return new HashMap<String, Object>()
         }
-
+        // validate duration fields
+         Date incomeStartDate
+         if(years != null || months != null ) {
+             sf.sync().name("mkdecision.dashboard.PartyServices.validate#IncomeSourceDuration")
+                 .parameters(cs)
+                 .call()
+             if (mf.hasError()) {
+                 return new HashMap<String, Object>()
+             }
+             incomeStartDate = new Date()
+             incomeStartDate = DateUtils.addYears(incomeStartDate, -years)
+             incomeStartDate = DateUtils.addMonths(incomeStartDate, -months)
+         }
         // create income source
-        Date incomeStartDate = new Date()
-        incomeStartDate = DateUtils.addYears(incomeStartDate, -years)
-        incomeStartDate = DateUtils.addMonths(incomeStartDate, -months)
         Map<String, Object> finFlowResp = sf.sync().name("create#mk.close.FinancialFlow")
                 .parameter("entryTypeEnumId", "MkEntryIncome")
                 .parameter("financialFlowTypeEnumId", financialFlowTypeEnumId)
@@ -1191,7 +1199,19 @@ class PartyServices {
         if (mf.hasError()) {
             return new HashMap<String, Object>()
         }
-
+        // validate duration fields
+        Date incomeStartDate
+         if(years != 0 && months != 0 ) {
+             sf.sync().name("mkdecision.dashboard.PartyServices.validate#IncomeSourceDuration")
+                 .parameters(cs)
+                 .call()
+             if (mf.hasError()) {
+                 return new HashMap<String, Object>()
+             }
+             incomeStartDate = new Date()
+             incomeStartDate = DateUtils.addYears(incomeStartDate, -years)
+             incomeStartDate = DateUtils.addMonths(incomeStartDate, -months)
+         }
         // validate financial flow
         EntityValue finFlow = ef.find("mk.close.FinancialFlow")
                 .condition("financialFlowId", financialFlowId)
@@ -1202,9 +1222,6 @@ class PartyServices {
         }
 
         // update financial flow
-        Date incomeStartDate = new Date()
-        incomeStartDate = DateUtils.addYears(incomeStartDate, -years)
-        incomeStartDate = DateUtils.addMonths(incomeStartDate, -months)
         Map<String, Object> finFlowResp = sf.sync().name("update#mk.close.FinancialFlow")
                 .parameter("financialFlowId", financialFlowId)
                 .parameter("financialFlowTypeEnumId", financialFlowTypeEnumId)
@@ -1393,6 +1410,7 @@ class PartyServices {
         BigDecimal mortgageBalance = (BigDecimal) cs.getOrDefault("mortgageBalance", null)
         BigDecimal mortgagePaymentMonthly = (BigDecimal) cs.getOrDefault("mortgagePaymentMonthly", null)
         String mortgagePriority = (String) cs.getOrDefault("mortgagePriority", null)
+        Boolean isUnsecured = (Boolean) cs.getOrDefault("isUnsecured", false)
 
         // validate lender name
         if (StringUtils.isBlank(lenderName)) {
@@ -1401,7 +1419,7 @@ class PartyServices {
         }
 
         // validate mortgage balance
-        if (mortgageBalance != null && mortgageBalance <= 0) {
+        if (mortgageBalance != null && mortgageBalance <= 0 && !isUnsecured) {
             mf.addError(lf.localize("DASHBOARD_INVALID_MORTGAGE_BALANCE"))
             return
         }
@@ -1412,7 +1430,7 @@ class PartyServices {
         }
 
         // validate mortgage priority
-        if (StringUtils.isBlank(mortgagePriority)) {
+        if (StringUtils.isBlank(mortgagePriority) && !isUnsecured) {
             mf.addError(lf.localize("DASHBOARD_INVALID_MORTGAGE_PRIORITY"))
             return
         }
@@ -1434,6 +1452,7 @@ class PartyServices {
         BigDecimal mortgageBalance = (BigDecimal) cs.getOrDefault("mortgageBalance", null)
         BigDecimal mortgagePaymentMonthly = (BigDecimal) cs.getOrDefault("mortgagePaymentMonthly", null)
         String mortgagePriority = (String) cs.getOrDefault("mortgagePriority", null)
+        Boolean isUnsecured = (Boolean) cs.getOrDefault("isUnsecured", false)
         Boolean includePropertyTaxesMonthly = (Boolean) cs.getOrDefault("propertyTaxesMonthlyIncluded", false)
         Boolean includePropertyInsuranceCostsMonthly = (Boolean) cs.getOrDefault("propertyInsuranceCostsMonthlyIncluded", false)
         Boolean includeHOAFeeMonthly = (Boolean) cs.getOrDefault("hoaFeeMonthlyIncluded", false)
@@ -1493,23 +1512,24 @@ class PartyServices {
             financialWorksheetId = getFinancialWorksheet.get("financialWorksheetId")
         }
 
-        // Creating accountId. including mortgagePriority to differentiate the MkFinFlowMonthlyPropertyTaxes
-        // between the different mortgages
-        String accountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyPropertyTaxes"
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccount")
+        if (!isUnsecured){
+            // Creating accountId. including mortgagePriority to differentiate the MkFinFlowMonthlyPropertyTaxes
+            // between the different mortgages
+            String accountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyPropertyTaxes"
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccount")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", accountId)
                 .parameter("statusId", "FwAcctStated")
                 .parameter("accountTypeEnumId", "FwAtMortgage")
                 .call()
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountParty")
-            .parameter("financialWorksheetId", financialWorksheetId)
-            .parameter("accountId", accountId)
-            .parameter("partyId", partyId)
-            .parameter("roleTypeId", "PrimaryApplicant")
-            .parameter("responsibilityEnumId", "FwRespIndividual")
-            .call()
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountParty")
+                .parameter("financialWorksheetId", financialWorksheetId)
+                .parameter("accountId", accountId)
+                .parameter("partyId", partyId)
+                .parameter("roleTypeId", "PrimaryApplicant")
+                .parameter("responsibilityEnumId", "FwRespIndividual")
+                .call()
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", accountId)
                 .parameter("adjusterUserId", ec.user.getUserId())
@@ -1517,56 +1537,56 @@ class PartyServices {
                 .parameter("include", includePropertyTaxesMonthly ? 'N' : 'Y')
                 .call()
 
-
-        // Creating accountId. including mortgagePriority to differentiate the MkFinFlowMonthlyInsuranceCosts
-        // between the different mortgages
-        accountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccount")
+            // Creating accountId. including mortgagePriority to differentiate the MkFinFlowMonthlyInsuranceCosts
+            // between the different mortgages
+            accountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccount")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", accountId)
                 .parameter("statusId", "FwAcctStated")
                 .parameter("accountTypeEnumId", "FwAtMortgage")
                 .call()
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountParty")
-            .parameter("financialWorksheetId", financialWorksheetId)
-            .parameter("accountId", accountId)
-            .parameter("partyId", partyId)
-            .parameter("roleTypeId", "PrimaryApplicant")
-            .parameter("responsibilityEnumId", "FwRespIndividual")
-            .call()
-        // create worksheet adjustment
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountParty")
+                .parameter("financialWorksheetId", financialWorksheetId)
+                .parameter("accountId", accountId)
+                .parameter("partyId", partyId)
+                .parameter("roleTypeId", "PrimaryApplicant")
+                .parameter("responsibilityEnumId", "FwRespIndividual")
+                .call()
+            // create worksheet adjustment
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", accountId)
                 .parameter("adjusterUserId", ec.user.getUserId())
                 .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
+                .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
                 .call()
 
-        // Creating accountId. including mortgagePriority to differentiate the MkFinFlowHoaMonthlyFee
-        // between the different mortgages
-        accountId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccount")
+            // Creating accountId. including mortgagePriority to differentiate the MkFinFlowHoaMonthlyFee
+            // between the different mortgages
+            accountId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccount")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", accountId)
                 .parameter("statusId", "FwAcctStated")
                 .parameter("accountTypeEnumId", "FwAtMortgage")
                 .call()
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountParty")
-            .parameter("financialWorksheetId", financialWorksheetId)
-            .parameter("accountId", accountId)
-            .parameter("partyId", partyId)
-            .parameter("roleTypeId", "PrimaryApplicant")
-            .parameter("responsibilityEnumId", "FwRespIndividual")
-            .call()
-        // create worksheet adjustment
-        sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountParty")
+                .parameter("financialWorksheetId", financialWorksheetId)
+                .parameter("accountId", accountId)
+                .parameter("partyId", partyId)
+                .parameter("roleTypeId", "PrimaryApplicant")
+                .parameter("responsibilityEnumId", "FwRespIndividual")
+                .call()
+            // create worksheet adjustment
+            sf.sync().name("create#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", accountId)
                 .parameter("adjusterUserId", ec.user.getUserId())
                 .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
                 .parameter("include", includeHOAFeeMonthly ? 'N' : 'Y')
                 .call()
+        }
 
         // update person to show residence has mortgage
         sf.sync().name("update#mantle.party.Person")
@@ -1595,6 +1615,7 @@ class PartyServices {
         String orderId = (String) cs.getOrDefault("orderId", null)
         String partyId = (String) cs.getOrDefault("partyId", null)
         String partyRelationshipId = (String) cs.getOrDefault("partyRelationshipId", null)
+        Boolean isUnsecured = (Boolean) cs.getOrDefault("isUnsecured", false)
         String lenderName = (String) cs.getOrDefault("lenderName", null)
         BigDecimal mortgageBalance = (BigDecimal) cs.getOrDefault("mortgageBalance", null)
         BigDecimal mortgagePaymentMonthly = (BigDecimal) cs.getOrDefault("mortgagePaymentMonthly", null)
@@ -1641,46 +1662,47 @@ class PartyServices {
                 .parameter("amount", mortgagePaymentMonthly)
                 .parameter("sequenceNum", mortgagePriority)
                 .call()
-        EntityValue getFinancialWorksheet = ef.find("mk.financial.worksheet.FinancialWorksheet")
+        if (!isUnsecured) {
+            EntityValue getFinancialWorksheet = ef.find("mk.financial.worksheet.FinancialWorksheet")
                 .condition("orderId", orderId)
                 .one()
-        String financialWorksheetId = (String) getFinancialWorksheet.get("financialWorksheetId")
+            String financialWorksheetId = (String) getFinancialWorksheet.get("financialWorksheetId")
 
-        EntityList accounts = ef.find("mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
-            .condition("financialWorksheetId", financialWorksheetId)
-            .list()
+            EntityList accounts = ef.find("mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+                .condition("financialWorksheetId", financialWorksheetId)
+                .list()
 
-        // update financial worksheet adjustment
-        String propertyTaxAccountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyPropertyTaxes"
-        sf.sync().name("store#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
-            .parameter("financialWorksheetId", financialWorksheetId)
-            .parameter("accountId", propertyTaxAccountId)
-            .parameter("fromDate", accounts.find {it.accountId == propertyTaxAccountId}.fromDate)
-            .parameter("adjusterUserId", ec.user.getUserId())
-            .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includePropertyTaxesMonthly ? 'N' : 'Y')
-            .call()
+            // update financial worksheet adjustment
+            String propertyTaxAccountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyPropertyTaxes"
+            sf.sync().name("store#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+                .parameter("financialWorksheetId", financialWorksheetId)
+                .parameter("accountId", propertyTaxAccountId)
+                .parameter("fromDate", accounts.find { it.accountId == propertyTaxAccountId }.fromDate)
+                .parameter("adjusterUserId", ec.user.getUserId())
+                .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
+                .parameter("include", includePropertyTaxesMonthly ? 'N' : 'Y')
+                .call()
 
-        String monthlyInsuranceCostsId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
-        sf.sync().name("store#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
-            .parameter("financialWorksheetId", financialWorksheetId)
-            .parameter("accountId", monthlyInsuranceCostsId)
-            .parameter("fromDate", accounts.find {it.accountId == monthlyInsuranceCostsId}.fromDate)
-            .parameter("adjusterUserId", ec.user.getUserId())
-            .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
-            .call()
+            String monthlyInsuranceCostsId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
+            sf.sync().name("store#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+                .parameter("financialWorksheetId", financialWorksheetId)
+                .parameter("accountId", monthlyInsuranceCostsId)
+                .parameter("fromDate", accounts.find { it.accountId == monthlyInsuranceCostsId }.fromDate)
+                .parameter("adjusterUserId", ec.user.getUserId())
+                .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
+                .parameter("include", includePropertyInsuranceCostsMonthly ? 'N' : 'Y')
+                .call()
 
-        String hoaMonthlyFeeId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
-        sf.sync().name("store#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
-            .parameter("financialWorksheetId", financialWorksheetId)
-            .parameter("accountId", hoaMonthlyFeeId)
-            .parameter("fromDate", accounts.find {it.accountId == hoaMonthlyFeeId}.fromDate)
-            .parameter("adjusterUserId", ec.user.getUserId())
-            .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
-            .parameter("include", includeHOAFeeMonthly ? 'N' : 'Y')
-            .call()
-
+            String hoaMonthlyFeeId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
+            sf.sync().name("store#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+                .parameter("financialWorksheetId", financialWorksheetId)
+                .parameter("accountId", hoaMonthlyFeeId)
+                .parameter("fromDate", accounts.find { it.accountId == hoaMonthlyFeeId }.fromDate)
+                .parameter("adjusterUserId", ec.user.getUserId())
+                .parameter("adjustmentReasonEnumId", "FwAdjIncludedInMortgage")
+                .parameter("include", includeHOAFeeMonthly ? 'N' : 'Y')
+                .call()
+        }
         // return the output parameters
         Map<String, Object> outParams = new HashMap<>()
         outParams.put("partyId", partyId)

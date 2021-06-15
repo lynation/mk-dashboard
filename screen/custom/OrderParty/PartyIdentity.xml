@@ -8,6 +8,7 @@
     <parameter name="orderId" required="true"/>
     <parameter name="orderPartSeqId" required="true"/>
     <parameter name="partyId" required="true"/>
+    <parameter name="isUnsecured"/>
 
     <transition name="addIdentity">
         <service-call name="mkdecision.dashboard.PartyServices.add#Identity" in-map="context"/>
@@ -26,6 +27,7 @@
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
             <parameter name="partyId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
     <transition name="partyEmployment">
@@ -33,6 +35,7 @@
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
             <parameter name="partyId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
 

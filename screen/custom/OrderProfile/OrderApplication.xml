@@ -56,6 +56,12 @@
             <field-map field-name="orderId" from="orderId"/>
             <field-map field-name="orderItemSeqId" value="01"/>
         </entity-find-one>
+
+        <entity-find-one entity-name="mantle.product.Product" value-field="productDetails">
+            <field-map field-name="productId" from="orderItem.productId"/>
+        </entity-find-one>
+        <set field="isUnsecured" from="productDetails?.productClassEnumId == 'IndirectUnsecuredLoan' ? true : false"/>
+        
         <entity-find entity-name="mantle.product.ProductDbForm" list="formList">
             <econdition field-name="productId" from="orderItem.productId"/>
         </entity-find>

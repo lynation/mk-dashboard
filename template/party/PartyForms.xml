@@ -33,7 +33,7 @@
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="nickname">
+                        <field name="nickname" hide="isUnsecured == 'true'">
                             <default-field title="Other Name (AKA) (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <text-line/>
                             </default-field>
@@ -98,6 +98,7 @@
         <section name="EditContact">
             <actions>
                 <entity-find-one entity-name="mantle.order.OrderPart" value-field="orderPart"/>
+                <entity-find-one entity-name="mantle.party.PartyRole" value-field="roleType"/>
                 <entity-find-one entity-name="mantle.party.PartySetting" value-field="serviceableStatesSetting">
                     <field-map field-name="partyId" from="orderPart?.vendorPartyId"/>
                     <field-map field-name="partySettingTypeId" value="ServiceableStates"/>
@@ -110,27 +111,27 @@
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
 
-                        <field name="address1">
+                        <field name="address1" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field title="Residential Address" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="address2">
+                        <field name="address2" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="postalCode">
+                        <field name="postalCode" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field title="ZIP Code" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="city">
+                        <field name="city" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="stateProvinceGeoId">
+                        <field name="stateProvinceGeoId" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field title="State" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <drop-down required-manual-select="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -143,12 +144,12 @@
                                 </drop-down>
                             </default-field>
                         </field>
-                        <field name="addressYears">
+                        <field name="addressYears" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field title="Years" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <text-line input-type="number" rules="value =&gt; (value &gt;= 0 &amp;&amp; value &lt;= 100) || 'Please enter a number between 0 and 100.'"/>
                             </default-field>
                         </field>
-                        <field name="addressMonths">
+                        <field name="addressMonths" hide="roleType.roleTypeId == 'CoApplicant'">
                             <default-field title="Months" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <text-line input-type="number" rules="value =&gt; (value &gt;= 0 &amp;&amp; value &lt;= 11) || 'Please enter a number between 0 and 11.'"/>
                             </default-field>
@@ -228,6 +229,7 @@
                     <form-single name="AddDriversLicenseForm" transition="addIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidDriverLicense"/></default-field></field>
 
@@ -276,6 +278,7 @@
                     <form-single name="EditDriversLicenseForm" transition="updateIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidDriverLicense"/></default-field></field>
 
@@ -324,6 +327,7 @@
                     <form-single name="AddStateIssuedForm" transition="addIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidStateId"/></default-field></field>
 
@@ -372,6 +376,7 @@
                     <form-single name="EditStateIssuedForm" transition="updateIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidStateId"/></default-field></field>
 
@@ -420,6 +425,7 @@
                     <form-single name="AddMilitaryIdForm" transition="addIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidMilitaryId"/></default-field></field>
 
@@ -467,6 +473,7 @@
                     <form-single name="EditMilitaryIdForm" transition="updateIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidMilitaryId"/></default-field></field>
 
@@ -514,6 +521,7 @@
                     <form-single name="AddPassportForm" transition="addIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidPassport"/></default-field></field>
 
@@ -561,6 +569,7 @@
                     <form-single name="EditPassportForm" transition="updateIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidPassport"/></default-field></field>
 
@@ -608,6 +617,7 @@
                     <form-single name="AddPermanentResidentCardForm" transition="addIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidArn"/></default-field></field>
 
@@ -650,6 +660,7 @@
                     <form-single name="EditPermanentResidentCardForm" transition="updateIdentity">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyIdTypeEnumId"><default-field><hidden default-value="PtidArn"/></default-field></field>
 
@@ -692,6 +703,7 @@
                     <form-single name="AddCurrentRegularEmploymentForm" transition="addEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtEmployee"/></default-field></field>
 
@@ -742,27 +754,27 @@
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -839,6 +851,7 @@
                     <form-single name="EditCurrentRegularEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${employmentRelation.partyRelationshipId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtEmployee"/></default-field></field>
@@ -896,27 +909,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -988,6 +1001,7 @@
                     <form-single name="AddCurrentSelfEmploymentForm" transition="addEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtEmployee"/></default-field></field>
 
@@ -1048,27 +1062,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -1138,6 +1152,7 @@
                     <form-single name="EditCurrentSelfEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${employmentRelation.partyRelationshipId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtEmployee"/></default-field></field>
@@ -1199,27 +1214,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -1289,6 +1304,7 @@
                     <form-single name="AddCurrentContractorEmploymentForm" transition="addEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtEmployee"/></default-field></field>
 
@@ -1349,27 +1365,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -1439,6 +1455,7 @@
                     <form-single name="EditCurrentContractorEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${employmentRelation.partyRelationshipId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtEmployee"/></default-field></field>
@@ -1500,27 +1517,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -1590,6 +1607,7 @@
                     <form-single name="AddPreviousRegularEmploymentForm" transition="addEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtPreviousEmployee"/></default-field></field>
 
@@ -1625,14 +1643,14 @@
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="fromDate">
-                            <default-field validate-service="mkdecision.dashboard.PartyServices.add#Employment">
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="years">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.add#PreviousEmployment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="toDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="months">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.add#PreviousEmployment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
                         <field name="jobTitle">
@@ -1646,27 +1664,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode" >
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.add#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -1699,8 +1717,8 @@
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="durationHeader"/></field-col>
                             </field-col-row>
                             <field-col-row>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="fromDate"/></field-col>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="toDate"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="years"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="months"/></field-col>
                             </field-col-row>
                             <field-col-row>
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="jobTitle"/></field-col>
@@ -1738,6 +1756,7 @@
                     <form-single name="EditPreviousRegularEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${employmentRelation.partyRelationshipId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtPreviousEmployee"/></default-field></field>
@@ -1774,14 +1793,14 @@
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="fromDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="years">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#PreviousEmployment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="toDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="months">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#PreviousEmployment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
                         <field name="jobTitle">
@@ -1795,27 +1814,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -1848,11 +1867,8 @@
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="durationHeader"/></field-col>
                             </field-col-row>
                             <field-col-row>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="fromDate"/></field-col>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="toDate"/></field-col>
-                            </field-col-row>
-                            <field-col-row>
-                                <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="jobTitle"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="years"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="months"/></field-col>
                             </field-col-row>
 
                             <field-col-row>
@@ -1887,6 +1903,7 @@
                     <form-single name="AddPreviousSelfEmploymentForm" transition="addEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtPreviousEmployee"/></default-field></field>
 
@@ -1931,14 +1948,14 @@
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="fromDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="years">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="toDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="months">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
 
@@ -1947,27 +1964,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -2001,8 +2018,8 @@
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="durationHeader"/></field-col>
                             </field-col-row>
                             <field-col-row>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="fromDate"/></field-col>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="toDate"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="years"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="months"/></field-col>
                             </field-col-row>
 
                             <field-col-row>
@@ -2037,6 +2054,7 @@
                     <form-single name="EditPreviousSelfEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${employmentRelation.partyRelationshipId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtPreviousEmployee"/></default-field></field>
@@ -2082,14 +2100,14 @@
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="fromDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="years">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="toDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="months">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
 
@@ -2098,27 +2116,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -2152,8 +2170,8 @@
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="durationHeader"/></field-col>
                             </field-col-row>
                             <field-col-row>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="fromDate"/></field-col>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="toDate"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="years"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="months"/></field-col>
                             </field-col-row>
 
                             <field-col-row>
@@ -2188,6 +2206,7 @@
                     <form-single name="AddPreviousContractorEmploymentForm" transition="addEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtPreviousEmployee"/></default-field></field>
 
@@ -2232,14 +2251,14 @@
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="fromDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="years">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="toDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="months">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
 
@@ -2248,27 +2267,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -2302,8 +2321,8 @@
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="durationHeader"/></field-col>
                             </field-col-row>
                             <field-col-row>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="fromDate"/></field-col>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="toDate"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="years"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="months"/></field-col>
                             </field-col-row>
 
                             <field-col-row>
@@ -2338,6 +2357,7 @@
                     <form-single name="EditPreviousContractorEmploymentForm" transition="updateEmployment">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${employmentRelation.partyRelationshipId}"/></default-field></field>
                         <field name="relationshipTypeEnumId"><default-field><hidden default-value="PrtPreviousEmployee"/></default-field></field>
@@ -2383,14 +2403,14 @@
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="fromDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="years">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="toDate">
-                            <default-field>
-                                <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date.'"/>
+                        <field name="months">
+                            <default-field validate-service="mkdecision.dashboard.PartyServices.update#Employment">
+                                <text-line input-type="number"/>
                             </default-field>
                         </field>
 
@@ -2399,27 +2419,27 @@
                                 <text-line  mask="###-###-####" input-type="tel"/>
                             </default-field>
                         </field>
-                        <field name="employerAddress1">
+                        <field name="employerAddress1" hide="true">
                             <default-field title="Employer Address (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerAddress2">
+                        <field name="employerAddress2" hide="true">
                             <default-field title="Apt / Unit # (Optional)">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerPostalCode">
+                        <field name="employerPostalCode" hide="true">
                             <default-field title="ZIP Code (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="employerCity">
+                        <field name="employerCity" hide="true">
                             <default-field title="Employer City (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="employerStateProvinceGeoId">
+                        <field name="employerStateProvinceGeoId" hide="true">
                             <default-field title="State (Optional)" validate-service="mkdecision.dashboard.PartyServices.update#Employment">
                                 <drop-down allow-empty="true">
                                     <entity-options text="${geoName}" key="${toGeoId}">
@@ -2453,8 +2473,8 @@
                                 <field-col xs="12" sm="12" md="12" lg="12"><field-ref name="durationHeader"/></field-col>
                             </field-col-row>
                             <field-col-row>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="fromDate"/></field-col>
-                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="toDate"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="years"/></field-col>
+                                <field-col xs="12" sm="6" md="6" lg="6"><field-ref name="months"/></field-col>
                             </field-col-row>
 
                             <field-col-row>
@@ -2489,6 +2509,7 @@
                     <form-single name="AddIncomeSourceForm" transition="addIncomeSource">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
 
                         <field name="financialFlowTypeEnumId">
@@ -2509,17 +2530,17 @@
                             </default-field>
                         </field>
 
-                        <field name="durationHeader">
+                        <field name="durationHeader" hide="true">
                             <default-field>
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="years">
+                        <field name="years" hide="true">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.add#IncomeSource">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="months">
+                        <field name="months" hide="true">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.add#IncomeSource">
                                 <text-line input-type="number"/>
                             </default-field>
@@ -2564,6 +2585,7 @@
                     <form-single name="EditIncomeSourceForm" transition="updateIncomeSource">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="financialFlowId"><default-field><hidden default-value="${incomeFinFlow.financialFlowId}"/></default-field></field>
 
@@ -2585,17 +2607,17 @@
                             </default-field>
                         </field>
 
-                        <field name="durationHeader">
+                        <field name="durationHeader" hide="true">
                             <default-field>
                                 <label text="Duration" style="margin-tb-1"/>
                             </default-field>
                         </field>
-                        <field name="years">
+                        <field name="years" hide="true">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.update#IncomeSource">
                                 <text-line input-type="number"/>
                             </default-field>
                         </field>
-                        <field name="months">
+                        <field name="months" hide="true">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.update#IncomeSource">
                                 <text-line input-type="number"/>
                             </default-field>
@@ -2702,6 +2724,7 @@
                     <form-single name="AddMortgageForm" transition="createMortgage">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
 
                         <field name="lenderName">
@@ -2709,7 +2732,7 @@
                             <text-line/>
                             </default-field>
                         </field>
-                        <field name="mortgageBalance">
+                        <field name="mortgageBalance" hide="isUnsecured == 'true'">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.create#Mortgage">
                                 <text-line input-type="number" format="#.##" prefix="$"/>
                             </default-field>
@@ -2720,7 +2743,7 @@
                                 <label text="Include property taxes, insurance, or HOA fees paid in this mortgage payment" style="text-caption"/>
                             </default-field>
                         </field>
-                        <field name="mortgagePriority">
+                        <field name="mortgagePriority" hide="isUnsecured == 'true'">
                             <default-field title="Mortgage Priority" validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
                                 <drop-down>
                                     <entity-options text="${description}" key="${optionValue}">
@@ -2732,12 +2755,12 @@
                                 </drop-down>
                             </default-field>
                         </field>
-                        <field name="mortgageAssistiveText">
+                        <field name="mortgageAssistiveText" hide="isUnsecured == 'true'">
                             <default-field>
                                 <label text="Are any of the following expenses included in the mortgage payment?" type="p"/>
                             </default-field>
                         </field>
-                        <field name="propertyTaxesMonthlyIncluded">
+                        <field name="propertyTaxesMonthlyIncluded" hide="isUnsecured == 'true'">
                             <default-field title="Property Taxes Monthly">
                                 <radio no-current-selected-key="false">
                                     <option key="true" text="Yes"/>
@@ -2745,7 +2768,7 @@
                                 </radio>
                             </default-field>
                         </field>
-                        <field name="propertyInsuranceCostsMonthlyIncluded">
+                        <field name="propertyInsuranceCostsMonthlyIncluded" hide="isUnsecured == 'true'">
                             <default-field title="Property Insurance Costs Monthly">
                                 <radio no-current-selected-key="false">
                                     <option key="true" text="Yes"/>
@@ -2753,7 +2776,7 @@
                                 </radio>
                             </default-field>
                         </field>
-                        <field name="hoaFeeMonthlyIncluded">
+                        <field name="hoaFeeMonthlyIncluded" hide="isUnsecured == 'true'">
                             <default-field title="HOA Fee Monthly">
                                 <radio no-current-selected-key="false">
                                     <option key="true" text="Yes"/>
@@ -2777,6 +2800,7 @@
                     <form-single name="EditMortgageForm" transition="updateMortgage" pass-through-parameters="false">
                         <field name="orderId"><default-field><hidden default-value="${orderId}"/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden default-value="${orderPartSeqId}"/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden default-value="${isUnsecured}"/></default-field></field>
                         <field name="partyId"><default-field><hidden default-value="${partyId}"/></default-field></field>
                         <field name="partyRelationshipId"><default-field><hidden default-value="${partyRelationshipId}"/></default-field></field>
 
@@ -2785,7 +2809,7 @@
                                 <text-line/>
                             </default-field>
                         </field>
-                        <field name="mortgageBalance">
+                        <field name="mortgageBalance" hide="isUnsecured == 'true'">
                             <default-field  validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
                                 <text-line input-type="number" format="#.##" prefix="$"/>
                             </default-field>
@@ -2796,7 +2820,7 @@
                                 <label text="Include property taxes, insurance, or HOA fees paid in this mortgage payment" style="text-caption"/>
                             </default-field>
                         </field>
-                        <field name="mortgagePriority">
+                        <field name="mortgagePriority" hide="isUnsecured == 'true'">
                             <default-field validate-service="mkdecision.dashboard.PartyServices.update#Mortgage">
                                 <drop-down>
                                     <entity-options text="${description}" key="${optionValue}">
@@ -2808,12 +2832,12 @@
                                 </drop-down>
                             </default-field>
                         </field>
-                        <field name="mortgageAssistiveText">
+                        <field name="mortgageAssistiveText" hide="isUnsecured == 'true'">
                             <default-field>
                                 <label text="Are any of the following expenses included in the mortgage payment?" type="p"/>
                             </default-field>
                         </field>
-                        <field name="propertyTaxesMonthlyIncluded">
+                        <field name="propertyTaxesMonthlyIncluded" hide="isUnsecured == 'true'">
                             <default-field title="Property Taxes Monthly">
                                 <radio>
                                     <option key="true" text="Yes"/>
@@ -2821,7 +2845,7 @@
                                 </radio>
                             </default-field>
                         </field>
-                        <field name="propertyInsuranceCostsMonthlyIncluded">
+                        <field name="propertyInsuranceCostsMonthlyIncluded" hide="isUnsecured == 'true'">
                             <default-field title="Property Insurance Costs Monthly">
                                 <radio>
                                     <option key="true" text="Yes"/>
@@ -2829,7 +2853,7 @@
                                 </radio>
                             </default-field>
                         </field>
-                        <field name="hoaFeeMonthlyIncluded">
+                        <field name="hoaFeeMonthlyIncluded" hide="isUnsecured == 'true'">
                             <default-field title="HOA Fee Monthly">
                                 <radio>
                                     <option key="true" text="Yes"/>

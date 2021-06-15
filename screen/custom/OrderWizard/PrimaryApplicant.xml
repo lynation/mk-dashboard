@@ -19,6 +19,7 @@
     <parameter name="financedAmount"/>
     <parameter name="estimatedPayment"/>
     <parameter name="formResponseId"/>
+    <parameter name="isUnsecured"/>
 
     <transition name="storeOrder">
         <actions>
@@ -29,6 +30,7 @@
         <default-response url="../PrimaryApplicantIdentity">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
     <transition name="orderHeader">
@@ -47,6 +49,7 @@
             <parameter name="financedAmount"/>
             <parameter name="estimatedPayment"/>
             <parameter name="formResponseId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
 
@@ -220,10 +223,10 @@
                 <field name="financedAmount"><default-field><hidden/></default-field></field>
                 <field name="estimatedPayment"><default-field><hidden/></default-field></field>
                 <field name="formResponseId"><default-field><hidden/></default-field></field>
+                <field name="isUnsecured"><default-field><hidden/></default-field></field>
 
                 <field name="applicantHeader">
                     <default-field>
-                        <label text="New Application" type="h4" style="margin-b-1"/>
                         <label text="Primary Applicant" type="h5" style="margin-b-1"/>
                         <label text="Please add all parties associated with the new application." style="margin-b-1"/>
                         <container style="h-separator margin-tb-2"/>
@@ -255,7 +258,7 @@
                         <text-line/>
                     </default-field>
                 </field>
-                <field name="nickname">
+                <field name="nickname" hide="isUnsecured">
                     <default-field title="Other Name (AKA) (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                         <text-line/>
                     </default-field>

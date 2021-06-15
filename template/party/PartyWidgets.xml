@@ -105,8 +105,10 @@
                                 <set field="jobTitle" from="employmentRelation.relationshipName"/>
                                 <set field="employmentStatusEnumId" from="employmentStatusSetting?.settingValue"/>
                                 <set field="monthlyIncome" from="monthlyIncomeFinFlowList?.getFirst()?.amount ?: null"/>
-                                <set field="fromDate" from="ec.l10n.format(employmentRelation.fromDate, 'MM-dd-yyyy') ?: null"/>
-                                <set field="toDate" from="ec.l10n.format(employmentRelation.thruDate, 'MM-dd-yyyy') ?: null"/>
+                                <set field="millis" from="Math.abs(employmentRelation.fromDate.getTime() - ec.user.nowTimestamp.getTime())"/>
+                                <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+                                <set field="years" from="Math.floor(days / 365)" type="Integer"/>
+                                <set field="months" from="Math.floor(days / 30.4) - (years * 12)" type="Integer"/>
                                 <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                                 <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
                                 <set field="employerAddress2" from="postalAddressResp.postalAddress?.address2"/>
@@ -124,6 +126,7 @@
                                     <row-col xs="6" sm="6" md="6" lg="6" style="text-right">
                                         <section-include name="EditPreviousRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <section-include name="EditPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                        <section-include name="EditPreviousContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <link text="Remove" btn-type="danger" url="deleteEmployment" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId, partyRelationshipId: employmentRelation.partyRelationshipId]"/>
                                     </row-col>
                                 </container-row>
@@ -214,6 +217,7 @@
                                 <set field="propertyTaxesMonthlyIncluded" from="monthlyPropertyTaxesAdj?.include == 'Y' ? false : true"/>
                                 <set field="propertyInsuranceCostsMonthlyIncluded" from="monthlyInsuranceCostsAdj?.include == 'Y' ? false : true"/>
                                 <set field="hoaFeeMonthlyIncluded" from="hoaMonthlyFeeAdj?.include == 'Y' ? false : true"/>
+                                <set field="isUnsecured" from="isUnsecured"/>
                             </actions>
                             <widgets>
                                 <container-row>
@@ -250,6 +254,7 @@
                     <form-single name="MartialForm" transition="saveMaritalStatus">
                         <field name="orderId"><default-field><hidden/></default-field></field>
                         <field name="orderPartSeqId"><default-field><hidden/></default-field></field>
+                        <field name="isUnsecured"><default-field><hidden/></default-field></field>
                         <field name="partyId"><default-field><hidden/></default-field></field>
                         <field name="maritalStatusEnumId">
                             <conditional-field title="${roleTypeDescription}'s Marital Status" condition="maritalStatusOptions.size() > 0">
@@ -373,8 +378,8 @@
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${suffix ?: '-'}"/></row-col>
                         </container-row>
                         <container-row>
-                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Other Name (AKA)" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${nickname ?: '-'}"/></row-col>
+                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Other Name (AKA)" style="text-light-grey" condition="isUnsecured == 'false'"/></row-col>
+                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${nickname ?: '-'}"  condition="isUnsecured == 'false'"/></row-col>
                         </container-row>
                         <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Social Security Number" style="text-light-grey"/></row-col>
@@ -529,7 +534,7 @@
                         <container style="q-pt-md">
                             <container-row>
                                 <row-col sm="8" xs="8" md="8" lg="8"  style="padding-all-0">
-                                    <label text="Current Employment ${employmentRelation_index + 1}" type="h6"/>
+                                    <label text="Employment ${employmentRelation_index + 1}" type="h6"/>
                                 </row-col>
                                 <row-col sm="4" xs="4" md="4" lg="4" style="text-right">
                                     <section-include name="EditCurrentRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
@@ -585,7 +590,7 @@
                         <container style="q-pt-md">
                             <container-row>
                                 <row-col sm="8" xs="8" md="8" lg="8"  style="padding-all-0">
-                                    <label text="Current Non-Employment Income ${incomeFinFlow_index + 1}" type="h6"/>
+                                    <label text="Non-Employment Income ${incomeFinFlow_index + 1}" type="h6"/>
                                 </row-col>
                                 <row-col sm="4" xs="4" md="4" lg="4" style="text-right">
                                     <section-include name="EditIncomeSource" location="component://mk-dashboard/template/party/PartyForms.xml"/>
@@ -633,8 +638,10 @@
                         <set field="employmentStatusEnumId" from="employmentStatusSetting?.settingValue"/>
                         <set field="monthlyIncome" from="monthlyIncomeFinFlowList?.getFirst()?.amount ?: null"/>
                         <set field="jobTitle" from="employmentRelation.relationshipName"/>
-                        <set field="fromDate" from="ec.l10n.format(employmentRelation.fromDate, 'MM-dd-yyyy')"/>
-                        <set field="toDate" from="ec.l10n.format(employmentRelation.thruDate, 'MM-dd-yyyy')"/>
+                        <set field="millis" from="Math.abs(employmentRelation.fromDate.getTime() - ec.user.nowTimestamp.getTime())"/>
+                        <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+                        <set field="years" from="Math.floor(days / 365)" type="Integer"/>
+                        <set field="months" from="Math.floor(days / 30.4) - (years * 12)" type="Integer"/>
                         <set field="employerContactNumber" from="telecomNumberResp.contactNumber"/>
                         <set field="employerPostalAddress" from="postalAddressResp.postalAddressString"/>
                         <set field="employerAddress1" from="postalAddressResp.postalAddress?.address1"/>
@@ -652,6 +659,7 @@
                                 <row-col sm="4" xs="4" md="4" lg="4" style="text-right">
                                     <section-include name="EditPreviousRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                     <section-include name="EditPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                    <section-include name="EditPreviousContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                 </row-col>
                             </container-row>
                             <container style="q-pt-sm">
@@ -664,12 +672,8 @@
                                     <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.formatCurrency(monthlyIncome, null)}"/></row-col>
                                 </container-row>
                                 <container-row>
-                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="From Date" style="text-light-grey"/></row-col>
-                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.format(fromDate, 'MM-dd-yyyy') ?: ''}"/></row-col>
-                                </container-row>
-                                <container-row>
-                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="To Date" style="text-light-grey"/></row-col>
-                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${ec.l10n.format(toDate, 'MM-dd-yyyy') ?: ''}"/></row-col>
+                                    <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Duration" style="text-light-grey"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${years} years ${months} months"/></row-col>
                                 </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Occupation" style="text-light-grey"/></row-col>

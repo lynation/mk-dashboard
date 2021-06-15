@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.1.xsd"
-        default-menu-title="Primary Applicant Current Employment"
+        default-menu-title="Primary Applicant Employment"
         default-menu-include="false"
         default-menu-index="5">
 
     <parameter name="orderId" required="true"/>
     <parameter name="orderPartSeqId" required="true"/>
+    <parameter name="isUnsecured" required="true"/>
 
     <transition-include name="addEmployment" location="component://mk-dashboard/screen/custom/OrderParty/PartyEmployment.xml"/>
     <transition-include name="updateEmployment" location="component://mk-dashboard/screen/custom/OrderParty/PartyEmployment.xml"/>
@@ -19,6 +20,7 @@
         <default-response url="../PrimaryApplicantIdentity">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
     <transition name="checkEmployment">
@@ -51,11 +53,13 @@
             </condition>
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </conditional-response>
 
         <default-response url="../PrimaryApplicantEmploymentPrevious">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
         </default-response>
     </transition>
 
@@ -112,15 +116,14 @@
         <container-row style="form-no-margin">
             <row-col xs="0" sm="1" md="3" lg="3"/>
             <row-col xs="12" sm="10" md="6" lg="6">
-                <label text="New Application" type="h4" style="margin-b-1"/>
 
-                <label text="Current Employment" type="h5" style="margin-b-1"/>
+                <label text="Employment" type="h5" style="margin-b-1"/>
                 <label text="Add all current employment sources" style="margin-b-1"/>
                 <container style="h-separator margin-tb-2"/>
 
                 <section-include name="CurrentEmploymentSection" location="component://mk-dashboard/template/party/PartyWidgets.xml"/>
 
-                <label text="Current Non-Employment Income" type="h5" style="margin-t-2 margin-b-1"/>
+                <label text="Non-Employment Income" type="h5" style="margin-t-2 margin-b-1"/>
                 <label text="Add all current non-employment income sources. Alimony, child support, or separate maintenance income need not be provided if applicant does not wish it to be considered as a basis for repaying this obligation." style="margin-b-1"/>
                 <container style="h-separator margin-tb-2"/>
 
@@ -140,5 +143,4 @@
             <row-col xs="0" sm="1" md="3" lg="3"/>
         </container-row>
     </widgets>
-
 </screen>

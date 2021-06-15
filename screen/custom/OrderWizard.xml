@@ -5,6 +5,7 @@
         default-menu-include="false">
 
     <subscreens default-item="OrderHeader"/>
+    <parameter name="isUnsecured"/>
 
     <always-actions>
         <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
@@ -17,6 +18,13 @@
             </entity-find-count>
             <set field="orderEditable" from="editableOrderStatusCount > 0 &amp;&amp; (orderHeader.lockUserId == null || orderHeader.lockUserId == ec.user.userId)"/>
         </if>
+        <if condition="productId">
+            <entity-find-one entity-name="mantle.product.Product" value-field="productDetails"/>
+            <set field="isUnsecured" from="productDetails?.productClassEnumId == 'IndirectUnsecuredLoan' ? true : false"/>
+        </if>
+        <script>
+            ec.web.requestParameters["isUnsecured"] = isUnsecured
+        </script>
     </always-actions>
 
     <widgets>

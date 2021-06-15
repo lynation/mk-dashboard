@@ -612,35 +612,36 @@ class OrderServices {
             mf.addError(lf.localize("DASHBOARD_INVALID_LAST_NAME"))
             return
         }
+        if(roleTypeId != 'CoApplicant') {
+            // validate residential address
+            if (StringUtils.isBlank(address1)) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_RESIDENCE_ADDR"))
+                return
+            }
 
-        // validate residential address
-        if (StringUtils.isBlank(address1)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_RESIDENCE_ADDR"))
-            return
-        }
+            // validate postal code
+            if (StringUtils.isBlank(postalCode)) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_POSTAL_CODE"))
+                return
+            }
 
-        // validate postal code
-        if (StringUtils.isBlank(postalCode)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_POSTAL_CODE"))
-            return
-        }
+            // validate city
+            if (StringUtils.isBlank(city)) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_CITY"))
+                return
+            }
 
-        // validate city
-        if (StringUtils.isBlank(city)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_CITY"))
-            return
-        }
+            // validate state
+            if (StringUtils.isBlank(stateProvinceGeoId)) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_STATE"))
+                return
+            }
 
-        // validate state
-        if (StringUtils.isBlank(stateProvinceGeoId)) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_STATE"))
-            return
-        }
-
-        // validate address duration
-        if (addressYears > 100 || addressMonths > 11) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_ADDRESS_DURATION"))
-            return
+            // validate address duration
+            if (addressYears > 100 || addressMonths > 11) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_ADDRESS_DURATION"))
+                return
+            }
         }
 
         // validate social security number
@@ -750,14 +751,14 @@ class OrderServices {
                     .parameter("partyId", partyId)
                     .parameter("roleTypeId", roleTypeId)
                     .call()
-
-            // update postal address
-            EntityValue postalAddress = ef.find("mantle.party.contact.PartyContactMechPostalAddress")
+            if(roleTypeId != 'CoApplicant') {
+                // update postal address
+                EntityValue postalAddress = ef.find("mantle.party.contact.PartyContactMechPostalAddress")
                     .condition("partyId", partyId)
                     .conditionDate("fromDate", "thruDate", uf.getNowTimestamp())
                     .list()
                     .getFirst()
-            sf.sync().name("update#mantle.party.contact.PostalAddress")
+                sf.sync().name("update#mantle.party.contact.PostalAddress")
                     .parameter("contactMechId", postalAddress.getString("contactMechId"))
                     .parameter("address1", address1)
                     .parameter("address2", address2)
@@ -766,13 +767,14 @@ class OrderServices {
                     .parameter("stateProvinceGeoId", stateProvinceGeoId)
                     .parameter("contactMechPurposeId", "PostalPrimary")
                     .call()
-            sf.sync().name("update#mantle.party.contact.PartyContactMech")
+                sf.sync().name("update#mantle.party.contact.PartyContactMech")
                     .parameter("partyId", postalAddress.get("partyId"))
                     .parameter("contactMechId", postalAddress.get("contactMechId"))
                     .parameter("contactMechPurposeId", postalAddress.get("contactMechPurposeId"))
                     .parameter("fromDate", postalAddress.get("fromDate"))
                     .parameter("usedSince", usedSince.getTime())
                     .call()
+            }
 
             // update telecom number
             EntityValue telecomNumber = ef.find("mantle.party.contact.PartyContactMechTelecomNumber")

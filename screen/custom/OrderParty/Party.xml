@@ -115,6 +115,7 @@
             <form-single name="ApplicantForm" transition="storeApplicant">
                 <field name="orderId"><default-field><hidden/></default-field></field>
                 <field name="orderPartSeqId"><default-field><hidden/></default-field></field>
+                <field name="isUnsecured"><default-field><hidden/></default-field></field>
                 <field name="partyId"><default-field><hidden/></default-field></field>
 
                 <field name="roleHeader">
@@ -166,7 +167,7 @@
                         <text-line/>
                     </default-field>
                 </field>
-                <field name="nickname">
+                <field name="nickname" hide="isUnsecured == 'true'">
                     <default-field title="Other Name (AKA) (Optional)">
                         <text-line/>
                     </default-field>
