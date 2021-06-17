@@ -177,8 +177,7 @@
                 </field>
                 <field name="suffix">
                     <default-field title="Suffix (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
-                        <drop-down required-manual-select="true">
-                            <option key="" text=""/>
+                        <drop-down allow-empty="true">
                             <option key="Jr" text="Jr"/>
                             <option key="Sr" text="Sr"/>
                             <option key="II" text="II"/>
