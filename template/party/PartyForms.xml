@@ -7,6 +7,11 @@
 
     <widgets>
         <section name="EditPerson">
+            <actions>
+                <entity-find entity-name="moqui.basic.EnumGroupMember" list="maritalStatusOptions">
+                    <econdition field-name="enumGroupEnumId" value="MarsOptions"/>
+                </entity-find>
+            </actions>
             <widgets>
                 <container-dialog id="EditPersonDialog" button-text="Edit" condition="orderEditable">
                     <form-single name="EditPersonForm" transition="updatePerson">
@@ -49,6 +54,17 @@
                             </default-field>
                         </field>
                         <field name="maritalStatusEnumId">
+                            <conditional-field title="Marital Status" condition="maritalStatusOptions.size() > 0" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
+                                <drop-down required-manual-select="true">
+                                    <entity-options text="${description}" key="${enumId}">
+                                        <entity-find entity-name="moqui.basic.Enumeration">
+                                            <econdition field-name="enumId" operator="in" from="maritalStatusOptions.enumId"/>
+                                            <econdition field-name="enumTypeId" value="MaritalStatus"/>
+                                            <order-by field-name="sequenceNum,description"/>
+                                        </entity-find>
+                                    </entity-options>
+                                </drop-down>
+                            </conditional-field>
                             <default-field title="Marital Status" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <drop-down required-manual-select="true">
                                     <entity-options text="${description}" key="${enumId}">
