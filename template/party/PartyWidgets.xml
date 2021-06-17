@@ -124,7 +124,8 @@
                                         </container>
                                     </row-col>
                                     <row-col xs="6" sm="6" md="6" lg="6" style="text-right">
-                                        <section-include name="EditPreviousRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                        <section-include name="EditPreviousFullEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                        <section-include name="EditPreviousPartEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <section-include name="EditPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <section-include name="EditPreviousContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                         <link text="Remove" btn-type="danger" url="deleteEmployment" parameter-map="[orderId: orderId, orderPartSeqId: orderPartSeqId, partyId: partyId, partyRelationshipId: employmentRelation.partyRelationshipId]"/>
@@ -137,7 +138,10 @@
                     </widgets>
                 </section>
                 <container style="block margin-tb-1">
-                    <section-include name="AddPreviousRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                    <section-include name="AddPreviousFullEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                </container>
+                <container style="block margin-tb-1">
+                    <section-include name="AddPreviousPartEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                 </container>
                 <container style="block margin-tb-1">
                     <section-include name="AddPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
@@ -657,7 +661,8 @@
                                     <label text="Previous Employment ${employmentRelation_index + 1}" type="h6"/>
                                 </row-col>
                                 <row-col sm="4" xs="4" md="4" lg="4" style="text-right">
-                                    <section-include name="EditPreviousRegularEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                    <section-include name="EditPreviousFullEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                                    <section-include name="EditPreviousPartEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                     <section-include name="EditPreviousSelfEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                     <section-include name="EditPreviousContractorEmployment" location="component://mk-dashboard/template/party/PartyForms.xml"/>
                                 </row-col>

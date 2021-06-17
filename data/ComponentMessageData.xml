@@ -62,6 +62,7 @@
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_BALANCE" locale="en" localized="Invalid mortgage balance."/>
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_PAYMENT_MONTHLY" locale="en" localized="Invalid mortgage payment monthly."/>
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE" locale="en" localized="Invalid mortgage."/>
+    <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_COUNT" locale="en" localized="At least one mortgage is required."/>
     <moqui.basic.LocalizedMessage original="DASHBOARD_INVALID_MORTGAGE_PRIORITY" locale="en" localized="Invalid mortgage priority."/>
 
 

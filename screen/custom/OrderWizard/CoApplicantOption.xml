@@ -17,6 +17,26 @@
         </default-response>
     </transition>
     <transition name="primaryApplicantEmployment">
+        <actions>
+            <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="partyRole">
+                <field-map field-name="orderId"/>
+                <field-map field-name="orderPartSeqId"/>
+                <field-map field-name="roleTypeId" value="PrimaryApplicant"/>
+            </entity-find-one>
+            <entity-find entity-name="mantle.party.PartyToAndRelationship" list="previousEmploymentRelationList">
+                <econdition field-name="statusId" value="VerifiedEmployee"/>
+                <econdition field-name="relationshipTypeEnumId" value="PrtPreviousEmployee"/>
+                <econdition field-name="fromPartyId" from="partyRole?.partyId"/>
+            </entity-find>
+        </actions>
+        <conditional-response url="../PrimaryApplicantEmploymentPrevious">
+            <condition>
+                <expression>previousEmploymentRelationList.size() > 0</expression>
+            </condition>
+            <parameter name="orderId"/>
+            <parameter name="orderPartSeqId"/>
+            <parameter name="isUnsecured"/>
+        </conditional-response>
         <default-response url="../PrimaryApplicantEmployment">
             <parameter name="orderId"/>
             <parameter name="orderPartSeqId"/>

@@ -1041,9 +1041,11 @@ class PartyServices {
         EntityValue relationship = ef.find("mantle.party.PartyRelationship")
                 .condition("partyRelationshipId", partyRelationshipId)
                 .one()
-        if (relationship == null || !StringUtils.equals(partyId, relationship.getString("fromPartyId")) || !StringUtils.equals(relationship.getString("relationshipTypeEnumId"), "PrtEmployee")) {
-            mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT"))
-            return new HashMap<String, Object>()
+        if (relationship == null || !StringUtils.equals(partyId, relationship.getString("fromPartyId"))) {
+            if(!StringUtils.equals(relationship.getString("relationshipTypeEnumId"), "PrtEmployee") || !StringUtils.equals(relationship.getString("relationshipTypeEnumId"), "PrtPreviousEmployee")) {
+                mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT"))
+                return new HashMap<String, Object>()
+            }
         }
 
         // delete monthly income
@@ -1779,35 +1781,36 @@ class PartyServices {
 
         // Delete financial worksheet party, account, and adjustments
         String propertyTaxAccountId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyPropertyTaxes"
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+        if(accounts.size() > 0) {
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", propertyTaxAccountId)
-                .parameter("fromDate", accounts.find {it.accountId == propertyTaxAccountId}.fromDate)
+                .parameter("fromDate", accounts.find { it.accountId == propertyTaxAccountId }.fromDate)
                 .call()
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountParty")
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountParty")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", propertyTaxAccountId)
                 .parameter("partyId", partyId)
                 .call()
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccount")
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccount")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", propertyTaxAccountId)
                 .parameter("statusId", "FwAcctStated")
                 .parameter("accountTypeEnumId", "FwAtMortgage")
                 .call()
 
-        String monthlyInsuranceCostsId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+            String monthlyInsuranceCostsId = partyId + "[${mortgagePriority}]:MkFinFlowMonthlyInsuranceCosts"
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", monthlyInsuranceCostsId)
-                .parameter("fromDate", accounts.find {it.accountId == monthlyInsuranceCostsId}.fromDate)
+                .parameter("fromDate", accounts.find { it.accountId == monthlyInsuranceCostsId }.fromDate)
                 .call()
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountParty")
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountParty")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", monthlyInsuranceCostsId)
                 .parameter("partyId", partyId)
                 .call()
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccount")
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccount")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", monthlyInsuranceCostsId)
                 .parameter("statusId", "FwAcctStated")
@@ -1815,24 +1818,24 @@ class PartyServices {
                 .call()
 
 
-        String hoaMonthlyFeeId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
+            String hoaMonthlyFeeId = partyId + "[${mortgagePriority}]:MkFinFlowHoaMonthlyFee"
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountAdjustment")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", hoaMonthlyFeeId)
-                .parameter("fromDate", accounts.find {it.accountId == hoaMonthlyFeeId}.fromDate)
+                .parameter("fromDate", accounts.find { it.accountId == hoaMonthlyFeeId }.fromDate)
                 .call()
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountParty")
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccountParty")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", hoaMonthlyFeeId)
                 .parameter("partyId", partyId)
                 .call()
-        sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccount")
+            sf.sync().name("delete#mk.financial.worksheet.FinancialWorksheetAccount")
                 .parameter("financialWorksheetId", financialWorksheetId)
                 .parameter("accountId", hoaMonthlyFeeId)
                 .parameter("statusId", "FwAcctStated")
                 .parameter("accountTypeEnumId", "FwAtMortgage")
                 .call()
-
+        }
         // return the output parameters
         return new HashMap<>()
     }

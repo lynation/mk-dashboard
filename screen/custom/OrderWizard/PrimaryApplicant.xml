@@ -255,7 +255,14 @@
                 </field>
                 <field name="suffix">
                     <default-field title="Suffix (Optional)" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
-                        <text-line/>
+                        <drop-down allow-empty="true" >
+                            <option key="Jr" text="Jr"/>
+                            <option key="Sr" text="Sr"/>
+                            <option key="II" text="II"/>
+                            <option key="III" text="III"/>
+                            <option key="IV" text="IV"/>
+                            <option key="V" text="V"/>
+                        </drop-down>
                     </default-field>
                 </field>
                 <field name="nickname" hide="isUnsecured">

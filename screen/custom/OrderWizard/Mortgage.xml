@@ -13,6 +13,19 @@
         <actions>
             <service-call name="mkdecision.dashboard.PartyServices.create#Mortgage" in-map="context"/>
             <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+            <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="partyRole">
+                <field-map field-name="orderId"/>
+                <field-map field-name="orderPartSeqId"/>
+                <field-map field-name="roleTypeId" value="PrimaryApplicant"/>
+            </entity-find-one>
+            <entity-find-count entity-name="mantle.party.PartyToAndRelationship" count-field="mortgageCount">
+                <econdition field-name="relationshipTypeEnumId" value="PrtMortgage"/>
+                <econdition field-name="fromPartyId" from="partyRole?.partyId"/>
+                <econdition field-name="fromRoleTypeId" value="Borrower"/>
+            </entity-find-count>
+            <if condition="mortgageCount == 0">
+                <return message="${ec.l10n.localize('DASHBOARD_INVALID_MORTGAGE_COUNT')}" error="true"/>
+            </if>
         </actions>
         <conditional-response url="../PrimaryApplicantMaritalStatus">
             <condition><expression>maritalStatusIsNeeded</expression></condition>
@@ -50,6 +63,19 @@
     <transition name="continue">
         <actions>
             <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+            <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="partyRole">
+                <field-map field-name="orderId"/>
+                <field-map field-name="orderPartSeqId"/>
+                <field-map field-name="roleTypeId" value="PrimaryApplicant"/>
+            </entity-find-one>
+            <entity-find-count entity-name="mantle.party.PartyToAndRelationship" count-field="mortgageCount">
+                <econdition field-name="relationshipTypeEnumId" value="PrtMortgage"/>
+                <econdition field-name="fromPartyId" from="partyRole?.partyId"/>
+                <econdition field-name="fromRoleTypeId" value="Borrower"/>
+            </entity-find-count>
+            <if condition="mortgageCount == 0">
+                <return message="${ec.l10n.localize('DASHBOARD_INVALID_MORTGAGE_COUNT')}" error="true"/>
+            </if>
         </actions>
         <conditional-response url="../PrimaryApplicantMaritalStatus">
             <condition><expression>maritalStatusIsNeeded</expression></condition>
