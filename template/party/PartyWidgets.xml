@@ -440,11 +440,14 @@
                 <section-iterate name="PersonIdentityIterator" list="identityList" entry="identity">
                     <actions>
                         <entity-find-related-one value-field="identity" relationship-name="type" to-value-field="idType"/>
-                        <entity-find-one entity-name="moqui.basic.GeoAssocAndToDetail" value-field="geoDetail">
+                        <entity-find-one entity-name="moqui.basic.GeoAssocAndToDetail" value-field="geoStateDetail">
                             <field-map field-name="toGeoId" from="identity.issuedBy"/>
-                            <field-map field-name="geoId" value="USA"/>
                             <field-map field-name="geoTypeEnumId" value="GEOT_STATE"/>
                         </entity-find-one>
+                        <entity-find-one entity-name="moqui.basic.Geo" value-field="geoCountryDetail">
+                            <field-map field-name="geoId" from="identity.issuedBy"/>
+                        </entity-find-one>
+
                         <set field="partyIdTypeEnumId" from="identity.partyIdTypeEnumId"/>
                         <set field="idValue" from="identity.idValue"/>
                         <set field="idIssuedBy" from="identity.issuedBy"/>
@@ -476,7 +479,7 @@
                                 </container-row>
                                 <container-row>
                                     <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="${idType.enumId == 'PtidPassport' || idType.enumId == 'PtidArn' || idType.enumId == 'PtidMilitaryId' ? 'Country Issued' : 'State Issued'}" style="text-light-grey"/></row-col>
-                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${geoDetail.geoName}"/></row-col>
+                                    <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${idType.enumId == 'PtidPassport' || idType.enumId == 'PtidArn' || idType.enumId == 'PtidMilitaryId' ? geoCountryDetail.geoName : geoStateDetail.geoName }"/></row-col>
                                 </container-row>
                                 <section name="idIssueDate" condition="idType.enumId != 'PtidArn'">
                                     <widgets>
