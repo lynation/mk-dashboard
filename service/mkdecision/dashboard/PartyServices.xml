@@ -58,7 +58,7 @@
                 <matches regexp="^\d{3}-\d{2}-\d{4}$" message="Please enter a valid social security number."/>
             </parameter>
             <parameter name="birthDate" type="Date" format="MM-dd-yyyy" required="true"/>
-            <parameter name="maritalStatusEnumId" required="true"/>
+            <parameter name="maritalStatusEnumId"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
