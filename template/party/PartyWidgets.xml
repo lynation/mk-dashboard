@@ -394,8 +394,8 @@
                             <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${birthDate ?: '-'}"/></row-col>
                         </container-row>
                         <container-row>
-                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Marital Status" style="text-light-grey"/></row-col>
-                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${maritalStatus?.description ?: '-'}"/></row-col>
+                            <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Marital Status" style="text-light-grey" condition="maritalStatusIsNeeded"/></row-col>
+                            <row-col lg="9" md="9" sm="8" xs="12" style="padding-all-0"><label text="${maritalStatus?.description ?: '-'}" condition="maritalStatusIsNeeded"/></row-col>
                         </container-row>
                         <container-row>
                             <row-col lg="3" md="3" sm="4" xs="12" style="padding-all-0"><label text="Occupation" style="text-light-grey"/></row-col>

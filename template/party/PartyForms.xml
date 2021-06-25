@@ -11,6 +11,16 @@
                 <entity-find entity-name="moqui.basic.EnumGroupMember" list="maritalStatusOptions">
                     <econdition field-name="enumGroupEnumId" value="MarsOptions"/>
                 </entity-find>
+                
+                <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="orderPartParty">
+                    <field-map field-name="partyId" from="partyId"/>
+                </entity-find-one>
+
+                <entity-find-one entity-name="mantle.order.OrderItem" value-field="OrderItem">
+                    <field-map field-name="orderId" from="orderPartParty?.orderId"/>
+                </entity-find-one>
+
+                <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
             </actions>
             <widgets>
                 <container-dialog id="EditPersonDialog" button-text="Edit" condition="orderEditable">
@@ -53,7 +63,7 @@
                                 <date-time type="date" size="200" format="MM-dd-yyyy" rules="value =&gt; (!!value &amp;&amp; value.indexOf('_') === -1) || 'Please enter a valid date of birth.', value =&gt; !value || value.indexOf('_') !== -1 || moment(value,'MM-DD-YYYY').add(18,'y') &lt; Date.now() || 'Applicants must be at least 18 years of age to apply for an account.', value =&gt; moment(value,'MM-DD-YYYY') &gt; moment().subtract(130,'y') || 'Please enter a valid date of birth.'"/>
                             </default-field>
                         </field>
-                        <field name="maritalStatusEnumId">
+                        <field name="maritalStatusEnumId" hide="!maritalStatusIsNeeded" >
                             <conditional-field title="Marital Status" condition="maritalStatusOptions.size() > 0" validate-service="mkdecision.dashboard.OrderServices.store#Applicant">
                                 <drop-down required-manual-select="true">
                                     <entity-options text="${description}" key="${enumId}">
