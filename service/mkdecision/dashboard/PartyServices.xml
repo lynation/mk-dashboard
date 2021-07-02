@@ -513,7 +513,7 @@
                 <number-range min="0" min-include-equals="false" message="Please enter the current Mortgage Balance"/>
             </parameter>
             <parameter name="mortgagePaymentMonthly" type="BigDecimal" required="true">
-                <number-range min="0" min-include-equals="false" message="Please enter the Mortgage Payment Monthly"/>
+                <number-range min="0" min-include-equals="true" message="Please enter the Mortgage Payment Monthly"/>
             </parameter>
             <parameter name="mortgagePriority"/>
             <parameter name="propertyTaxesMonthlyIncluded" type="Boolean" default="false"/>
