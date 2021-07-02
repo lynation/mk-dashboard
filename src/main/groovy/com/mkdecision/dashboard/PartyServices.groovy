@@ -1427,7 +1427,7 @@ class PartyServices {
         }
 
         // validate mortgage payment monthly
-        if (mortgagePaymentMonthly != null && mortgagePaymentMonthly <= 0) {
+        if (mortgagePaymentMonthly != null && mortgagePaymentMonthly < 0) {
             mf.addError(lf.localize("DASHBOARD_INVALID_MORTGAGE_PAYMENT_MONTHLY"))
         }
 
@@ -1466,6 +1466,33 @@ class PartyServices {
                 .call()
         if (mf.hasError()) {
             return new HashMap<String, Object>()
+        }
+        // Find mock mortgage if no mortgage was initially entered and delete it
+        EntityValue noPaymentMortgageFinFlow = ef.find("mk.close.FinancialFlow")
+            .condition("partyId", partyId)
+            .condition("entryTypeEnumId", "MkEntryExpense")
+            .condition("financialFlowTypeEnumId", "MkFinFlowMortgage")
+            .condition("amount", 0)
+            .list()
+            .getFirst()
+        EntityValue mockPartyRelationship = ef.find("mantle.party.PartyRelationship")
+            .condition("partyRelationshipId", noPaymentMortgageFinFlow?.partyRelationshipId)
+            .condition("relationshipTypeEnumId", "PrtMortgage")
+            .condition("fromPartyId", partyId)
+            .condition("fromRoleTypeId", "Borrower")
+            .condition("toRoleTypeId", "Lender")
+            .list()
+            .getFirst()
+        EntityValue naMortgageName = ef.find("mantle.party.Organization")
+            .condition("partyId", mockPartyRelationship?.toPartyId)
+            .condition("organizationName", "N/A")
+            .one()
+
+        if(noPaymentMortgageFinFlow && mockPartyRelationship && naMortgageName) {
+            String partyRelationshipId = noPaymentMortgageFinFlow.partyRelationshipId
+            sf.sync().name("mkdecision.dashboard.PartyServices.delete#Mortgage")
+                .parameters(cs + [partyRelationshipId: partyRelationshipId])
+                .call()
         }
 
         // create lender

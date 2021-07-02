@@ -74,7 +74,11 @@
                 <econdition field-name="fromRoleTypeId" value="Borrower"/>
             </entity-find-count>
             <if condition="mortgageCount == 0">
-                <return message="${ec.l10n.localize('DASHBOARD_INVALID_MORTGAGE_COUNT')}" error="true"/>
+                <!-- Create a mock mortgage if user does not enter or have a mortgage -->
+                <set field="lenderName" value="N/A"/>
+                <set field="mortgagePaymentMonthly" type="BigDecimal" value="0"/>
+                <set field="partyId" from="partyRole?.partyId"/>
+                <service-call name="mkdecision.dashboard.PartyServices.create#Mortgage" in-map="context"/>
             </if>
         </actions>
         <conditional-response url="../PrimaryApplicantMaritalStatus">

@@ -196,6 +196,9 @@
                 <section name="MortgageRelationSection" condition="mortgageRelationList.size() > 0">
                     <widgets>
                         <section-iterate name="MortgageIterator" list="mortgageRelationList" entry="mortgageRelation">
+                            <condition>
+                                <expression>mortgageRelation.organizationName != 'N/A'</expression>
+                            </condition>
                             <actions>
                                 <entity-find-one entity-name="mk.close.FinancialFlow" value-field="mortgageFinFlow">
                                     <field-map field-name="partyId" from="mortgageRelation.fromPartyId"/>
