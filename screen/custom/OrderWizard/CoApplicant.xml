@@ -72,33 +72,34 @@
         </entity-find-one>
         <set field="geoRegion" from="serviceableStatesSetting?.settingValue ?: 'USA'"/>
 
-        <set field="primaryApplicantPartyId" from="orderPart.customerPartyId ?: null"/>
-        <!-- Grab the primary applicant residential address and use it as well for the co-applicant -->
-        <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryPostalAddress" out-map="context">
-            <field-map field-name="partyId" from="primaryApplicantPartyId"/>
-        </service-call>
-
-        <!-- Set the address value fields for the coApplicant using Primary Applicant information -->
-        <set field="address1" from="postalAddress?.address1 ?: ''"/>
-        <set field="address2" from="postalAddress?.address2 ?: ''"/>
-        <set field="postalCode" from="postalAddress?.postalCode ?: ''"/>
-        <set field="city" from="postalAddress?.city ?: ''"/>
-        <set field="stateProvinceGeoId" from="postalAddress?.stateProvinceGeoId ?: ''"/>
-        <set field="usedSince" from="postalAddress?.usedSince"/>
-        <if condition="usedSince != null">
-            <set field="millis" from="Math.abs(usedSince.getTime() - ec.user.nowTimestamp.getTime())"/>
-            <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
-            <set field="addressYears" from="Math.floor(days / 365)" type="Integer"/>
-            <set field="addressMonths" from="Math.floor(days / 30.4) - (addressYears * 12)" type="Integer"/>
-        </if>
-
         <!-- Find the co-applicant partyId on the order if any -->
         <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
             <econdition field-name="orderId" from="orderId"/>
             <econdition field-name="orderPartSeqId" from="orderPartSeqId"/>
             <econdition field-name="roleTypeId" value="CoApplicant"/>
         </entity-find>
+
         <set field="partyId" from="partyList?.getFirst()?.partyId ?: null"/>
+        <set field="primaryApplicantPartyId" from="orderPart.customerPartyId ?: null"/>
+
+        <!-- Grab the primary applicant residential address and use it as well for the co-applicant -->
+        <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryPostalAddress" out-map="primaryPostal">
+            <field-map field-name="partyId" from="primaryApplicantPartyId"/>
+        </service-call>
+
+        <!-- Set the address value fields for the coApplicant using Primary Applicant information -->
+        <set field="address1" from="primaryPostal.postalAddress?.address1 ?: ''"/>
+        <set field="address2" from="primaryPostal.postalAddress?.address2 ?: ''"/>
+        <set field="postalCode" from="primaryPostal.postalAddress?.postalCode ?: ''"/>
+        <set field="city" from="primaryPostal.postalAddress?.city ?: ''"/>
+        <set field="stateProvinceGeoId" from="primaryPostal.postalAddress?.stateProvinceGeoId ?: ''"/>
+        <set field="usedSince" from="primaryPostal.postalAddress?.usedSince"/>
+        <if condition="usedSince != null">
+            <set field="millis" from="Math.abs(usedSince.getTime() - ec.user.nowTimestamp.getTime())"/>
+            <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+            <set field="addressYears" from="Math.floor(days / 365)" type="Integer"/>
+            <set field="addressMonths" from="Math.floor(days / 30.4) - (addressYears * 12)" type="Integer"/>
+        </if>
 
         <!-- If co-applicant partyId exist fill out the existing information in the form fields        -->
         <if condition="partyId != null">
@@ -119,6 +120,25 @@
             <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryEmailAddress" out-map="context">
                 <field-map field-name="partyId" from="partyId"/>
             </service-call>
+            <service-call name="mkdecision.dashboard.PartyServices.get#PrimaryPostalAddress" out-map="context">
+                <field-map field-name="partyId" from="partyId"/>
+            </service-call>
+
+            <!-- Set the address value fields for the coApplicant if any and override the Primary Applicant information -->
+            <if condition="postalAddress">
+                <set field="address1" from="postalAddress?.address1 ?: ''"/>
+                <set field="address2" from="postalAddress?.address2 ?: ''"/>
+                <set field="postalCode" from="postalAddress?.postalCode ?: ''"/>
+                <set field="city" from="postalAddress?.city ?: ''"/>
+                <set field="stateProvinceGeoId" from="postalAddress?.stateProvinceGeoId ?: ''"/>
+                <set field="usedSince" from="postalAddress?.usedSince"/>
+                <if condition="usedSince != null">
+                    <set field="millis" from="Math.abs(usedSince.getTime() - ec.user.nowTimestamp.getTime())"/>
+                    <set field="days" from="java.util.concurrent.TimeUnit.DAYS.convert(millis, java.util.concurrent.TimeUnit.MILLISECONDS)"/>
+                    <set field="addressYears" from="Math.floor(days / 365)" type="Integer"/>
+                    <set field="addressMonths" from="Math.floor(days / 30.4) - (addressYears * 12)" type="Integer"/>
+                </if>
+            </if>
 
             <set field="email" from="emailAddress"/>
             <set field="emailVerify" from="emailAddress"/>
