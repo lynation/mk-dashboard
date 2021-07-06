@@ -228,6 +228,23 @@
             </parameter>
             <parameter name="suffix"/>
             <parameter name="nickname"/>
+            <parameter name="address1" required="true">
+                <matches regexp="^(?=[- #a-zA-Z0-9.',\/]+$)(?!.*(?:(.*([p|P][\s?.?]*[o|O][\s?.?]*[b|B][\s]|\b[p|P][\s?.?]*[o|O][\s?.?]*[b|B][\s]*[o|O][\s]*[x|X][\s]*[a-zA-Z0-9]*|\b[P|p]+(OST|ost|o|O)?\s*[O|o|0]+(ffice|FFICE)?\s*[B|b][O|o|0]?[X|x]+\.?\s+[#]?(\d+)*(\D+)*)))).*$" message="Please enter a valid street address using only letters, numbers, spaces and special characters (periods, commas, -, /, ', or #). Do not include P.O. Box numbers."/>
+            </parameter>
+            <parameter name="address2"/>
+            <parameter name="postalCode" required="true">
+                <matches regexp="^\d{5}$" message="Please enter a valid ZIP code."/>
+            </parameter>
+            <parameter name="city" required="true">
+                <matches regexp="^[- A-Za-z'.]+$" message="Please enter a city using only letters, spaces, periods, apostrophes or hyphens."/>
+            </parameter>
+            <parameter name="stateProvinceGeoId" required="true"/>
+            <parameter name="addressYears" type="Integer" required="true">
+                <number-range min="0" max="100" max-include-equals="true" message="Please enter a number between 0 and 100."/>
+            </parameter>
+            <parameter name="addressMonths" type="Integer" required="true">
+                <number-range min="0" max="11" max-include-equals="true" message="Please enter a number between 0 and 11."/>
+            </parameter>
             <parameter name="socialSecurityNumber" required="true">
                 <matches regexp="^\d{3}-\d{2}-\d{4}$" message="Please enter a valid social security number."/>
             </parameter>
