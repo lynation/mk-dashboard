@@ -557,14 +557,14 @@ class PartyServices {
         }
 
         // validate if issue date is after birthdate
-        if(idIssueDate != null){
+        if (idIssueDate != null) {
             EntityValue partyPerson = ef.find("mantle.party.Person")
                 .condition("partyId", partyId)
                 .one()
 
             def birthDate = (Date) partyPerson.get("birthDate")
             def compareDate = idIssueDate.compareTo(birthDate)
-            if(compareDate == -1){
+            if (compareDate == -1) {
                 mf.addError(lf.localize("DASHBOARD_INVALID_ID_ISSUE_DATE"))
                 return
             }
