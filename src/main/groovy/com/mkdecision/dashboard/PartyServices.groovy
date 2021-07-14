@@ -522,6 +522,7 @@ class PartyServices {
         ContextStack cs = ec.getContext()
         MessageFacade mf = ec.getMessage()
         L10nFacade lf = ec.getL10n()
+        EntityFacade ef = ec.getEntity()
 
         // get the parameters
         String partyId = (String) cs.getOrDefault("partyId", null)
@@ -553,6 +554,20 @@ class PartyServices {
         if (idIssueDate == null && !StringUtils.equals(partyIdTypeEnumId, "PtidArn")) {
             mf.addError(lf.localize("DASHBOARD_INVALID_ID_ISSUE_DATE"))
             return
+        }
+
+        // validate if issue date is after birthdate
+        if(idIssueDate != null){
+            EntityValue partyPerson = ef.find("mantle.party.Person")
+                .condition("partyId", partyId)
+                .one()
+
+            def birthDate = (Date) partyPerson.get("birthDate")
+            def compareDate = idIssueDate.compareTo(birthDate)
+            if(compareDate == -1){
+                mf.addError(lf.localize("DASHBOARD_INVALID_ID_ISSUE_DATE"))
+                return
+            }
         }
 
         // validate expiry date
