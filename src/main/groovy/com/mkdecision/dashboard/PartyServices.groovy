@@ -495,13 +495,14 @@ class PartyServices {
                 .conditionDate("fromDate", "thruDate", uf.getNowTimestamp())
                 .list()
                 .getFirst()
-        if (info == null) {
+        if (info == null && StringUtils.isNotBlank(email)) {
             sf.sync().name("mantle.party.ContactServices.create#EmailAddress")
                     .parameter("partyId", partyId)
                     .parameter("emailAddress", email)
                     .parameter("contactMechPurposeId", "EmailPrimary")
                     .call()
-        } else {
+        }
+        else if (info != null) {
             sf.sync().name("update#mantle.party.contact.ContactMech")
                     .parameter("contactMechId", info.getString("contactMechId"))
                     .parameter("infoString", email)
