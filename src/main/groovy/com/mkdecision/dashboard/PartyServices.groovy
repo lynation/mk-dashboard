@@ -1866,4 +1866,62 @@ class PartyServices {
         // return the output parameters
         return new HashMap<>()
     }
+
+    static Map<String, Object> checkMaritalStatusIsNeeded(ExecutionContext ec) {
+        // shortcuts for convenience
+        ContextStack cs = ec.getContext()
+        EntityFacade ef = ec.getEntity()
+
+        // get the parameters
+        String orderId = cs.getByString("orderId")
+        String orderPartSeqId = cs.getByString("orderPartSeqId")
+        String orderItemSeqId = cs.getByString("orderItemSeqId")
+
+        //set parameters
+        def communityPropertyStates = ef.find('moqui.basic.GeoAssoc')
+            .condition(geoId              :'US_COMMUNITY_PROPERTY')
+            .condition(geoAssocTypeEnumId :'GAT_GROUP_MEMBER'     )
+            .list().toGeoId
+
+        //if application is joint, marital status is needed
+        def jointApplicant = ef.find('mantle.order.OrderPartParty')
+            .condition(orderId        : orderId         )
+            .condition(orderPartSeqId : orderPartSeqId  )
+            .condition(roleTypeId     : 'CoApplicant'   )
+            .one()
+
+        if (jointApplicant){
+            return [maritalStatusIsNeeded: true]
+        }
+
+        //if the product is a secured loan, marital status is needed
+        def item = ef.find('mantle.order.OrderItem')
+            .condition(orderId        : orderId       )
+            .condition(orderItemSeqId : orderItemSeqId)
+            .one()
+        def productClass = (item.product as EntityValue).productClassEnumId
+
+        if (productClass == 'IndirectSecuredLoan') {
+            return [maritalStatusIsNeeded: true]
+        }
+
+        //if the primary applicant lives in a Community Property State, marital status is needed
+        def primaryApplicantPartyId = ef.find('mantle.order.OrderPartParty')
+            .condition(orderId        : orderId           )
+            .condition(orderPartSeqId : orderPartSeqId    )
+            .condition(roleTypeId     : 'PrimaryApplicant')
+            .one().partyId
+
+        def primaryApplicantState = ef.find('mantle.party.contact.PartyContactMechPostalAddress')
+            .condition(partyId              : primaryApplicantPartyId)
+            .condition(contactMechPurposeId : 'PostalPrimary')
+            .list().stateProvinceGeoId
+
+        if (!primaryApplicantState.disjoint(communityPropertyStates)){
+            return [maritalStatusIsNeeded: true]
+        }
+
+        return [maritalStatusIsNeeded: false]
+
+    }
 }
