@@ -365,6 +365,7 @@
                         </row-col>
                         <row-col sm="4" xs="4" md="4" lg="4" style="text-right">
                             <section-include name="EditPerson" location="component://mk-dashboard/template/party/PartyForms.xml"/>
+                            <label text="${!orderEditable ? ec.getL10n().localize('DASHBOARD_ORDER_NOT_EDITABLE') : ''}"/>
                         </row-col>
                     </container-row>
                     <container style="q-pt-sm">

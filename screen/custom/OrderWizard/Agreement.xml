@@ -21,7 +21,7 @@
     </transition>
     <transition name="back">
         <actions>
-            <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+            <service-call name="mkdecision.dashboard.PartyServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
 
             <entity-find entity-name="mantle.order.OrderPartParty" list="partyList">
                 <econdition field-name="orderId" from="orderId"/>

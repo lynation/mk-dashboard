@@ -245,6 +245,7 @@
                     </if>
                     <set field="email" from="emailAddress"/>
                     <set field="emailVerify" from="emailAddress"/>
+                    <set field="message" from="ec.message.messages.size() > 0 ? ec.message.messages[0] : ''"/>
                 </actions>
                 <widgets>
                     <container style="col-lg-6 col-md-12 col-sm-12 col-xs-12">

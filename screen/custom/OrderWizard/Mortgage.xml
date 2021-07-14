@@ -12,7 +12,7 @@
     <transition name="createMortgage">
         <actions>
             <service-call name="mkdecision.dashboard.PartyServices.create#Mortgage" in-map="context"/>
-            <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+            <service-call name="mkdecision.dashboard.PartyServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
             <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="partyRole">
                 <field-map field-name="orderId"/>
                 <field-map field-name="orderPartSeqId"/>
@@ -62,7 +62,7 @@
     </transition>
     <transition name="continue">
         <actions>
-            <service-call name="mkdecision.dashboard.OrderServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
+            <service-call name="mkdecision.dashboard.PartyServices.check#MaritalStatusIsNeeded" in-map="context" out-map="context"/>
             <entity-find-one entity-name="mantle.order.OrderPartParty" value-field="partyRole">
                 <field-map field-name="orderId"/>
                 <field-map field-name="orderPartSeqId"/>

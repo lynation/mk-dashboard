@@ -304,15 +304,4 @@
         </out-parameters>
     </service>
 
-    <!--Supplement Party Info -->
-    <service verb="check" noun="MaritalStatusIsNeeded" type="java" location="com.mkdecision.dashboard.OrderServices" method="checkMaritalStatusIsNeeded">
-        <in-parameters>
-            <parameter name="orderId" required="true"/>
-            <parameter name="orderPartSeqId" default-value="01"/>
-            <parameter name="orderItemSeqId" default-value="01"/>
-        </in-parameters>
-        <out-parameters>
-            <parameter name="maritalStatusIsNeeded" type="Boolean"/>
-        </out-parameters>
-    </service>
 </services>
