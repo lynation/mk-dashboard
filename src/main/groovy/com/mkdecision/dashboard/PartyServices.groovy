@@ -6,6 +6,7 @@ import org.moqui.entity.*
 import org.moqui.service.ServiceFacade
 import org.moqui.util.*
 import org.apache.commons.lang3.StringUtils
+import java.sql.Timestamp
 
 class PartyServices {
 
@@ -799,6 +800,31 @@ class PartyServices {
             fromDate = DateUtils.addMonths(fromDate, -months)
         }
 
+        if (relationshipTypeEnumId == 'PrtPreviousEmployee') {
+            // find current employments
+            EntityList currentEmployments = ef.find("mantle.party.PartyRelationship")
+                .condition("fromPartyId", partyId)
+                .condition("relationshipTypeEnumId", "PrtEmployee")
+                .conditionDate(null, null, null)
+                .orderBy("fromDate")
+                .list()
+            EntityValue currentEmployment = !currentEmployments.isEmpty() ? currentEmployments.getFirst() : null
+
+            if (currentEmployment) {
+                // set previous employment toDate/thruDate to the current employment fromDate
+                Timestamp currentFromDate = currentEmployment.getOrDefault("fromDate", null) as Timestamp
+                fromDate = new Date(currentFromDate.getTime())
+                toDate = fromDate
+
+                /* calculate previous employment fromDate using current employment fromDate
+                   and user input years and months */
+                fromDate = DateUtils.addYears(fromDate, -years)
+                fromDate = DateUtils.addMonths(fromDate, -months)
+            } else {
+                toDate = new Date(ec.user.nowTimestamp.getTime())
+            }
+        }
+
         // create employer
         Map<String, Object> employerResp = sf.sync().name("mantle.party.PartyServices.create#Organization")
                 .parameter("partyTypeEnumId", "PtyOrganization")
@@ -929,6 +955,31 @@ class PartyServices {
         if (relationship == null || !StringUtils.equals(partyId, relationship.getString("fromPartyId")) || (!StringUtils.equals(relationship.getString("relationshipTypeEnumId"), "PrtEmployee") && !StringUtils.equals(relationship.getString("relationshipTypeEnumId"), "PrtPreviousEmployee"))) {
             mf.addError(lf.localize("DASHBOARD_INVALID_EMPLOYMENT"))
             return new HashMap<String, Object>()
+        }
+
+        if (relationshipTypeEnumId == 'PrtPreviousEmployee') {
+            // find current employments
+            EntityList currentEmployments = ef.find("mantle.party.PartyRelationship")
+                .condition("fromPartyId", partyId)
+                .condition("relationshipTypeEnumId", "PrtEmployee")
+                .conditionDate(null, null, null)
+                .orderBy("fromDate")
+                .list()
+            EntityValue currentEmployment = !currentEmployments.isEmpty() ? currentEmployments.getFirst() : null
+
+            if (currentEmployment) {
+                // set previous employment toDate/thruDate to the current employment fromDate
+                Timestamp currentFromDate = currentEmployment.getOrDefault("fromDate", null) as Timestamp
+                fromDate = new Date(currentFromDate.getTime())
+                toDate = fromDate
+
+                /* calculate previous employment fromDate using current employment fromDate
+                   and user input years and months */
+                fromDate = DateUtils.addYears(fromDate, -years)
+                fromDate = DateUtils.addMonths(fromDate, -months)
+            } else {
+                toDate = new Date(ec.user.nowTimestamp.getTime())
+            }
         }
 
         // update employer
