@@ -204,6 +204,7 @@
             <parameter name="emailVerify">
                 <text-email/>
             </parameter>
+            <parameter name="orderPartPartySequenceNum"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>
@@ -259,6 +260,7 @@
             <parameter name="emailVerify">
                 <text-email/>
             </parameter>
+            <parameter name="orderPartPartySequenceNum"/>
         </in-parameters>
         <out-parameters>
             <parameter name="partyId"/>

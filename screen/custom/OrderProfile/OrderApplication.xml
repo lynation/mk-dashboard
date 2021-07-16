@@ -78,6 +78,7 @@
                 <econdition field-name="roleTypeId" value="CcSpouseSeparate"/>
                 <econdition field-name="roleTypeId" value="NonBorrowerOwner"/>
             </econditions>
+            <order-by field-name="sequenceNum"/>
         </entity-find>
         <entity-find entity-name="mantle.product.asset.Asset" list="assetList">
             <econdition field-name="ownerPartyId" operator="in" from="partyList?.partyId?.toSet()"/>

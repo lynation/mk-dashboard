@@ -16,9 +16,7 @@
                     <service-call name="mkdecision.dashboard.OrderServices.archive#OrderParty" in-map="context"/>
                 </then>
                 <else>
-                    <service-call name="mkdecision.dashboard.OrderServices.store#CoApplicant" in-map="context" out-map="context">
-                        <field-map field-name="roleTypeId" value="CoApplicant"/>
-                    </service-call>
+                    <service-call name="mkdecision.dashboard.OrderServices.store#CoApplicant" in-map="context" out-map="context"/>
                 </else>
             </if>
         </actions>
@@ -172,6 +170,10 @@
                 <field name="orderPartSeqId"><default-field><hidden/></default-field></field>
                 <field name="isUnsecured"><default-field><hidden/></default-field></field>
                 <field name="partyId"><default-field><hidden/></default-field></field>
+                <field name="roleTypeId"><default-field>
+                    <set field="roleTypeId" value="CoApplicant"/><hidden/></default-field></field>
+                <field name="orderPartPartySequenceNum"><default-field>
+                    <set field="orderPartPartySequenceNum" value="2"/><hidden/></default-field></field>
 
                 <field name="applicantHeader">
                     <default-field>

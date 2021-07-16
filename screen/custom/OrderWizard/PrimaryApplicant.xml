@@ -224,6 +224,8 @@
                 <field name="estimatedPayment"><default-field><hidden/></default-field></field>
                 <field name="formResponseId"><default-field><hidden/></default-field></field>
                 <field name="isUnsecured"><default-field><hidden/></default-field></field>
+                <field name="orderPartPartySequenceNum"><default-field>
+                    <set field="orderPartPartySequenceNum" value="1"/><hidden/></default-field></field>
 
                 <field name="applicantHeader">
                     <default-field>

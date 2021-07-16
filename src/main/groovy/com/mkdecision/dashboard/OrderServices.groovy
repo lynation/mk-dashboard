@@ -712,6 +712,7 @@ class OrderServices {
         String contactNumber = (String) cs.getOrDefault("contactNumber", null)
         String contactMechPurposeId = (String) cs.getOrDefault("contactMechPurposeId", null)
         String email = (String) cs.getOrDefault("email", null)
+        String orderPartPartySequenceNum = (String) cs.getOrDefault("orderPartPartySequenceNum", null)
 
         // validate fields
         sf.sync().name("mkdecision.dashboard.OrderServices.validate#ApplicantFields")
@@ -842,6 +843,7 @@ class OrderServices {
                     .parameter("orderPartSeqId", orderPartSeqId)
                     .parameter("partyId", partyId)
                     .parameter("roleTypeId", roleTypeId)
+                    .parameter("sequenceNum", orderPartPartySequenceNum)
                     .call()
 
             // update order part customer
